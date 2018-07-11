@@ -18,6 +18,13 @@ import credentials from './credentials/main';
 import credentialTypes from './credential-types/main';
 import organizations from './organizations/main';
 import managementJobs from './management-jobs/main';
+import ipamPrefixes from './ipam-prefixes/main';
+import ipamRirs from './ipam-rirs/main';
+import ipamVrfs from './ipam-vrfs/main';
+import ipamAggregates from './ipam-aggregates/main';
+import ipamSubnets from './ipam-subnets/main';
+import ipamIpAddresses from './ipam-ip-addresses/main';
+import ipamVlans from './ipam-vlans/main';
 import workflowResults from './workflow-results/main';
 import jobSubmission from './job-submission/main';
 import notifications from './notifications/main';
@@ -78,6 +85,13 @@ angular
         credentialTypes.name,
         organizations.name,
         managementJobs.name,
+        ipamPrefixes.name,
+        ipamRirs.name,
+        ipamVrfs.name,
+        ipamAggregates.name,
+        ipamSubnets.name,
+        ipamIpAddresses.name,
+        ipamVlans.name,
         breadCrumb.name,
         home.name,
         login.name,

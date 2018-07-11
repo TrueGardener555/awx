@@ -44,6 +44,50 @@
         </at-side-nav-item>
         <at-side-nav-item icon-class="fa-columns" route="portalMode.myJobs" name="PORTAL_MODE">
         </at-side-nav-item>
+        <div class="at-Layout-sideNavSpacer at-Layout-sideNavSpacer--first">
+          <span class="at-Layout-sideNavHeader">
+              {{:: $parent.layoutVm.getString('IPAM_HEADER') }}
+          <span>
+        </div>
+        <at-side-nav-item icon-class="fa-heartbeat" route="ipamPrefixesList" name="IPAM_PREFIXES">
+        </at-side-nav-item>
+        <at-side-nav-item icon-class="fa-university" route="ipamRirsList" name="IPAM_RIRS">
+        </at-side-nav-item>
+        <at-side-nav-item icon-class="fa-map" route="ipamVrfsList" name="IPAM_VRFS">
+        </at-side-nav-item>
+        <at-side-nav-item icon-class="fa-object-group" route="ipamAggregatesList" name="IPAM_AGGREGATES">
+        </at-side-nav-item>
+        <at-side-nav-item icon-class="fa-sliders" route="ipamSubnetsList" name="IPAM_SUBNETS">
+        </at-side-nav-item>
+        <at-side-nav-item icon-class="fa-cogs" route="ipamIpAddressesList" name="IPAM_IP_ADDRESSES">
+        </at-side-nav-item>
+        <at-side-nav-item icon-class="fa-hashtag" route="ipamVlansList" name="IPAM_VLANS">
+        </at-side-nav-item>      
+        <div class="at-Layout-sideNavSpacer at-Layout-sideNavSpacer--first">
+          <span class="at-Layout-sideNavHeader">
+              {{:: $parent.layoutVm.getString('INFRASTRUCTURE_HEADER') }}
+          <span>
+        </div>
+        <at-side-nav-item icon-class="fa-server" route="dashboard" name="INFRASTRUCTURE_PROVIDERS">
+        </at-side-nav-item>
+        <at-side-nav-item icon-class="fa-database" route="dashboard" name="INFRASTRUCTURE_STORAGES">
+        </at-side-nav-item>
+        <at-side-nav-item icon-class="fa-snowflake-o" route="dashboard" name="INFRASTRUCTURE_NETWORKS">
+        </at-side-nav-item>
+        <at-side-nav-item icon-class="fa-cog" route="dashboard" name="INFRASTRUCTURE_SERVICES">
+        </at-side-nav-item>
+        <at-side-nav-item icon-class="fa-cubes" route="jobs" name="INFRASTRUCTURE_APPS">
+        </at-side-nav-item>
+        <at-side-nav-item icon-class="fa-key" route="jobs.schedules" name="INFRASTRUCTURE_PKI">
+        </at-side-nav-item>
+        <at-side-nav-item icon-class="fa-stethoscope" route="jobs.schedules" name="INFRASTRUCTURE_MONITORING">
+        </at-side-nav-item>      
+        <at-side-nav-item icon-class="fa-medkit" route="jobs.schedules" name="INFRASTRUCTURE_BACKUPS">
+        </at-side-nav-item>  
+        <at-side-nav-item icon-class="fa-shield" route="jobs.schedules" name="INFRASTRUCTURE_SECURITY">
+        </at-side-nav-item>
+        <at-side-nav-item icon-class="fa-file-text-o" route="jobs.schedules" name="INFRASTRUCTURE_DOCUMENTATION">
+        </at-side-nav-item>
         <div class="at-Layout-sideNavSpacer">
             <span class="at-Layout-sideNavHeader">
                 {{:: $parent.layoutVm.getString('RESOURCES_HEADER') }}
@@ -58,6 +102,14 @@
         <at-side-nav-item icon-class="fa-sitemap" route="inventories" name="INVENTORIES">
         </at-side-nav-item>
         <at-side-nav-item icon-class="fa-code" route="inventoryScripts" name="INVENTORY_SCRIPTS">
+        </at-side-nav-item>
+        <at-side-nav-item icon-class="fa-microchip" route="inventoryScripts" name="RESOURCES_NETWORK_GEARS">
+        </at-side-nav-item>
+        <at-side-nav-item icon-class="fa-cube" route="inventoryScripts" name="RESOURCES_REGISTRIES">
+        </at-side-nav-item>
+        <at-side-nav-item icon-class="fa-desktop" route="inventoryScripts" name="RESOURCES_PHYSICAL_HOSTS">
+        </at-side-nav-item>
+        <at-side-nav-item icon-class="fa-tags" route="inventoryScripts" name="RESOURCES_VIRTUAL_HOSTS">
         </at-side-nav-item>
         <div class="at-Layout-sideNavSpacer">
             <span class="at-Layout-sideNavHeader">

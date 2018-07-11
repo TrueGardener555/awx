@@ -80,7 +80,32 @@ function ComponentsStrings (BaseString) {
         VIEWS_HEADER: t.s('Views'),
         RESOURCES_HEADER: t.s('Resources'),
         ACCESS_HEADER: t.s('Access'),
-        ADMINISTRATION_HEADER: t.s('Administration')
+        ADMINISTRATION_HEADER: t.s('Administration'),
+        IPAM_HEADER: t.s('IPAM'),
+        IPAM_PREFIXES: t.s('Prefixes'),
+        IPAM_SUBNETS: t.s('Subnets'),
+        IPAM_IP_ADDRESSES: t.s('IP addresses'),
+        IPAM_VRFS: t.s('VRFS'),
+        IPAM_AGGREGATES: t.s('Aggregates'),
+        IPAM_RIRS: t.s('RIRs'),
+        IPAM_VLANS: t.s('VLANS'),
+        INFRASTRUCTURE_HEADER: t.s('INFRASTRUCTURE'),
+        INFRASTRUCTURE_PROVIDERS: t.s('Providers'),
+        INFRASTRUCTURE_STORAGES: t.s('Storages'),
+        INFRASTRUCTURE_NETWORKS: t.s('Networks'),
+        INFRASTRUCTURE_SERVICES: t.s('Services'),
+        INFRASTRUCTURE_APPS: t.s('Apps'),
+        INFRASTRUCTURE_PKI: t.s('PKI'),
+        INFRASTRUCTURE_MONITORING: t.s('Monitoring'),
+        INFRASTRUCTURE_BACKUPS: t.s('Backups'),
+        INFRASTRUCTURE_SECURITY: t.s('Security'),
+        INFRASTRUCTURE_DOCUMENTATION: t.s('Documentation'),
+        RESOURCES_NETWORK_GEARS: t.s('Network Gears'),
+        RESOURCES_REGISTRIES: t.s('Registries'),
+        RESOURCES_PHYSICAL_HOSTS: t.s('Hosts'),
+        RESOURCES_VIRTUAL_HOSTS: t.s('Virtual Hosts'),
+        HOME_HEADER: t.s('Home'),
+        PRODUCT_CODENAME: t.s('aHOMé')
     };
 
     ns.relaunch = {
