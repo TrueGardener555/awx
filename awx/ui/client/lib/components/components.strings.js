@@ -99,7 +99,7 @@ function ComponentsStrings (BaseString) {
         INFRASTRUCTURE_MONITORING: t.s('Monitoring'),
         INFRASTRUCTURE_BACKUPS: t.s('Backups'),
         INFRASTRUCTURE_SECURITY: t.s('Security'),
-        INFRASTRUCTURE_DOCUMENTATION: t.s('Documentation'),
+        INFRASTRUCTURE_DOCUMENTATIONS: t.s('Documentations'),
         RESOURCES_NETWORK_GEARS: t.s('Network Gears'),
         RESOURCES_REGISTRIES: t.s('Registries'),
         RESOURCES_PHYSICAL_HOSTS: t.s('Hosts'),
