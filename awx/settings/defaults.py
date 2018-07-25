@@ -287,7 +287,8 @@ INSTALLED_APPS = (
     'awx.ui',
     'awx.sso',
     'solo',
-    'awx.network_ui'
+    'awx.network_ui',
+    'awx.ipam'
 )
 
 INTERNAL_IPS = ('127.0.0.1',)

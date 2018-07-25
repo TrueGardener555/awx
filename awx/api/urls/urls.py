@@ -71,6 +71,15 @@ from .user_oauth import urls as user_oauth_urls
 from .oauth import urls as oauth_urls
 
 
+from rest_framework import routers
+from awx.api.views import RirViewSet
+
+# Routers provide a way of automatically determining the URL conf.
+router = routers.DefaultRouter()
+router.register(r'rirs', RirViewSet, base_name="rir")
+
+
+
 v1_urls = [
     url(r'^$', ApiV1RootView.as_view(), name='api_v1_root_view'),
     url(r'^ping/$', ApiV1PingView.as_view(), name='api_v1_ping_view'),
@@ -131,6 +140,7 @@ v2_urls = [
     url(r'^applications/(?P<pk>[0-9]+)/tokens/$', ApplicationOAuth2TokenList.as_view(), name='application_o_auth2_token_list'),
     url(r'^tokens/$', OAuth2TokenList.as_view(), name='o_auth2_token_list'),
     url(r'^', include(user_oauth_urls)),
+    url(r'^ipam/', include(router.urls)),
 ]
 
 app_name = 'api'
