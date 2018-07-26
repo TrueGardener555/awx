@@ -14,7 +14,7 @@ export default {
     controller: 'ipamRirsCardController',
     data: {
         activityStream: true,
-        activityStreamTarget: 'job'
+        activityStreamTarget: 'rir'
     },
     ncyBreadcrumb: {
         label: N_('IPAM RIRS')
