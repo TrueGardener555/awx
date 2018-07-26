@@ -313,7 +313,7 @@ class ApiVersionRootView(APIView):
         data['workflow_jobs'] = reverse('api:workflow_job_list', request=request)
         data['workflow_job_template_nodes'] = reverse('api:workflow_job_template_node_list', request=request)
         data['workflow_job_nodes'] = reverse('api:workflow_job_node_list', request=request)
-        data['ipam_rir'] = reverse('api:rir-list', request=request)
+        data['ipam_rir'] = reverse('api:ipam_rir-list', request=request)
         return Response(data)
 
 
@@ -5109,9 +5109,9 @@ class RoleChildrenList(SubListAPIView):
 
 
 # ViewSets define the view behavior.
-class RirViewSet(viewsets.ModelViewSet):
+class IpamRirViewSet(viewsets.ModelViewSet):
     queryset = Rir.objects.all()
-    serializer_class = RirSerializer
+    serializer_class = IpamRirSerializer
 
 
 # Create view functions for all of the class-based views to simplify inclusion

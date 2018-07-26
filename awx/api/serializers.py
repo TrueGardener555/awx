@@ -4881,10 +4881,10 @@ class FactSerializer(BaseFactSerializer):
 # IPAM
 
 # Serializers define the API representation.
-class RirSerializer(serializers.HyperlinkedModelSerializer):
+class IpamRirSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Rir
-        fields = ('rir_name', 'rir_description')
+        fields = ('name', 'description')
 
 
 
