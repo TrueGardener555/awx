@@ -12,3 +12,9 @@ from awx.ipam.serializers import * # noqa
 class IpamRirViewSet(viewsets.ModelViewSet):
     queryset = Rir.objects.all()
     serializer_class = IpamRirSerializer
+
+
+
+class IpamVrfViewSet(viewsets.ModelViewSet):
+    queryset = Vrf.objects.all()
+    serializer_class = IpamVrfSerializer

@@ -313,7 +313,8 @@ class ApiVersionRootView(APIView):
         data['workflow_jobs'] = reverse('api:workflow_job_list', request=request)
         data['workflow_job_template_nodes'] = reverse('api:workflow_job_template_node_list', request=request)
         data['workflow_job_nodes'] = reverse('api:workflow_job_node_list', request=request)
-        data['ipam_rir'] = reverse('api:ipam_rir-list', request=request)
+        data['ipam_rirs'] = reverse('api:ipam_rir-list', request=request)
+        data['ipam_vrfs'] = reverse('api:ipam_vrf-list', request=request)
         return Response(data)
 
 
