@@ -94,8 +94,8 @@ from awx.main.scheduler.tasks import run_job_complete
 from awx.api.exceptions import ActiveJobConflict
 
 
-from rest_framework import  viewsets
-from awx.ipam.models import * # noqa
+# from rest_framework import  viewsets
+# from awx.ipam.models import * # noqa
 
 
 logger = logging.getLogger('awx.api.views')
@@ -5108,10 +5108,10 @@ class RoleChildrenList(SubListAPIView):
 
 
 
-# ViewSets define the view behavior.
-class IpamRirViewSet(viewsets.ModelViewSet):
-    queryset = Rir.objects.all()
-    serializer_class = IpamRirSerializer
+# # ViewSets define the view behavior.
+# class IpamRirViewSet(viewsets.ModelViewSet):
+#     queryset = Rir.objects.all()
+#     serializer_class = IpamRirSerializer
 
 
 # Create view functions for all of the class-based views to simplify inclusion

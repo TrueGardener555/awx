@@ -71,12 +71,15 @@ from .user_oauth import urls as user_oauth_urls
 from .oauth import urls as oauth_urls
 
 
-from rest_framework import routers
-from awx.api.views import IpamRirViewSet
 
-# Routers provide a way of automatically determining the URL conf.
-ipam_router = routers.DefaultRouter()
-ipam_router.register(r'ipam_rirs', IpamRirViewSet, base_name="ipam_rir")
+from awx.ipam.routers import ipam_router
+
+# from rest_framework import routers
+# from awx.api.views import IpamRirViewSet
+
+# # Routers provide a way of automatically determining the URL conf.
+# ipam_router = routers.DefaultRouter()
+# ipam_router.register(r'ipam_rirs', IpamRirViewSet, base_name="ipam_rir")
 
 
 
@@ -140,7 +143,7 @@ v2_urls = [
     url(r'^applications/(?P<pk>[0-9]+)/tokens/$', ApplicationOAuth2TokenList.as_view(), name='application_o_auth2_token_list'),
     url(r'^tokens/$', OAuth2TokenList.as_view(), name='o_auth2_token_list'),
     url(r'^', include(user_oauth_urls)),
-    url(r'^ipam/', include(ipam_router.urls)),
+    url(r'^', include(ipam_router.urls)),
 ]
 
 app_name = 'api'

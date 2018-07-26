@@ -65,7 +65,7 @@ from awx.api.fields import (BooleanNullField, CharNullField, ChoiceNullField,
                             VerbatimField, DeprecatedCredentialField)
 
 
-from awx.ipam.models import *
+# from awx.ipam.models import *
 
 
 logger = logging.getLogger('awx.api.serializers')
@@ -4878,13 +4878,13 @@ class FactSerializer(BaseFactSerializer):
             ret['facts'] = json.loads(ret['facts'])
         return ret
 
-# IPAM
+# # IPAM
 
-# Serializers define the API representation.
-class IpamRirSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Rir
-        fields = ('name', 'description')
+# # Serializers define the API representation.
+# class IpamRirSerializer(serializers.HyperlinkedModelSerializer):
+#     class Meta:
+#         model = Rir
+#         fields = ('name', 'description')
 
 
 
