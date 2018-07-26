@@ -93,6 +93,11 @@ from awx.main.constants import ACTIVE_STATES
 from awx.main.scheduler.tasks import run_job_complete
 from awx.api.exceptions import ActiveJobConflict
 
+
+# from rest_framework import  viewsets
+# from awx.ipam.models import * # noqa
+
+
 logger = logging.getLogger('awx.api.views')
 
 
@@ -308,7 +313,11 @@ class ApiVersionRootView(APIView):
         data['workflow_jobs'] = reverse('api:workflow_job_list', request=request)
         data['workflow_job_template_nodes'] = reverse('api:workflow_job_template_node_list', request=request)
         data['workflow_job_nodes'] = reverse('api:workflow_job_node_list', request=request)
+        data['ipam_rirs'] = reverse('api:ipam_rir-list', request=request)
+        data['ipam_vrfs'] = reverse('api:ipam_vrf-list', request=request)
         return Response(data)
+
+
 
 
 class ApiV1RootView(ApiVersionRootView):
@@ -5096,6 +5105,14 @@ class RoleChildrenList(SubListAPIView):
     def get_queryset(self):
         role = Role.objects.get(pk=self.kwargs['pk'])
         return Role.filter_visible_roles(self.request.user, role.children.all())
+
+
+
+
+# # ViewSets define the view behavior.
+# class IpamRirViewSet(viewsets.ModelViewSet):
+#     queryset = Rir.objects.all()
+#     serializer_class = IpamRirSerializer
 
 
 # Create view functions for all of the class-based views to simplify inclusion

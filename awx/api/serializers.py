@@ -64,6 +64,10 @@ from awx.api.versioning import reverse, get_request_version
 from awx.api.fields import (BooleanNullField, CharNullField, ChoiceNullField,
                             VerbatimField, DeprecatedCredentialField)
 
+
+# from awx.ipam.models import *
+
+
 logger = logging.getLogger('awx.api.serializers')
 
 # Fields that should be summarized regardless of object type.
@@ -4873,3 +4877,14 @@ class FactSerializer(BaseFactSerializer):
         if 'facts' in ret and isinstance(ret['facts'], six.string_types):
             ret['facts'] = json.loads(ret['facts'])
         return ret
+
+# # IPAM
+
+# # Serializers define the API representation.
+# class IpamRirSerializer(serializers.HyperlinkedModelSerializer):
+#     class Meta:
+#         model = Rir
+#         fields = ('name', 'description')
+
+
+
