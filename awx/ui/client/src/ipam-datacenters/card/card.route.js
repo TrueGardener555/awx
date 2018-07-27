@@ -9,12 +9,12 @@ import {N_} from "../../i18n";
 
 export default {
     name: 'ipamDatacentersList',
-    route: '/ipam_rirs',
-    templateUrl: templateUrl('ipam-rirs/card/card'),
+    route: '/ipam_datacenters',
+    templateUrl: templateUrl('ipam-datacenters/card/card'),
     controller: 'ipamDatacentersCardController',
     data: {
         activityStream: true,
-        activityStreamTarget: 'rir'
+        activityStreamTarget: 'datacenter'
     },
     ncyBreadcrumb: {
         label: N_('IPAM Datacenters')

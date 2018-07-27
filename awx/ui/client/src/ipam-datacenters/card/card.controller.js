@@ -15,7 +15,7 @@ export default
             $rootScope, $state, $scope,
             CreateSelect2, i18n, $transitions) {
 
-                var defaultUrl = GetBasePath('ipam_rirs') + "?order_by=name";
+                var defaultUrl = GetBasePath('ipam_datacenters') + "?order_by=name";
 
                 var getipamDatacenters = function(){
                     Rest.setUrl(defaultUrl);
