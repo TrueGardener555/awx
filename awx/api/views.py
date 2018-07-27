@@ -264,6 +264,18 @@ class ApiOAuthAuthorizationRootView(APIView):
         return Response(data)
 
 
+
+'''
+NOTE:
+DRF adds suffixes in viewsets for different URLs - list, detail and possibly custom URLs. You can see that in source code and in docs. So in your case the actual reverse should be something like:
+
+reverse('api:my_list-list')    # for list URL. e.g. /api/my-list/
+reverse('api:my_list-detail')  # for detail URL. e.g. /api/my-list/<pk>/
+That is why its also probably better to use a resource name as a router base_name. For example base_name='user' vs base_name='users_list'.
+
+'''
+
+
 class ApiVersionRootView(APIView):
 
     permission_classes = (AllowAny,)
@@ -315,6 +327,9 @@ class ApiVersionRootView(APIView):
         data['workflow_job_nodes'] = reverse('api:workflow_job_node_list', request=request)
         data['ipam_rirs'] = reverse('api:ipam_rir-list', request=request)
         data['ipam_vrfs'] = reverse('api:ipam_vrf-list', request=request)
+        data['ipam_datacenters'] = reverse('api:ipam_datacenter-list', request=request)
+        data['ipam_aggregates'] = reverse('api:ipam_aggregate-list', request=request)
+        data['ipam_prefixes'] = reverse('api:ipam_prefix-list', request=request)
         return Response(data)
 
 

@@ -9,3 +9,6 @@ from awx.ipam.views import *  # noqa
 ipam_router = routers.DefaultRouter()
 ipam_router.register(r'ipam_rirs', IpamRirViewSet, base_name="ipam_rir")
 ipam_router.register(r'ipam_vrfs', IpamVrfViewSet, base_name="ipam_vrf")
+ipam_router.register(r'ipam_datacenters', IpamDatacenterViewSet, base_name="ipam_datacenter")
+ipam_router.register(r'ipam_aggregates', IpamAggregateViewSet, base_name="ipam_aggregate")
+ipam_router.register(r'ipam_prefixes', IpamPrefixViewSet, base_name="ipam_prefix")

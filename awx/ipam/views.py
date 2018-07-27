@@ -18,3 +18,34 @@ class IpamRirViewSet(viewsets.ModelViewSet):
 class IpamVrfViewSet(viewsets.ModelViewSet):
     queryset = Vrf.objects.all()
     serializer_class = IpamVrfSerializer
+
+
+class IpamDatacenterViewSet(viewsets.ModelViewSet):
+    queryset = Datacenter.objects.all()
+    serializer_class = IpamDatacenterSerializer
+
+
+class IpamAggregateViewSet(viewsets.ModelViewSet):
+    queryset = Aggregate.objects.all()
+    serializer_class = IpamAggregateSerializer
+
+
+
+class IpamPrefixViewSet(viewsets.ModelViewSet):
+    queryset = Prefix.objects.all()
+    serializer_class = IpamPrefixSerializer
+
+
+# class IpamDatacenterViewSet(viewsets.ModelViewSet):
+#     queryset = Datacenter.objects.all()
+#     serializer_class = IpamDatacenterSerializer
+
+
+
+# class IpamDatacenterViewSet(viewsets.ModelViewSet):
+#     queryset = Datacenter.objects.all()
+#     serializer_class = IpamDatacenterSerializer
+
+
+
+
