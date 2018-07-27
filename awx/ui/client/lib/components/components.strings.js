@@ -87,6 +87,7 @@ function ComponentsStrings (BaseString) {
         IPAM_IP_ADDRESSES: t.s('IP addresses'),
         IPAM_VRFS: t.s('VRFS'),
         IPAM_AGGREGATES: t.s('Aggregates'),
+        IPAM_DATACENTERS: t.s('Datacenters'),
         IPAM_RIRS: t.s('RIRs'),
         IPAM_VLANS: t.s('VLANS'),
         INFRASTRUCTURE_HEADER: t.s('INFRASTRUCTURE'),

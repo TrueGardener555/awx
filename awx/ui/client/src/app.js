@@ -25,6 +25,8 @@ import ipamAggregates from './ipam-aggregates/main';
 import ipamSubnets from './ipam-subnets/main';
 import ipamIpAddresses from './ipam-ip-addresses/main';
 import ipamVlans from './ipam-vlans/main';
+import ipamDatacenters from './ipam-datacenters/main';
+
 
 import infraProviders from './infra-providers/main';
 import infraStorages from './infra-storages/main';
@@ -108,6 +110,7 @@ angular
         ipamSubnets.name,
         ipamIpAddresses.name,
         ipamVlans.name,
+        ipamDatacenters.name,
         
         infraProviders.name,
         infraStorages.name,
