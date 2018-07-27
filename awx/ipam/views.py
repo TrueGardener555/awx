@@ -36,15 +36,15 @@ class IpamPrefixViewSet(viewsets.ModelViewSet):
     serializer_class = IpamPrefixSerializer
 
 
-# class IpamDatacenterViewSet(viewsets.ModelViewSet):
-#     queryset = Datacenter.objects.all()
-#     serializer_class = IpamDatacenterSerializer
+class IpamIPAddressViewSet(viewsets.ModelViewSet):
+    queryset = IPAddress.objects.all()
+    serializer_class = IpamIPAddressSerializer
 
 
 
-# class IpamDatacenterViewSet(viewsets.ModelViewSet):
-#     queryset = Datacenter.objects.all()
-#     serializer_class = IpamDatacenterSerializer
+class IpamVlanViewSet(viewsets.ModelViewSet):
+    queryset = Vlan.objects.all()
+    serializer_class = IpamVlanSerializer
 
 
 

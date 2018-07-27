@@ -170,7 +170,8 @@ class IPAddress(CreatedUpdatedModel):
     for example, when mapping public addresses to private addresses. When an Interface has been assigned an IPAddress
     which has a NAT outside IP, that Interface's Device can use either the inside or outside IP as its primary IP.
     """
-    family = models.PositiveSmallIntegerField(choices=AF_CHOICES, editable=False)
+    datacenter = models.ForeignKey('Datacenter', related_name='ip_addresses', on_delete=models.PROTECT, blank=True, null=True)
+    family = models.PositiveSmallIntegerField(choices=AF_CHOICES, default=4, editable=True)
     address = IPAddressField(help_text="IPv4 or IPv6 address (with mask)")
     vrf = models.ForeignKey('VRF', related_name='ip_addresses', on_delete=models.PROTECT, blank=True, null=True,
                             verbose_name='VRF')

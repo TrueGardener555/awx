@@ -330,6 +330,8 @@ class ApiVersionRootView(APIView):
         data['ipam_datacenters'] = reverse('api:ipam_datacenter-list', request=request)
         data['ipam_aggregates'] = reverse('api:ipam_aggregate-list', request=request)
         data['ipam_prefixes'] = reverse('api:ipam_prefix-list', request=request)
+        data['ipam_ip_addresses'] = reverse('api:ipam_ip_address-list', request=request)
+        data['ipam_vlans'] = reverse('api:ipam_vlan-list', request=request)
         return Response(data)
 
 

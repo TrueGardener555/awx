@@ -43,8 +43,21 @@ class IpamPrefixSerializer(serializers.HyperlinkedModelSerializer):
         	)
 
 
+class IpamIPAddressSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = IPAddress
+        fields = ('address', 'description', 
+        	'vrf', 'family', 'datacenter', 'status',
+        	)
 
 
+
+class IpamVlanSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Vlan
+        fields = ('name', 'description', 
+        	'vid', 'status',
+        	)
 
 
 
