@@ -95,6 +95,7 @@ from awx.api.exceptions import ActiveJobConflict
 
 
 # from rest_framework import  viewsets
+# from awx.ipam.views import *  # noqa
 # from awx.ipam.models import * # noqa
 
 

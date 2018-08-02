@@ -70,8 +70,8 @@ from .instance_group import urls as instance_group_urls
 from .user_oauth import urls as user_oauth_urls
 from .oauth import urls as oauth_urls
 
-
-
+from rest_framework_swagger.views import get_swagger_view
+from awx.ipam.views import *
 from awx.ipam.routers import ipam_router
 
 # from rest_framework import routers
@@ -162,6 +162,8 @@ urlpatterns = [
 ]
 if settings.SETTINGS_MODULE == 'awx.settings.development':
     from awx.api.swagger import SwaggerSchemaView
+    schema_view = get_swagger_view(title='AHOME API')
     urlpatterns += [
         url(r'^swagger/$', SwaggerSchemaView.as_view(), name='swagger_view'),
+        url(r'^docs/$', schema_view),
     ]

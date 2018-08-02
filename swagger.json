@@ -3,7 +3,7 @@
   "info": {
     "title": "Ansible Tower API", 
     "description": "", 
-    "version": "1.0.6.23"
+    "version": "1.0.6.33"
   }, 
   "host": null, 
   "schemes": [
@@ -631,9 +631,9 @@
                   "activity_stream": "/api/v2/applications/1/activity_stream/"
                 }, 
                 "client_type": "confidential", 
-                "client_id": "ULsHNGgPi9fpzTuv9cJ0Ki71dFKvHx4uAIFrkOPX", 
+                "client_id": "46bAG0E4IgA1QpvdQRHYDviuvkdieAupR2DFXeGV", 
                 "skip_authorization": false, 
-                "client_secret": "ddVEqreSxS1ohI4475aJwmMZyg8eqUewc4EKotUW7z5i0P1RW5ds4UD2IlHIODa5Rt4A8rluO7IJpCNutMD3ZI7q1NIffb8WvoFB2VDwJTwqtc0SwfB3EQJvrDQoqNGF", 
+                "client_secret": "pzNOO8mQkJ1iQ0mf7A11kFAYmEQHke7CODMQMVoG2LSUg01rbHxNpsbIA9w6PSIvTCUEW1sGXwUtl5lzwkQXryjgHO9mVYPPvdGbYUNdSym0YE8EQVbXKGGW3C7x3U1c", 
                 "authorization_grant_type": "password", 
                 "type": "o_auth2_application", 
                 "id": 1, 
@@ -796,9 +796,9 @@
                   "activity_stream": "/api/v2/applications/1/activity_stream/"
                 }, 
                 "client_type": "confidential", 
-                "client_id": "H3mA8B6umE8I5dQzgUWiKXr40oWJgzJmCvZVWfyh", 
+                "client_id": "cwnDUYRHkZQqMcOwTNhl034iqiShBfgCkabnqVwn", 
                 "skip_authorization": true, 
-                "client_secret": "DKX5KrxMEomU9HrEQh31HqckyMq8RcK9azAtsrCzFBYVPK1tAz5jWr4CGrhtwriIYC5sbr5HhoRSMSwoR7mlpqZ5woB9apBEAvoMxlNWHMvoJ9ZEhDhj4ESmnqHc4h1w", 
+                "client_secret": "dUt0lpLgWIFvEjoJjYyHGfKtIwf3ESNBvcH0dcn1dohrwYYfx3IhyZ4lJtieEeOwgadgduDS9RExCQUtbZsgeHOC5UDNLGxezZaMKlvJ94UpzvRvr5eLfYCbdS0mo4LN", 
                 "authorization_grant_type": "password", 
                 "type": "o_auth2_application", 
                 "id": 1, 
@@ -13310,6 +13310,8 @@
             "examples": {
               "application/json": {
                 "job_templates": "/api/v2/job_templates/", 
+                "ipam_vrfs": "/api/v2/ipam_vrfs/", 
+                "ipam_ip_addresses": "/api/v2/ipam_ip_addresses/", 
                 "job_events": "/api/v2/job_events/", 
                 "ping": "/api/v2/ping/", 
                 "labels": "/api/v2/labels/", 
@@ -13317,6 +13319,7 @@
                 "workflow_job_nodes": "/api/v2/workflow_job_nodes/", 
                 "instances": "/api/v2/instances/", 
                 "instance_groups": "/api/v2/instance_groups/", 
+                "ipam_aggregates": "/api/v2/ipam_aggregates/", 
                 "notifications": "/api/v2/notifications/", 
                 "credential_types": "/api/v2/credential_types/", 
                 "unified_job_templates": "/api/v2/unified_job_templates/", 
@@ -13339,12 +13342,16 @@
                 "groups": "/api/v2/groups/", 
                 "schedules": "/api/v2/schedules/", 
                 "credentials": "/api/v2/credentials/", 
+                "ipam_datacenters": "/api/v2/ipam_datacenters/", 
+                "ipam_rirs": "/api/v2/ipam_rirs/", 
                 "workflow_job_template_nodes": "/api/v2/workflow_job_template_nodes/", 
+                "ipam_prefixes": "/api/v2/ipam_prefixes/", 
                 "projects": "/api/v2/projects/", 
                 "me": "/api/v2/me/", 
                 "organizations": "/api/v2/organizations/", 
                 "roles": "/api/v2/roles/", 
                 "settings": "/api/v2/settings/", 
+                "ipam_vlans": "/api/v2/ipam_vlans/", 
                 "teams": "/api/v2/teams/", 
                 "hosts": "/api/v2/hosts/", 
                 "dashboard": "/api/v2/dashboard/", 
@@ -16906,7 +16913,7 @@
                       "is_staff": false, 
                       "password": "hidden", 
                       "id": 1, 
-                      "date_joined": "2018-07-07 14:05:01.375137+00:00"
+                      "date_joined": "2018-08-01 03:10:58.117011+00:00"
                     }, 
                     "operation": "create", 
                     "type": "activity_stream", 
@@ -21388,7 +21395,7 @@
                   "activity_stream": "/api/v2/organizations/1/activity_stream/", 
                   "projects": "/api/v2/organizations/1/projects/"
                 }, 
-                "custom_virtualenv": "/venv/tmpYhVB53/", 
+                "custom_virtualenv": "/venv/tmpUqKQtD/", 
                 "type": "organization", 
                 "id": 1, 
                 "description": "test-org-desc"
@@ -22506,7 +22513,7 @@
                 "summary_fields": {
                   "application": {
                     "id": 1, 
-                    "client_id": "njUyC0w7ZGxVh29Qy7hL9vAN6YAOO0OOaITpvPsS", 
+                    "client_id": "YL0fxEQNXYTV7uH6D02jKevduLh3a7NCg1tGe3w6", 
                     "name": "test app"
                   }, 
                   "user": {
@@ -22524,12 +22531,12 @@
                   "activity_stream": "/api/v2/tokens/1/activity_stream/"
                 }, 
                 "application": 1, 
-                "token": "eMzua2TnihpLNWht8rYvzsqzt59SX8", 
+                "token": "8bGNRbnTj9wU1dwdtDkXNtnm9Cbc3N", 
                 "user": 1, 
                 "scope": "read", 
                 "type": "o_auth2_access_token", 
                 "id": 1, 
-                "refresh_token": "iugNdLiurgYYkREuEenfPcVdBqWsL2"
+                "refresh_token": "Z4RrwkTJLgyiWDxLrcn6qdJNFhN0Nu"
               }
             }
           }
@@ -23504,7 +23511,7 @@
                 "summary_fields": {
                   "application": {
                     "id": 1, 
-                    "client_id": "qWTNqO6hakdIyfvbzvPs5Z0xZB2a2Iq0uHo8z4Us", 
+                    "client_id": "Za9tyNZoSDiPNRPv7OBxrH55jGhwI6c8OIjghhuL", 
                     "name": "test app"
                   }, 
                   "user": {
@@ -23894,7 +23901,7 @@
                   "activity_stream": "/api/v2/tokens/1/activity_stream/"
                 }, 
                 "application": null, 
-                "token": "Q3kE6gHQJYzJFAWTQzq4vimnnxSvyN", 
+                "token": "P7Dyv1P7tepeSZlbQKlXMDfZES77YK", 
                 "user": 1, 
                 "scope": "read", 
                 "type": "o_auth2_access_token", 
@@ -24567,10 +24574,10 @@
                 }, 
                 "analytics_status": "off", 
                 "time_zone": "UTC", 
-                "version": "1.0.6-332-g2e980293d", 
+                "version": "1.0.6-350-gcff3e6843", 
                 "project_local_paths": [], 
                 "project_base_dir": "/projects/", 
-                "ansible_version": "2.6.0"
+                "ansible_version": "2.6.1"
               }
             }
           }
@@ -24656,21 +24663,21 @@
                     "timestamp": "2018-02-01T08:00:00.000000Z", 
                     "module": "ansible", 
                     "related": {
-                      "fact_view": "/api/v2/hosts/1/fact_view/?module=ansible&datetime=2018-07-07T14%3A11%3A40.462969Z"
+                      "fact_view": "/api/v2/hosts/1/fact_view/?module=ansible&datetime=2018-08-01T03%3A13%3A55.327638Z"
                     }
                   }, 
                   {
                     "timestamp": "2018-02-01T08:00:00.000000Z", 
                     "module": "packages", 
                     "related": {
-                      "fact_view": "/api/v2/hosts/1/fact_view/?module=packages&datetime=2018-07-07T14%3A11%3A40.462969Z"
+                      "fact_view": "/api/v2/hosts/1/fact_view/?module=packages&datetime=2018-08-01T03%3A13%3A55.327638Z"
                     }
                   }, 
                   {
                     "timestamp": "2018-02-01T08:00:00.000000Z", 
                     "module": "services", 
                     "related": {
-                      "fact_view": "/api/v2/hosts/1/fact_view/?module=services&datetime=2018-07-07T14%3A11%3A40.462969Z"
+                      "fact_view": "/api/v2/hosts/1/fact_view/?module=services&datetime=2018-08-01T03%3A13%3A55.327638Z"
                     }
                   }
                 ]
@@ -25825,9 +25832,9 @@
                   "activity_stream": "/api/v2/applications/1/activity_stream/"
                 }, 
                 "client_type": "confidential", 
-                "client_id": "cNsKuXbwdQGkqoJTfbR1rmHS1fJFnAODpAUrrjYB", 
+                "client_id": "DkFMgbXSB8KIq2e5MjBNwxdhpxhbCli9FictWgNP", 
                 "skip_authorization": false, 
-                "client_secret": "SSM6RBGrgLKyWlIciCTAL0kawijcmD5dpXMiqYmBi3uKzNYlfxeCcXHklXze38KLz788xQEmbCu6IyjfGsuJBFIuznjH9txOqyyqELFZOTvwP56hiZESOOhIs4p59JlU", 
+                "client_secret": "Ota8o0ZXMZfROVun9XLz17WEDURtcNPu4lhBtSGqmgrH4vSDKERM7f8PrCRgOCl10HZgeoPRcF1cLOs1bdqSZTGcW7C16MM8VB4fH5TJoiUN4myCBSdtMGaDuwC2eIB2", 
                 "authorization_grant_type": "password", 
                 "type": "o_auth2_application", 
                 "id": 1, 
@@ -27661,7 +27668,7 @@
                 "instances": [], 
                 "ha": false, 
                 "instance_groups": [], 
-                "version": "1.0.6-332-g2e980293d", 
+                "version": "1.0.6-350-gcff3e6843", 
                 "active_node": "awx"
               }
             }
@@ -29176,7 +29183,7 @@
       "type": "basic"
     }
   }, 
-  "modified": "2018-07-07T14:21:26.177550", 
+  "modified": "2018-08-01T03:21:13.362702", 
   "consumes": [
     "application/json"
   ]

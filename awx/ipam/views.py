@@ -8,7 +8,7 @@ from awx.ipam.serializers import * # noqa
 
 
 
-# ViewSets define the view behavior.
+## ViewSets define the view behavior.
 class IpamRirViewSet(viewsets.ModelViewSet):
     queryset = Rir.objects.all()
     serializer_class = IpamRirSerializer

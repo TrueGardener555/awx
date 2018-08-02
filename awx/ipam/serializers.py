@@ -30,8 +30,7 @@ class IpamDatacenterSerializer(serializers.HyperlinkedModelSerializer):
 class IpamAggregateSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Aggregate
-        fields = ('name', 'description', 
-        	'prefix', 'rir', 
+        fields = ( 'family', 'rir', 'date_added', 'description',
         	)
 
 
