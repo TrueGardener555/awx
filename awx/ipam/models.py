@@ -518,8 +518,8 @@ class Pki(InfrastructureTemplate):
     def __str__(self):
         return str(self.name)
 
-    # def get_absolute_url(self, request=None):
-    #     return reverse('api:ipam_pki-detail', kwargs={'pk': self.pk}, request=request)
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_pki-detail', kwargs={'pk': self.pk}, request=request)
 
 
 
@@ -539,8 +539,8 @@ class Security(InfrastructureTemplate):
         return str(self.name)
 
 
-    # def get_absolute_url(self, request=None):
-    #     return reverse('api:ipam_security-detail', kwargs={'pk': self.pk}, request=request)
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_security-detail', kwargs={'pk': self.pk}, request=request)
 
 
 
@@ -674,8 +674,8 @@ class Registry(DeviceTemplate):
         return str(self.name)
 
 
-    # def get_absolute_url(self, request=None):
-    #     return reverse('api:ipam_registry-detail', kwargs={'pk': self.pk}, request=request)
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_registry-detail', kwargs={'pk': self.pk}, request=request)
 
 
 
