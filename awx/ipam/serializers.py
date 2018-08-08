@@ -318,12 +318,15 @@ class IpamVlanSerializer(BaseSerializer):
 
 class IpamProviderSerializer(BaseSerializer):
 
-    artifacts = serializers.JSONField(default={})
-    opts = serializers.JSONField(default={})
-    hosts = serializers.JSONField(default={})
-    svc_enabled = serializers.JSONField(default={})
-    requirements = serializers.JSONField(default={})
-    security = serializers.JSONField(default={})
+    # artifacts = serializers.JSONField(default={})
+    # opts = serializers.JSONField(default={})
+    # hosts = serializers.JSONField(default={})
+    # svc_enabled = serializers.JSONField(default={})
+    # requirements = serializers.JSONField(default={})
+    # security = serializers.JSONField(default={})
+
+
+
     # url = serializers.CharField(source='get_absolute_url', read_only=True)
     # groups = serializers.PrimaryKeyRelatedField(many=True)
     # datacenter = serializers.HyperlinkedRelatedField(queryset=Datacenter.objects.all())
@@ -339,6 +342,220 @@ class IpamProviderSerializer(BaseSerializer):
         #   'requirements', 'opts', 'source', 'credential', 'datacenter',
         #   )
 
+
+
+# Storage
+class IpamStorageSerializer(BaseSerializer):
+
+    # artifacts = serializers.JSONField(default={})
+    # opts = serializers.JSONField(default={})
+    # hosts = serializers.JSONField(default={})
+    # svc_enabled = serializers.JSONField(default={})
+    # requirements = serializers.JSONField(default={})
+    # security = serializers.JSONField(default={})
+
+    class Meta:
+        model = Storage
+        fields = '__all__'
+
+
+
+
+# Service
+class IpamServiceSerializer(BaseSerializer):
+
+    # artifacts = serializers.JSONField(default={})
+    # opts = serializers.JSONField(default={})
+    # hosts = serializers.JSONField(default={})
+    # svc_enabled = serializers.JSONField(default={})
+    # requirements = serializers.JSONField(default={})
+    # security = serializers.JSONField(default={})
+
+    class Meta:
+        model = Service
+        fields = '__all__'
+
+
+
+
+
+# Network
+class IpamNetworkSerializer(BaseSerializer):
+
+    # artifacts = serializers.JSONField(default={})
+    # opts = serializers.JSONField(default={})
+    # hosts = serializers.JSONField(default={})
+    # svc_enabled = serializers.JSONField(default={})
+    # requirements = serializers.JSONField(default={})
+    # security = serializers.JSONField(default={})
+
+    class Meta:
+        model = Network
+        fields = '__all__'
+
+
+
+
+
+# App
+class IpamAppSerializer(BaseSerializer):
+
+    # artifacts = serializers.JSONField(default={})
+    # opts = serializers.JSONField(default={})
+    # hosts = serializers.JSONField(default={})
+    # svc_enabled = serializers.JSONField(default={})
+    # requirements = serializers.JSONField(default={})
+    # security = serializers.JSONField(default={})
+
+    class Meta:
+        model = App
+        fields = '__all__'
+
+
+
+
+
+# Noc
+class IpamNocSerializer(BaseSerializer):
+
+    # artifacts = serializers.JSONField(default={})
+    # opts = serializers.JSONField(default={})
+    # hosts = serializers.JSONField(default={})
+    # svc_enabled = serializers.JSONField(default={})
+    # requirements = serializers.JSONField(default={})
+    # security = serializers.JSONField(default={})
+
+    class Meta:
+        model = Noc
+        fields = '__all__'
+
+
+
+
+
+# Backup
+class IpamBackupSerializer(BaseSerializer):
+
+    # artifacts = serializers.JSONField(default={})
+    # opts = serializers.JSONField(default={})
+    # hosts = serializers.JSONField(default={})
+    # svc_enabled = serializers.JSONField(default={})
+    # requirements = serializers.JSONField(default={})
+    # security = serializers.JSONField(default={})
+
+    class Meta:
+        model = Backup
+        fields = '__all__'
+
+
+
+
+
+# Documentation
+class IpamDocumentationSerializer(BaseSerializer):
+
+    # artifacts = serializers.JSONField(default={})
+    # opts = serializers.JSONField(default={})
+    # hosts = serializers.JSONField(default={})
+    # svc_enabled = serializers.JSONField(default={})
+    # requirements = serializers.JSONField(default={})
+    # security = serializers.JSONField(default={})
+
+    class Meta:
+        model = Documentation
+        fields = '__all__'
+
+
+
+
+
+# PKI
+class IpamPkiSerializer(BaseSerializer):
+
+    # artifacts = serializers.JSONField(default={})
+    # opts = serializers.JSONField(default={})
+    # hosts = serializers.JSONField(default={})
+    # svc_enabled = serializers.JSONField(default={})
+    # requirements = serializers.JSONField(default={})
+    # security = serializers.JSONField(default={})
+
+    class Meta:
+        model = Pki
+        fields = '__all__'
+
+
+
+
+# Security
+class IpamSecuritySerializer(BaseSerializer):
+
+    # artifacts = serializers.JSONField(default={})
+    # opts = serializers.JSONField(default={})
+    # hosts = serializers.JSONField(default={})
+    # svc_enabled = serializers.JSONField(default={})
+    # requirements = serializers.JSONField(default={})
+    # security = serializers.JSONField(default={})
+
+    class Meta:
+        model = Security
+        fields = '__all__'
+
+
+
+
+# BareMetal
+class IpamBareMetalSerializer(BaseSerializer):
+
+    # artifacts = serializers.JSONField(default={})
+    # opts = serializers.JSONField(default={})
+    # hosts = serializers.JSONField(default={})
+
+
+    class Meta:
+        model = BareMetal
+        fields = '__all__'
+
+
+
+
+# VirtualHost
+class IpamVirtualHostSerializer(BaseSerializer):
+
+    # artifacts = serializers.JSONField(default={})
+    # opts = serializers.JSONField(default={})
+    # hosts = serializers.JSONField(default={})
+
+    class Meta:
+        model = VirtualHost
+        fields = '__all__'
+
+
+
+
+
+# NetworkGear
+class IpamNetworkGearSerializer(BaseSerializer):
+
+    # artifacts = serializers.JSONField(default={})
+    # opts = serializers.JSONField(default={})
+    # hosts = serializers.JSONField(default={})
+
+    class Meta:
+        model = NetworkGear
+        fields = '__all__'
+
+
+
+# Registry
+class IpamRegistrySerializer(BaseSerializer):
+
+    # artifacts = serializers.JSONField(default={})
+    # opts = serializers.JSONField(default={})
+    # hosts = serializers.JSONField(default={})
+
+    class Meta:
+        model = Registry
+        fields = '__all__'
 
 
 

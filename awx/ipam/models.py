@@ -280,12 +280,14 @@ class InfrastructureTemplate(CreatedUpdatedModel):
     hosts = JSONField(
         blank=True,
         default={},
-        editable=False,
+        editable=True,
+        null=True,
     )
     artifacts = JSONField(
         blank=True,
         default={},
-        editable=False,
+        editable=True,
+        null=True,
     )
     scm_type = models.CharField(
         max_length=8,
@@ -337,22 +339,26 @@ class InfrastructureTemplate(CreatedUpdatedModel):
     svc_enabled = JSONField(
         blank=True,
         default={},
-        editable=False,
+        editable=True,
+        null=True,
     )
     security = JSONField(
         blank=True,
         default={},
-        editable=False,
+        editable=True,
+        null=True,
     )
     requirements = JSONField(
         blank=True,
         default={},
-        editable=False,
+        editable=True,
+        null=True,
     )
     opts = JSONField(
         blank=True,
         default={},
-        editable=False,
+        editable=True,
+        null=True,
     )
 
 
@@ -388,6 +394,10 @@ class Storage(InfrastructureTemplate):
     def __str__(self):
         return str(self.name)
 
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_storage-detail', kwargs={'pk': self.pk}, request=request)
+
+
 
 class Service(InfrastructureTemplate):
     """
@@ -401,6 +411,9 @@ class Service(InfrastructureTemplate):
     def __str__(self):
         return str(self.name)
 
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_service-detail', kwargs={'pk': self.pk}, request=request)
+
 
 class Network(InfrastructureTemplate):
     """
@@ -413,6 +426,9 @@ class Network(InfrastructureTemplate):
 
     def __str__(self):
         return str(self.name)
+
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_network-detail', kwargs={'pk': self.pk}, request=request)
 
 
 
@@ -429,6 +445,10 @@ class App(InfrastructureTemplate):
         return str(self.name)
 
 
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_app-detail', kwargs={'pk': self.pk}, request=request)
+
+
 
 class Noc(InfrastructureTemplate):
     """
@@ -441,6 +461,10 @@ class Noc(InfrastructureTemplate):
 
     def __str__(self):
         return str(self.name)
+
+
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_noc-detail', kwargs={'pk': self.pk}, request=request)
 
 
 
@@ -457,6 +481,10 @@ class Backup(InfrastructureTemplate):
         return str(self.name)
 
 
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_backup-detail', kwargs={'pk': self.pk}, request=request)
+
+
 
 class Documentation(InfrastructureTemplate):
     """
@@ -471,7 +499,48 @@ class Documentation(InfrastructureTemplate):
         return str(self.name)
 
 
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_documentation-detail', kwargs={'pk': self.pk}, request=request)
 
+
+
+class Pki(InfrastructureTemplate):
+    """
+    Network Operation Center
+    """
+    source = models.CharField(max_length=20, choices=PKI_CHOICES, default=PKI_DEFAULT, editable=True)
+
+    class Meta:
+        ordering = ['name',]
+        verbose_name = 'PKI'
+        verbose_name_plural = 'PKIs'
+
+    def __str__(self):
+        return str(self.name)
+
+    # def get_absolute_url(self, request=None):
+    #     return reverse('api:ipam_pki-detail', kwargs={'pk': self.pk}, request=request)
+
+
+
+class Security(InfrastructureTemplate):
+    """
+   Security
+    """
+    source = models.CharField(max_length=20, choices=SECURITY_CHOICES, default=SECURITY_DEFAULT, editable=True)
+
+
+    class Meta:
+        ordering = ['name',]
+        verbose_name = 'Security'
+        verbose_name_plural = 'Securities'
+
+    def __str__(self):
+        return str(self.name)
+
+
+    # def get_absolute_url(self, request=None):
+    #     return reverse('api:ipam_security-detail', kwargs={'pk': self.pk}, request=request)
 
 
 
@@ -495,12 +564,14 @@ class DeviceTemplate(CreatedUpdatedModel):
     hosts = JSONField(
         blank=True,
         default={},
-        editable=False,
+        editable=True,
+        null=True,
     )
     artifacts = JSONField(
         blank=True,
         default={},
-        editable=False,
+        editable=True,
+        null=True,
     )
     credential = models.ForeignKey(
         'main.Credential',
@@ -520,7 +591,8 @@ class DeviceTemplate(CreatedUpdatedModel):
     opts = JSONField(
         blank=True,
         default={},
-        editable=False,
+        editable=True,
+        null=True,
     )
     primary_ip = models.CharField(max_length=200, blank=True)
     primary_ip6 = models.CharField(max_length=200, blank=True)
@@ -540,6 +612,9 @@ class BareMetal(DeviceTemplate):
 
     def __str__(self):
         return str(self.name)
+
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_bare_metal-detail', kwargs={'pk': self.pk}, request=request)
 
 
 
@@ -562,6 +637,11 @@ class VirtualHost(DeviceTemplate):
     def __str__(self):
         return str(self.name)
 
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_virtual_host-detail', kwargs={'pk': self.pk}, request=request)
+
+
+
 
 class NetworkGear(DeviceTemplate):
     """
@@ -574,6 +654,31 @@ class NetworkGear(DeviceTemplate):
 
     def __str__(self):
         return str(self.name)
+
+
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_network_gear-detail', kwargs={'pk': self.pk}, request=request)
+
+
+
+class Registry(DeviceTemplate):
+    """
+    Registry
+    """
+    class Meta:
+        ordering = ['name',]
+        verbose_name = 'Registry'
+        verbose_name_plural = 'Registries'
+
+    def __str__(self):
+        return str(self.name)
+
+
+    # def get_absolute_url(self, request=None):
+    #     return reverse('api:ipam_registry-detail', kwargs={'pk': self.pk}, request=request)
+
+
+
 
 
 

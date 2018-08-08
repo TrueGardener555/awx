@@ -202,6 +202,20 @@ DOCUMENTATION_CHOICES = (
 )
 
 
+# PKI TYPE
+PKI_DEFAULT = ''
+PKI_CHOICES = (
+    ('', _('None')),
+    ('idm', _('Red Hat IDM')),
+    ('freeipa', _('FreeIPA')),
+)
+
+
+# SECURITY TYPE
+SECURITY_DEFAULT = ''
+SECURITY_CHOICES = (
+    ('', _('None')),
+)
 
 
 
