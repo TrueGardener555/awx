@@ -47,5 +47,8 @@ class IpamVlanViewSet(viewsets.ModelViewSet):
     serializer_class = IpamVlanSerializer
 
 
+class IpamProviderViewSet(viewsets.ModelViewSet):
+    queryset = Provider.objects.all()
+    serializer_class = IpamProviderSerializer
 
 

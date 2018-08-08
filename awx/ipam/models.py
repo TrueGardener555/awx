@@ -8,7 +8,15 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models.expressions import RawSQL
-from django.urls import reverse
+# from django.urls import reverse
+
+# AWX
+from awx.api.versioning import reverse
+
+
+from django.utils.translation import ugettext_lazy as _
+#from awx.main.fields import JSONField, AskForField
+from django.contrib.postgres.fields import JSONField
 
 
 
@@ -39,6 +47,12 @@ class Rir(CreatedUpdatedModel):
         return self.name
 
 
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_rir-detail', kwargs={'pk': self.pk}, request=request)
+        # return reverse('api:ipam_rir-list', request=request)
+
+
+
 
 @python_2_unicode_compatible
 class Vrf(CreatedUpdatedModel):
@@ -67,6 +81,9 @@ class Vrf(CreatedUpdatedModel):
             return "{} ({})".format(self.name, self.rd)
         return None
 
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_vrf-detail', kwargs={'pk': self.pk}, request=request)
+
 
 
 @python_2_unicode_compatible
@@ -75,9 +92,9 @@ class Datacenter(CreatedUpdatedModel):
     Datacenter
     """	
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=200)
-    site = models.CharField(max_length=50)
-    location = models.CharField(max_length=50)
+    description = models.CharField(max_length=200, blank=True)
+    site = models.CharField(max_length=50, blank=True)
+    location = models.CharField(max_length=50, blank=True)
     facility = models.CharField(max_length=50, blank=True)
     physical_address = models.CharField(max_length=200, blank=True)
     shipping_address = models.CharField(max_length=200, blank=True)
@@ -91,6 +108,11 @@ class Datacenter(CreatedUpdatedModel):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_datacenter-detail', kwargs={'pk': self.pk}, request=request)
+
+
 
 
 @python_2_unicode_compatible
@@ -111,9 +133,11 @@ class Aggregate(CreatedUpdatedModel):
     def __str__(self):
         return str(self.prefix)
 
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_aggregate-detail', kwargs={'pk': self.pk}, request=request)
 
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class Prefix(CreatedUpdatedModel):
     """
     A Prefix represents an IPv4 or IPv6 network, including mask length. Prefixes can optionally be assigned to Sites and
@@ -141,7 +165,8 @@ class Prefix(CreatedUpdatedModel):
     def __str__(self):
         return str(self.prefix)
 
- 
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_prefix-detail', kwargs={'pk': self.pk}, request=request) 
 
 
 
@@ -191,7 +216,8 @@ class IPAddress(CreatedUpdatedModel):
     def __str__(self):
         return str(self.address)
 
-
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_ip_address-detail', kwargs={'pk': self.pk}, request=request)
 
 
 @python_2_unicode_compatible
@@ -230,4 +256,400 @@ class Vlan(CreatedUpdatedModel):
 
     def get_status_class(self):
         return STATUS_CHOICE_CLASSES[self.status]
+
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_vlan-detail', kwargs={'pk': self.pk}, request=request)
+
+
+
+
+# @python_2_unicode_compatible
+class InfrastructureTemplate(CreatedUpdatedModel):
+    """
+    Template for all infrastructure
+    """
+    class Meta:
+        abstract = True
+
+    name = models.CharField(max_length=100, blank=True)
+    description = models.CharField(max_length=100, blank=True)
+    url = models.CharField(max_length=200, blank=True)
+    token = models.CharField(max_length=200, blank=True)
+    username = models.CharField(max_length=200, blank=True)
+    password = models.CharField(max_length=200, blank=True)
+    hosts = JSONField(
+        blank=True,
+        default={},
+        editable=False,
+    )
+    artifacts = JSONField(
+        blank=True,
+        default={},
+        editable=False,
+    )
+    scm_type = models.CharField(
+        max_length=8,
+        choices=SCM_TYPE_CHOICES,
+        blank=True,
+        default='',
+        verbose_name=_('SCM Type'),
+        help_text=_("Specifies the source control system used to store the project."),
+    )
+    scm_url = models.CharField(
+        max_length=1024,
+        blank=True,
+        default='',
+        editable=False,
+        verbose_name=_('SCM Source'),
+        help_text=_('The SCM Source'),
+    )
+    scm_branch = models.CharField(
+        max_length=1024,
+        blank=True,
+        default='',
+        editable=False,
+        verbose_name=_('SCM Branch'),
+        help_text=_('The SCM Branch'),
+    )
+    scm_revision = models.CharField(
+        max_length=1024,
+        blank=True,
+        default='',
+        editable=False,
+        verbose_name=_('SCM Revision'),
+        help_text=_('The SCM Revision'),
+    )
+    credential = models.ForeignKey(
+        'main.Credential',
+        related_name='%(class)ss',
+        blank=True,
+        null=True,
+        default=None,
+        on_delete=models.SET_NULL,
+    )
+    datacenter = models.ForeignKey(
+    	'Datacenter', 
+    	related_name='%(class)ss',
+    	on_delete=models.PROTECT, 
+    	blank=True, 
+    	null=True
+    )
+    svc_enabled = JSONField(
+        blank=True,
+        default={},
+        editable=False,
+    )
+    security = JSONField(
+        blank=True,
+        default={},
+        editable=False,
+    )
+    requirements = JSONField(
+        blank=True,
+        default={},
+        editable=False,
+    )
+    opts = JSONField(
+        blank=True,
+        default={},
+        editable=False,
+    )
+
+
+
+
+class Provider(InfrastructureTemplate):
+    """
+    Provider
+    """
+    source = models.CharField(max_length=20, choices=PROVIDER_CHOICES, default=PROVIDER_DEFAULT, editable=True)
+
+    class Meta:
+        ordering = ['name',]
+
+    def __str__(self):
+        return str(self.name)
+
+    def get_absolute_url(self, request=None):
+        return reverse('api:ipam_provider-detail', kwargs={'pk': self.pk}, request=request)
+
+
+class Storage(InfrastructureTemplate):
+    """
+    Storage
+    """
+    source = models.CharField(max_length=20, choices=STORAGE_CHOICES, default=STORAGE_DEFAULT, editable=True)
+
+    path = models.CharField(max_length=100, blank=True)
+
+    class Meta:
+        ordering = ['name',]
+
+    def __str__(self):
+        return str(self.name)
+
+
+class Service(InfrastructureTemplate):
+    """
+    Service
+    """
+    source = models.CharField(max_length=20, choices=SERVICE_CHOICES, default=SERVICE_DEFAULT, editable=True)
+
+    class Meta:
+        ordering = ['name',]
+
+    def __str__(self):
+        return str(self.name)
+
+
+class Network(InfrastructureTemplate):
+    """
+    Service
+    """
+    source = models.CharField(max_length=20, choices=NETWORK_CHOICES, default=NETWORK_DEFAULT, editable=True)
+
+    class Meta:
+        ordering = ['name',]
+
+    def __str__(self):
+        return str(self.name)
+
+
+
+class App(InfrastructureTemplate):
+    """
+    Application
+    """
+    source = models.CharField(max_length=20, choices=APP_CHOICES, default=APP_DEFAULT, editable=True)
+
+    class Meta:
+        ordering = ['name',]
+
+    def __str__(self):
+        return str(self.name)
+
+
+
+class Noc(InfrastructureTemplate):
+    """
+    Network Operation Center
+    """
+    source = models.CharField(max_length=20, choices=NOC_CHOICES, default=NOC_DEFAULT, editable=True)
+
+    class Meta:
+        ordering = ['name',]
+
+    def __str__(self):
+        return str(self.name)
+
+
+
+class Backup(InfrastructureTemplate):
+    """
+    Network Operation Center
+    """
+    source = models.CharField(max_length=20, choices=BACKUP_CHOICES, default=BACKUP_DEFAULT, editable=True)
+
+    class Meta:
+        ordering = ['name',]
+
+    def __str__(self):
+        return str(self.name)
+
+
+
+class Documentation(InfrastructureTemplate):
+    """
+    Network Operation Center
+    """
+    source = models.CharField(max_length=20, choices=DOCUMENTATION_CHOICES, default=DOCUMENTATION_DEFAULT, editable=True)
+
+    class Meta:
+        ordering = ['name',]
+
+    def __str__(self):
+        return str(self.name)
+
+
+
+
+
+
+class DeviceTemplate(CreatedUpdatedModel):
+    """
+    Template for all devices (physical and virtual)
+    """
+    class Meta:
+        abstract = True
+
+    name = models.CharField(max_length=100, blank=True)
+    description = models.CharField(max_length=100, blank=True)
+    fqdn = models.CharField(max_length=200, blank=True)
+    model = models.CharField(max_length=200, blank=True)
+    sn = models.CharField(
+    	max_length=200, 
+    	blank=True,
+    	verbose_name=_('Serial Number'),
+    	help_text=_("Specifies the serial number of the device if exist"),
+    	)
+    hosts = JSONField(
+        blank=True,
+        default={},
+        editable=False,
+    )
+    artifacts = JSONField(
+        blank=True,
+        default={},
+        editable=False,
+    )
+    credential = models.ForeignKey(
+        'main.Credential',
+        related_name='%(class)ss',
+        blank=True,
+        null=True,
+        default=None,
+        on_delete=models.SET_NULL,
+    )
+    datacenter = models.ForeignKey(
+    	'Datacenter', 
+    	related_name='%(class)ss',
+    	on_delete=models.PROTECT, 
+    	blank=True, 
+    	null=True
+    )
+    opts = JSONField(
+        blank=True,
+        default={},
+        editable=False,
+    )
+    primary_ip = models.CharField(max_length=200, blank=True)
+    primary_ip6 = models.CharField(max_length=200, blank=True)
+    primary_mac = models.CharField(max_length=200, blank=True)
+    primary_domain = models.CharField(max_length=200, blank=True)
+
+
+
+
+class BareMetal(DeviceTemplate):
+    """
+    BareMetal Hosts
+    """
+
+    class Meta:
+        ordering = ['name',]
+
+    def __str__(self):
+        return str(self.name)
+
+
+
+class VirtualHost(DeviceTemplate):
+    """
+    Virtual Hosts
+    """
+
+    provider = models.ForeignKey(
+    	'Provider', 
+    	related_name='%(class)ss',
+    	on_delete=models.PROTECT, 
+    	blank=True, 
+    	null=True
+    )
+
+    class Meta:
+        ordering = ['name',]
+
+    def __str__(self):
+        return str(self.name)
+
+
+class NetworkGear(DeviceTemplate):
+    """
+    Network Gears
+    """
+
+
+    class Meta:
+        ordering = ['name',]
+
+    def __str__(self):
+        return str(self.name)
+
+
+
+
+
+
+    # job_template = models.ForeignKey(
+    #     'JobTemplate',
+    #     related_name='jobs',
+    #     blank=True,
+    #     null=True,
+    #     default=None,
+    #     on_delete=models.SET_NULL,
+    # )
+    # hosts = models.ManyToManyField(
+    #     'Host',
+    #     related_name='jobs',
+    #     editable=False,
+    #     through='JobHostSummary',
+    # )
+    # artifacts = JSONField(
+    #     blank=True,
+    #     default={},
+    #     editable=False,
+    # )
+    # scm_revision = models.CharField(
+    #     max_length=1024,
+    #     blank=True,
+    #     default='',
+    #     editable=False,
+    #     verbose_name=_('SCM Revision'),
+    #     help_text=_('The SCM Revision from the Project used for this job, if available'),
+    # )
+
+
+
+
+
+    # scm_type = models.CharField(
+    #     max_length=8,
+    #     choices=SCM_TYPE_CHOICES,
+    #     blank=True,
+    #     default='',
+    #     verbose_name=_('SCM Type'),
+    #     help_text=_("Specifies the source control system used to store the project."),
+    # )
+    # scm_url = models.CharField(
+    #     max_length=1024,
+    #     blank=True,
+    #     default='',
+    #     verbose_name=_('SCM URL'),
+    #     help_text=_("The location where the project is stored."),
+    # )
+    # scm_branch = models.CharField(
+    #     max_length=256,
+    #     blank=True,
+    #     default='',
+    #     verbose_name=_('SCM Branch'),
+    #     help_text=_('Specific branch, tag or commit to checkout.'),
+    # )
+    # scm_clean = models.BooleanField(
+    #     default=False,
+    #     help_text=_('Discard any local changes before syncing the project.'),
+    # )
+    # scm_delete_on_update = models.BooleanField(
+    #     default=False,
+    #     help_text=_('Delete the project before syncing.'),
+    # )
+    # credential = models.ForeignKey(
+    #     'Credential',
+    #     related_name='%(class)ss',
+    #     blank=True,
+    #     null=True,
+    #     default=None,
+    #     on_delete=models.SET_NULL,
+    # )
+
+
 

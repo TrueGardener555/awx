@@ -27,6 +27,7 @@ import WorkflowJob from '~models/WorkflowJob';
 import WorkflowJobTemplate from '~models/WorkflowJobTemplate';
 import WorkflowJobTemplateNode from '~models/WorkflowJobTemplateNode';
 import UnifiedJob from '~models/UnifiedJob';
+// import IpamDatacenter from '~models/IpamDatacenter';
 
 import ModelsStrings from '~models/models.strings';
 
@@ -60,6 +61,7 @@ angular
     .service('ProjectUpdateModel', ProjectUpdate)
     .service('SystemJobModel', SystemJob)
     .service('UnifiedJobTemplateModel', UnifiedJobTemplate)
+    // .service('IpamDatacenterTemplateModel', IpamDatacenterTemplate)
     .service('WorkflowJobModel', WorkflowJob)
     .service('WorkflowJobTemplateModel', WorkflowJobTemplate)
     .service('WorkflowJobTemplateNodeModel', WorkflowJobTemplateNode)

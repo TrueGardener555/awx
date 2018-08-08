@@ -166,4 +166,6 @@ if settings.SETTINGS_MODULE == 'awx.settings.development':
     urlpatterns += [
         url(r'^swagger/$', SwaggerSchemaView.as_view(), name='swagger_view'),
         url(r'^docs/$', schema_view),
+        url(r'^apiroot/', include((ipam_router.urls, 'ipam'))),
+
     ]

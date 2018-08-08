@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from django.utils.translation import ugettext_lazy as _
+
 
 # IP address families
 AF_CHOICES = (
@@ -70,6 +72,7 @@ STATUS_CHOICE_CLASSES = {
     4: 'warning',
     5: 'success',
 }
+
 ROLE_CHOICE_CLASSES = {
     10: 'default',
     20: 'primary',
@@ -88,3 +91,138 @@ IP_PROTOCOL_CHOICES = (
     (IP_PROTOCOL_TCP, 'TCP'),
     (IP_PROTOCOL_UDP, 'UDP'),
 )
+
+
+
+SCM_TYPE_CHOICES = [
+        ('', _('Manual')),
+        ('git', _('Git')),
+        ('hg', _('Mercurial')),
+        ('svn', _('Subversion')),
+        ('insights', _('Red Hat Insights')),
+    ]
+
+
+
+# PROVIDERS TYPE
+PROVIDER_DEFAULT = ''
+PROVIDER_CHOICES = (
+    ('kvm', 'KVM'),
+    ('rhev', 'RHEV'),
+    ('', 'Cloud Providers'),
+    ('dockerce', 'Docker Engine Community Edition'),
+    ('vmware', 'VmWare/vCenter'),
+    ('ocp', 'Origin/OpenShift Container Platform'),
+    ('rh_ocp', _('Red Hat OpenShift Container Platform')),
+    ('rh_osp', 'Red Hat OpenStack Platform'),
+    ('kubernetes', 'kubernetes'),
+    ('gce', 'Google Compute Engine'),
+    ('azure', 'Microsoft Azure'),
+    ('aws', 'Amazon EC2'),
+)
+
+
+
+# STORAGE TYPE
+STORAGE_DEFAULT = ''
+STORAGE_CHOICES = (
+    ('', _('Local')),
+    ('nfs', 'NFS'),
+    ('cifs', 'CIFS'),
+    ('glusterfs', 'Gluster FS'),
+    ('rh_glusterfs', _('Red Hat Gluster FS')),
+    ('ceph', 'CEPH'),
+    ('rh_ceph', _('Red Hat CEPH')),
+)
+
+
+
+# NETWORK TYPE
+NETWORK_DEFAULT = ''
+NETWORK_CHOICES = (
+    ('', _('None')),
+    ('phyical', 'PHYSICAL'),
+    ('bridge', 'VIRTUAL BRIDGE'),
+    ('ovs', 'OpenvSwitch'),
+)
+
+
+
+# SERVCIES TYPE
+SERVICE_DEFAULT = ''
+SERVICE_CHOICES = (
+    ('', _('None')),
+    ('rh_satellite6', _('Red Hat Satellite 6')),
+    ('rh_ansible_tower', _('Red Hat Ansible Tower')),
+    ('isc_dhcp', _('isc DHCP')),
+    ('isc_dns', _('isc DNS')),
+    ('rh_idm', _('Red Hat Identity Manager')),
+    ('freeipa', _('FreeIPA')),
+    ('gitlab', _('GitLab')),
+)
+
+
+
+# APP TYPE
+APP_DEFAULT = ''
+APP_CHOICES = (
+    ('', _('None')),
+    ('pod', _('Kubernetes/OpenShift POD')),
+    ('container', _('Container Apps')),
+)
+
+
+# NOC TYPE
+NOC_DEFAULT = ''
+NOC_CHOICES = (
+    ('', _('None')),
+    ('nagios', _('Nagions POD')),
+    ('centreon', _('Centreon')),
+    ('librenms', _('LibreNMS')),
+    ('elk', _('Elasticsearch Logstash Kibana')),
+)
+
+
+# BACKUP TYPE
+BACKUP_DEFAULT = ''
+BACKUP_CHOICES = (
+    ('', _('None')),
+    ('bacula', _('Bacula')),
+    ('spiderOaK', _('spiderOaK')),
+)
+
+
+
+# DOCUMENTATION TYPE
+DOCUMENTATION_DEFAULT = ''
+DOCUMENTATION_CHOICES = (
+    ('', _('None')),
+    ('wiki', _('WIKI DOC')),
+    ('readme', _('Markdown Doc')),
+)
+
+
+
+
+
+
+
+# # PROVIDERS TYPE
+# PROVIDER_DEFAULT = 'kvm'
+# PROVIDER_CHOICES = (
+#     ('kvm', 'KVM'),
+#     ('rhev', 'RHEV'),
+#     ('internet', 'cloud Providers'),
+#     ('docker', 'Docker Engine'),
+#     ('vmware', 'VmWare/vCenter'),
+#     ('ocp', 'OpenShift Container Platform'),
+#     ('osp', 'OpenStack Platform'),
+#     ('kubernetes', 'kubernetes'),
+#     ('gce', 'Google Compute Engine'),
+#     ('azure', 'Microsoft Azure'),
+#     ('aws', 'Amazon EC2'),
+# )
+
+
+
+

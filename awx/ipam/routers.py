@@ -14,3 +14,4 @@ ipam_router.register(r'ipam_aggregates', IpamAggregateViewSet, base_name="ipam_a
 ipam_router.register(r'ipam_prefixes', IpamPrefixViewSet, base_name="ipam_prefix")
 ipam_router.register(r'ipam_ip_addresses', IpamIPAddressViewSet, base_name="ipam_ip_address")
 ipam_router.register(r'ipam_vlans', IpamVlanViewSet, base_name="ipam_vlan")
+ipam_router.register(r'ipam_providers', IpamProviderViewSet, base_name="ipam_provider")
