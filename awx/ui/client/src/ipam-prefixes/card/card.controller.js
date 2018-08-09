@@ -6,22 +6,20 @@
 
 
 export default
-    [   'Wait',  'CreateDialog', 'GetBasePath' ,
-        'Rest' ,
-        'ProcessErrors', '$rootScope', '$state',
-        '$scope', 'CreateSelect2', 'i18n', '$transitions',
-        function( Wait, CreateDialog, GetBasePath,
-            Rest, ProcessErrors,
-            $rootScope, $state, $scope,
-            CreateSelect2, i18n, $transitions) {
+	[   'Wait',  'CreateDialog', 'GetBasePath' , 'Rest' , 'ProcessErrors', '$rootScope', '$state', 
+	'$scope', '$filter', 'CreateSelect2', 'i18n', '$transitions', 'Prompt',
+function( Wait, CreateDialog, GetBasePath, Rest, ProcessErrors, $rootScope, $state, 
+	$scope, $filter, CreateSelect2, i18n, $transitions, Prompt) {
 
-                var defaultUrl = GetBasePath('system_job_templates') + "?order_by=name";
+                var defaultUrl = GetBasePath('ipam_prefixes');
+				var edit_id;	//Proper ID at datacenters
+				var edit_no;	//No in List
 
-                var getipamPrefixes = function(){
-                    Rest.setUrl(defaultUrl);
+                var getipamRirs = function(){
+                    Rest.setUrl(defaultUrl + "?order_by=prefix");
                     Rest.get()
                         .then(({data}) => {
-                            $scope.mgmtCards = data.results;
+                            $scope.prefixLists = data.results;
                             Wait('stop');
                         })
                         .catch(({data, status}) => {
@@ -29,119 +27,128 @@ export default
                             msg: i18n.sprintf(i18n._('Call to %s failed. Return status: %d'), (defaultUrl === undefined) ? "undefined" : defaultUrl, status )});
                         });
                 };
-                getipamPrefixes();
+                
+                $scope.showKeyPane = false;
+				/* Pane variables  (Title, Button Name, ...)*/
+                $scope.showPane = false;
+                
+                $scope.toggleKeyPane = function(){
+                	$scope.showKeyPane = !$scope.showKeyPane;
+            	};
+            	
+				var resetUi = function(){
+					$scope.prefix = "";
+					$scope.description = "";
+					$scope.datacenter = "";
+					$scope.vrf = "";
+					$scope.is_pool = "";
+				}
 
-                $scope.cleanupJob = true;
-                // This handles the case where the user refreshes the management job notifications page.
-                if($state.current.name === 'ipamPrefixesList.notifications') {
-                    $scope.activeCard = parseInt($state.params.management_id);
-                    $scope.cardAction = "notifications";
+            	$scope.formCreate = function() {
+					$scope.paneType = 1;	//Set as New
+					$scope.paneTitle = "New Prefix";
+					$scope.submitTitle = "Create a New";
+            		$scope.showPane = true;
+					
+            		console.log($scope.prefixLists);
+            	}
+
+				$scope.editClick = function(Id) {
+					$scope.paneType = 2;	//Set as Edit
+
+					edit_id = $scope.prefixLists[Id].id;
+					edit_no = Id;
+					$scope.paneTitle = "Edit Prefix / " + $scope.prefixLists[Id].name;
+
+					$scope.prefix = $scope.prefixLists[Id].prefix;
+					$scope.description = $scope.prefixLists[Id].description;
+					$scope.datacenter = $scope.prefixLists[Id].datacenter;
+					$scope.vrf = $scope.prefixLists[Id].vrf;
+					$scope.is_pool = $scope.prefixLists[Id].is_pool;
+
+					$scope.submitTitle = "Update";
+
+					$scope.showPane = true;
+				}
+				/* Include all function as New, Update*/
+            	$scope.formSubmit = function(){
+					if($scope.paneType == 1)
+					{
+						//Create New Event
+						var prefixes = { 'prefix':$scope.prefix, 'description': $scope.description, 'vrf':$scope.vrf, 'family' :$scope.family, 'datacenter':$scope.datacenter, 'is_pool':$scope.is_pool};
+
+						Rest.setUrl(defaultUrl);            		
+						Rest.post(prefixes)
+							.then(({data}) => {
+								getipamRirs();
+								resetUi();
+								$scope.showPane = false;
+							})
+							.catch(({data, status}) => {
+								ProcessErrors($scope, data, status, null, {hdr: i18n._('Error!'),
+								msg: i18n.sprintf(i18n._('Call to %s failed. Return status: %d'), (defaultUrl === undefined) ? "undefined" : defaultUrl, status )});
+							});
+
+
+					}
+					else
+					{
+						//Edit Submit (Update) Event.
+						var prefixes = { 'prefix':$scope.prefix, 'description': $scope.description, 'vrf':$scope.vrf, 'family' :$scope.family, 'datacenter':$scope.datacenter, 'is_pool':$scope.is_pool};
+
+						Rest.setUrl(defaultUrl + edit_id + '/');      
+						Rest.put(prefixes)
+							.then(({data}) => {
+								getipamRirs();
+								resetUi();
+								$scope.showPane = false;
+							})
+							.catch(({data, status}) => {
+								ProcessErrors($scope, data, status, null, {hdr: i18n._('Error!'),
+								msg: i18n.sprintf(i18n._('Call to %s failed. Return status: %d'), (defaultUrl === undefined) ? "undefined" : defaultUrl, status )});
+							});
+						
+
+					}
+					
+            	}
+
+            	$scope.formCancel = function(){
+					resetUi();
+                	$scope.showPane = false;
+            	};
+            	
+				var deleteId;
+				$scope.showModal = false;
+				
+            	
+            	
+            	$scope.modal_cancel = function(){
+            		$scope.showModal = false;
+				}
+
+				$scope.deleteClick = function(id, name) {
+                	var action = function() {
+						$('#prompt-modal').modal('hide');
+						Wait('start');
+						Rest.setUrl(defaultUrl + id + '/');
+						Rest.destroy()
+						.then(() => {
+							getipamRirs();
+						});
+						
+                	}
+                	Prompt({
+                        hdr: i18n._('Delete'),
+                        resourceName: $filter('sanitize')(name),
+                        body: '<div class="Prompt-bodyQuery">' + i18n._('Are you sure you want to delete this Prefix?') + '</div>',
+                        action: action,
+                        actionText: i18n._('DELETE')
+                    });
                 }
 
-                $scope.goToNotifications = function(card){
-                    $state.transitionTo('ipamPrefixesList.notifications',{
-                        card: card,
-                        management_id: card.id
-                    });
-                };
-
-                $scope.submitJob = function (id, name) {
-                    Wait('start');
-                        defaultUrl = GetBasePath('system_job_templates')+id+'/launch/';
-                        CreateDialog({
-                            id: 'prompt-for-days'    ,
-                            title: name,
-                            scope: $scope,
-                            width: 500,
-                            height: 300,
-                            minWidth: 200,
-                            callback: 'PromptForDays',
-                            resizable: false,
-                            onOpen: function(){
-                                $scope.$watch('prompt_for_days_form.$invalid', function(invalid) {
-                                    if (invalid === true) {
-                                        $('#prompt-for-days-launch').prop("disabled", true);
-                                    } else {
-                                        $('#prompt-for-days-launch').prop("disabled", false);
-                                    }
-                                });
-
-                                let fieldScope = $scope.$parent;
-                                fieldScope.days_to_keep = 30;
-                                $scope.prompt_for_days_form.$setPristine();
-                                $scope.prompt_for_days_form.$invalid = false;
-                            },
-                            buttons: [
-                                {
-                                    "label": "Cancel",
-                                    "onClick": function() {
-                                        $(this).dialog('close');
-
-                                    },
-                                    "class": "btn btn-default",
-                                    "id": "prompt-for-days-cancel"
-                                },
-                            {
-                                "label": "Launch",
-                                "onClick": function() {
-                                    const extra_vars = {"days": $scope.days_to_keep },
-                                    data = {};
-                                    data.extra_vars = JSON.stringify(extra_vars);
-
-                                    Rest.setUrl(defaultUrl);
-                                    Rest.post(data)
-                                        .then(({data}) => {
-                                            Wait('stop');
-                                            $("#prompt-for-days").dialog("close");
-                                            // $("#configure-dialog").dialog('close');
-                                            $state.go('output', { id: data.system_job, type: 'system' }, { reload: true });
-                                        })
-                                        .catch(({data, status}) => {
-                                            let template_id = $scope.job_template_id;
-                                            template_id = (template_id === undefined) ? "undefined" : i18n.sprintf("%d", template_id);
-                                            ProcessErrors($scope, data, status, null, { hdr: i18n._('Error!'),
-                                                msg: i18n.sprintf(i18n._('Failed updating job %s with variables. POST returned: %d'), template_id, status) });
-                                        });
-                                },
-                                "class": "btn btn-primary",
-                                "id": "prompt-for-days-launch"
-                            }
-                            ]
-                        });
-
-                        if ($scope.removePromptForDays) {
-                            $scope.removePromptForDays();
-                        }
-                        $scope.removePromptForDays = $scope.$on('PromptForDays', function() {
-                            // $('#configure-dialog').dialog('close');
-                            $('#prompt-for-days').show();
-                            $('#prompt-for-days').dialog('open');
-                            Wait('stop');
-                        });
-                };
-
-                $scope.configureSchedule = function(id) {
-                    $state.transitionTo('ipamPrefixesList.schedule', {
-                        id: id
-                    });
-                };
-
-                var cleanUpStateChangeListener = $transitions.onSuccess({}, function(trans) {
-                     if(trans.to().name === "ipamPrefixesList") {
-                         // We are on the management job list view - nothing needs to be highlighted
-                         delete $scope.activeCard;
-                         delete $scope.cardAction;
-                     }
-                     else if(trans.to().name === "ipamPrefixesList.notifications") {
-                         // We are on the notifications view - update the active card and the action
-                         $scope.activeCard = parseInt(trans.params('to').management_id);
-                         $scope.cardAction = "notifications";
-                     }
-                });
-
-                // Remove the listener when the scope is destroyed to avoid a memory leak
-                $scope.$on('$destroy', function() {
-                    cleanUpStateChangeListener();
-                });
+                getipamRirs();
+                
+                
         }
     ];

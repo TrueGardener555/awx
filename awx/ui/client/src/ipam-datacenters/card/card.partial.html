@@ -1,0 +1,328 @@
+<div class="tab-pane" id="ipam-prefixes-panel">
+	<aw-limit-panels max-panels="2" panel-container="ipam-prefixes-panel"></aw-limit-panels>
+	<div ui-view></div>                
+	<div class="tab-pane Panel" id="management_jobs" ng-show="showPane">
+    
+		<div class="Form-header">
+			<div class="Form-title">{{paneTitle}}</div>
+			<div class="Form-header--fields"></div>
+			<div class="Form-exitHolder">
+				<button class="Form-exit" ng-click="formCancel()"><i class="fa fa-times-circle"></i></button>
+			</div>
+		</div>
+		
+		<div class="Form-tabHolder">
+			<div id="datacenter_tab" class="Form-tab {{ selected1 }}" ng-click="TabClick(1)">Details</div>
+			<div id="contacts_tab" class="Form-tab {{ selected2 }}" ng-click="TabClick(2)">Contacts</div>
+			<div id="comment_tab" class="Form-tab {{ selected3 }}" ng-click="TabClick(3)"">Comments</div>
+		</div>
+
+		<form class="Form" name="datacenter_form" id="datacenter_form" autocomplete="off" novalidate="" >
+	
+			<div ng-show="flashMessage != null &amp;&amp; flashMessage != undefined" class="alert alert-info ng-binding ng-hide"></div>
+			<div class="form-group Form-formGroup" ng-show = "tabId == 1">
+				<label class="Form-inputLabelContainer" for="name">
+					<span class="Form-requiredAsterisk">*</span>		
+					<span class="Form-inputLabel">Name</span>
+				</label>
+				<div>
+					<input type="text" ng-model="name" name="name" id="datacenters_name" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="" capitalize="">
+					<div class="error" ng-show="datacenter_form.datacenters_name.$dirty &amp;&amp; datacenter_form.datacenters_name.$error.required">Please enter a value.</div>
+				</div>
+			</div>
+						
+			<div class="form-group Form-formGroup " ng-show = "tabId == 1">
+				<label class="Form-inputLabelContainer ">		
+					<span class="Form-inputLabel">Description</span>
+				</label>
+				<div>
+					<input type="text" ng-model="description" name="description" id="datacenters_description" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="">
+				</div>
+			</div>
+
+			<div class="form-group Form-formGroup " ng-show = "tabId == 1">
+				<label class="Form-inputLabelContainer ">
+					<span class="Form-inputLabel">Site</span>
+				</label>
+				<div>
+					<input type="text" ng-model="site" name="site" id="datacenters_site" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="" >
+				</div>
+			</div>
+						
+			<div class="form-group Form-formGroup " ng-show = "tabId == 1">
+				<label class="Form-inputLabelContainer ">	
+					<span class="Form-inputLabel">Location</span>
+				</label>
+				<div>
+					<input type="text" ng-model="location" name="location" id="datacenters_location" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="">
+				</div>
+			</div>
+
+			<div class="form-group Form-formGroup " ng-show = "tabId == 1">
+				<label class="Form-inputLabelContainer ">
+					<span class="Form-inputLabel">Facility</span>
+				</label>
+				<div>
+					<input type="text" ng-model="facility" name="facility" id="datacenters_facility" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="">
+				</div>
+			</div>
+			
+			<div class="form-group Form-formGroup " ng-show = "tabId == 2">
+				<label class="Form-inputLabelContainer ">	
+					<span class="Form-inputLabel">Contact Name</span>
+				</label>
+				<div>
+					<input type="text" ng-model="contact_name" name="contact_name" id="datacenters_contact_name" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="">
+				</div>
+			</div>
+			
+			<div class="form-group Form-formGroup " ng-show = "tabId == 2">
+				<label class="Form-inputLabelContainer ">	
+					<span class="Form-inputLabel">Contact Phone</span>
+				</label>
+				<div>
+					<input type="text" ng-model="contact_phone" name="contact_phone" id="datacenters_contact_phone" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="">
+				</div>
+			</div>
+
+			
+			<div class="form-group Form-formGroup " ng-show = "tabId == 2">
+				<label class="Form-inputLabelContainer ">
+					<span class="Form-requiredAsterisk">*</span>
+					<span class="Form-inputLabel">Contact Email</span>
+				</label>
+				<div>
+					<input type="email" ng-model="contact_email" name="contact_email" id="datacenters_contact_email" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required ng-invalid-email" required="">
+					<div class="error ng-hide" id="user-email-required-error" ng-show="datacenter_form.contact_email.$dirty &amp;&amp; datacenter_form.contact_email.$error.required">Please enter a value.</div>
+					<div class="error" id="user-email-email-error" ng-show="datacenter_form.contact_email.$dirty &amp;&amp; datacenter_form.contact_email.$error.email">Please enter a valid email address.</div>
+					<div class="error api-error ng-binding" id="datacenter-contact_email-api-error" ng-bind="contact_email_api_error"></div>
+				</div>
+			</div>
+			
+			<div class="form-group Form-formGroup " ng-show = "tabId == 2">
+				<label class="Form-inputLabelContainer ">		
+					<span class="Form-inputLabel">Physical Address</span>
+				</label>
+				<div>
+					<textarea rows="2" ng-model="physical_address" name="physical_address" class="form-control Form-textArea Form-formGroup--fullWidth Form-monospace ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" id="datacenters_physical_address"></textarea>
+					<div class="error ng-hide" id="datacenter-comments-required-error" ng-show="datacenter_form.comments.$dirty &amp;&amp; datacenter_form.comments.$error.required">Please enter a value.</div>
+					<div class="error api-error ng-binding" id="datacenter_form-comments-api-error" ng-bind="script_api_error"></div>
+				</div>
+
+			</div>
+			
+			<div class="form-group Form-formGroup " ng-show = "tabId == 2">
+				<label class="Form-inputLabelContainer ">	
+					<span class="Form-inputLabel">Shipping Address</span>
+				</label>
+				<div>
+					<textarea rows="2" ng-model="shipping_address" name="shipping_address" class="form-control Form-textArea Form-formGroup--fullWidth Form-monospace ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" id="shipping_address"></textarea>
+				</div>
+
+			</div>
+			
+			
+			<div class="form-group Form-formGroup Form-formGroup--fullWidth" ng-show = "tabId == 3">
+				<label class="Form-inputLabelContainer ">
+					<span class="Form-requiredAsterisk">*</span>		
+					<span class="Form-inputLabel">Comments</span>
+				</label>
+				<div>
+					<textarea rows="10" ng-model="comments" name="comments" class="form-control Form-textArea Form-formGroup--fullWidth Form-monospace ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" id="inventory_script_script"></textarea>
+					<div class="error ng-hide" id="datacenter-comments-required-error" ng-show="datacenter_form.comments.$dirty &amp;&amp; datacenter_form.comments.$error.required">Please enter a value.</div>
+					<div class="error api-error ng-binding" id="datacenter_form-comments-api-error" ng-bind="script_api_error"></div>
+				</div>
+			</div>
+		</form>
+		
+		<div class="buttons Form-buttons" id="user_controls">
+			<button type="button" class="btn btn-sm Form-cancelButton" ng-show="(user_obj.summary_fields.user_capabilities.edit || canAdd)" ng-click="formCancel()"> Cancel</button>
+			<button type="button" class="btn btn-sm Form-cancelButton ng-hide" ng-show="!(user_obj.summary_fields.user_capabilities.edit || canAdd)" ng-click="formCancel()"> Close</button>
+			<button type="button" class="btn btn-sm Form-saveButton" ng-click="formSubmit()" ng-disabled="datacenter_form.$invalid ||  datacenter_form.$pending" disabled="disabled"> {{submitTitle}}</button>
+		</div>
+	</div>
+	
+	<div class="tab-pane Panel" id="management_jobs">
+		<div class="List-title">
+			<div class="List-titleText" translate>
+				IPAM Datacenters
+			</div>
+			<span class="badge List-titleBadge ng-binding">
+				{{ apidataLists.length }}
+			</span>
+		</div>
+		<div class="List-well">
+			<div class="List-actionHolder">
+				<div class="List-actions">
+					<button toolbar-button="" mode="options.mode" aw-tool-tip="Create a new datacenter" data-tip-watch="" data-placement="top" data-container="" class="at-Button--add" id="button-add" data-title="" ng-disabled="" ng-click="formCreate()" toolbar="true" aw-feature="" data-original-title="" title="">
+			        	<i class="fa undefined fa-lg"></i>
+			        </button>
+				</div>
+			</div>
+
+			<div class="SmartSearch row">
+				<div class="SmartSearch-bar">
+					<div class="SmartSearch-searchTermContainer">
+	            		<form name="smartSearch" class="SmartSearch-form" aw-enter-key="addTerms(searchTerm)" novalidate="">
+	                		<input class="SmartSearch-input" ng-model="searchTerm" placeholder="Search" ng-disabled="disableSearch">
+	            		</form>
+	            		<div type="submit" class="SmartSearch-searchButton" ng-disabled="!searchTerm" ng-click="addTerms(searchTerm)" disabled="disabled">
+	                		<i class="fa fa-search"></i>
+	            		</div>
+	        		</div>
+					<div class="SmartSearch-keyToggle btn" ng-class="{'is-active': showKeyPane}" ng-click="toggleKeyPane()">Key</div>
+				</div>
+				
+				<div class="SmartSearch-tags" ng-show="searchTags">
+			        <div class="SmartSearch-tagSection">
+			            <div class="SmartSearch-flexContainer">
+				            <div class="SmartSearch-tagContainer ng-scope">
+			                    <div class="SmartSearch-deleteContainer">
+			                        <i class="fa fa-times SmartSearch-tagDelete"></i>
+			                    </div>
+			                    <div class="SmartSearch-tag SmartSearch-tag--deletable">
+			                        <span class="SmartSearch-name ng-binding">{{ searchString }}</span>
+			                    </div>
+			                </div>
+			                <a href="" class="SmartSearch-clearAll" ng-click="clearAllTerms()">CLEAR ALL</a>
+			            </div>
+			        </div>
+			    </div>
+				
+				<div class="SmartSearch-keyPane row ng-scope" ng-show="showKeyPane">
+			        <div class="SmartSearch-keyRow">
+			            <div class="SmartSearch-examples">
+			                <div class="SmartSearch-examples--title">
+			                    <b>EXAMPLES:</b>
+			                </div>
+			                <div class="SmartSearch-examples--search ng-binding ng-scope" ng-repeat="searchExample in searchExamples">{{ searchExample }}</div>
+			            </div>
+			        </div>
+			        <div class="SmartSearch-keyRow">
+			            <b>FIELDS:</b> <span ng-repeat="field in keyFields">{{ field }}<span ng-if="!$last" class="ng-scope">, </span></span>
+			        </div>
+			        <div class="SmartSearch-keyRow">
+			            <b class="ng-binding">ADDITIONAL INFORMATION:</b>
+			                <span>{{ 'For additional information on advanced search search syntax please see the Ansible Tower' | translate }}
+            				<a href="https://docs.ansible.com/ansible-tower/1.0.6/html/userguide/search_sort.html"> {{ 'documentation' | translate }}</a>.</span>
+			        </div>
+			    </div>
+			    
+				<button toolbar-button="" mode="options.mode" aw-tool-tip="Create a new user" data-tip-watch="" data-placement="top" data-container="" class="at-Button--add" id="button-add" data-title="" ng-disabled="" ng-click="$eval(options.ngClick)" ng-show="canAdd &amp;&amp; canEdit" toolbar="true" aw-feature="" data-original-title="" title="">
+            		<i class="fa undefined fa-lg"></i>
+            	</button>
+			</div>
+			<div class="list-table-container">
+				<table id="datacenters_table" class="List-table" is-extended="false">
+					<thead>
+						<tr class="List-tableHeaderRow">
+							<th id="project-status-header" class="List-tableHeader list-header List-staticColumn--smallStatus list-header-noSort" ng-click="columnNoSort !== 'true' &amp;&amp; toggleColumnOrderBy()" ng-class="{'list-header-noSort' : columnNoSort === 'true'}" base-path="projects" collection="projects" dataset="project_dataset" column-sort="" column-field="status" column-iterator="project" column-no-sort="true" column-label="" column-custom-class="List-staticColumn--smallStatus" query-set="project_queryset">
+							</th>
+							<th id="project-name-header" class="List-tableHeader list-header col-lg-4 col-md-4 col-sm-4 col-xs-7 List-staticColumnAdjacent" ng-click="sortData('name')"> 
+								NAME
+								<i class="fa columnSortIcon ng-scope {{ getSortClass('name') }}"></i>
+							</th>
+							<th id="project-scm_type-header" class="List-tableHeader list-header col-lg-2 col-md-2 col-sm-2 hidden-xs" ng-click="sortData('site')">
+								SITE
+								<i class="fa columnSortIcon ng-scope {{ getSortClass('site') }}"></i>
+							</th>
+							<th id="project-scm_revision-header" class="List-tableHeader list-header List-tableCell col-lg-2 col-md-2 hidden-sm hidden-xs" ng-click="sortData('location')">
+								LOCATION
+								<i class="fa columnSortIcon ng-scope {{ getSortClass('location') }}"></i>
+							</th>
+
+							<th class="List-tableHeader List-tableHeader--actions actions-column col-lg-4 col-md-3 col-sm-4 col-xs-5">Actions</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr ng-class="[users.active_class, {'List-tableRow--selected' : $stateParams['item_id'] == item.id}]" id="2" class="List-tableRow users_class ng-scope" ng-repeat="item in apidataLists | orderBy:sortColumn:reverseSort">
+							<td class="List-tableCell username-column col-md-3 col-sm-3 col-xs-9"/>
+							<td class="List-tableCell username-column col-md-3 col-sm-3 col-xs-9">
+								<a href="" ng-click="editClick($index)" class="ng-binding">{{ item.name }}</a>
+							</td>
+							<td class="List-tableCell first_name-column col-md-3 col-sm-3 hidden-xs ng-binding">{{ item.site }}</td>
+							<td class="List-tableCell last_name-column col-md-3 col-sm-3 hidden-xs ng-binding">{{ item.location }}</td>
+							<td class="List-actionsContainer">
+								<div class="List-actionButtonCell List-tableCell">
+									<button id="edit-action" class="List-actionButton" data-placement="top" ng-click="editClick($index)" aw-tool-tip="Edit Datacenter" data-original-title="" title=""><i class="fa fa-pencil"></i> </button>
+									<button id="delete-action" class="List-actionButton List-actionButton--delete" data-placement="top" ng-click="deleteDatacenter(item.id, item.name)" aw-tool-tip="Delete Datacenter" data-original-title="" title=""><i class="fa fa-trash-o"></i> </button>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="Paginate page-row">
+			    <div class="Paginate-wrapper ng-hide" ng-hide="apidataLists.length <= pageSize">
+			        <ul class="Paginate-controls pagination">
+			            <!-- first -->
+			            <li class="Paginate-controls--first Paginate-controls--item ng-hide" ng-hide="pageRange.length < maxVisiblePages || pageRange[0] === 1">
+			                <a href="" ng-click="toPage(1)">
+			                    <i class="fa fa-angle-double-left"></i>
+			                </a>
+			            </li>
+			            <!-- previous -->
+			            <li class="Paginate-controls--previous Paginate-controls--item disabled" ng-class="{disabled: current === 1}">
+			                <a href="" ng-click="toPage(current - 1)">
+			                    <i class="fa fa-angle-left"></i>
+			                </a>
+			            </li>
+			            <!-- range -->
+			            <!-- ngRepeat: page in pageRange --><li class="Paginate-controls--item ng-scope" ng-repeat="page in pageRange">
+			                <a href="" ng-class="{'Paginate-controls--active': page === current}" ng-click="toPage(page)" class="ng-binding Paginate-controls--active">1</a>
+			            </li><!-- end ngRepeat: page in pageRange -->
+			            <!-- next -->
+			            <li class="Paginate-controls--next Paginate-controls--item disabled" ng-class="{disabled: current === last}">
+			                <a href="" ng-click="toPage(current + 1)">
+			                    <i class="fa fa-angle-right"></i>
+			                </a>
+			            </li>
+			            <!-- last -->
+			            <li class="Paginate-controls--item Paginate-controls--last ng-hide" ng-hide="(pageRange.length < maxVisiblePages || pageRange[pageRange.length-1] === last)">
+			                <a href="" id="last-page-set" ng-click="toPage(last)">
+			                    <i class="fa fa-angle-double-right"></i>
+			                </a>
+			            </li>
+			        </ul>
+			        <span class="Paginate-pager--pageof ng-binding">Page
+			                <span id="current-page" class="ng-binding">1</span> of
+			        <span id="total-pages" class="ng-binding">1</span>
+			        </span>
+			    </div>
+			    <div class="Paginate-total page-label" ng-hide="apidataLists.length === 0">
+			        <!-- TODO: Move the ITEMS line into paginate.directive.js
+			             so that i18n.sprintf("A of B") can be used but
+			             it seems $sce.trustAsHtml() does not work with html tag.
+			         -->
+			        <span class="Paginate-itemsOf ng-binding">ITEMS&nbsp;
+			            <span class="ng-binding">1 - 1</span>
+			            <span ng-hide="apidataLists.length <= basePageSize" class="ng-binding ng-hide">of 1</span>
+			        </span>
+			        <div class="Paginate-filteringDropdowns ng-hide" ng-hide="hideViewPerPage || apidataLists.length <= basePageSize">
+			            <div class="Paginate-filterLabel">VIEW PER PAGE</div>
+			            <div class="DashboardGraphs-periodDropdown">
+			                <a role="button" data-toggle="dropdown" data-target="#" href="/page.html" class="DashboardGraphs-filterDropdownText">
+			                    <translate>20</translate> <i class="fa fa-angle-down DashboardGraphs-filterIcon"></i>
+			                </a>
+			                <ul class="dropdown-menu DashboardGraphs-filterDropdownItems
+			                    DashboardGraphs-filterDropdownItems--period Paginate-dropdown" role="menu" aria-labelledby="period-dropdown">
+			                    <li>
+			                        <a ng-click="filter(20)">20</a>
+			                    </li>
+			                    <li>
+			                        <a ng-click="filter(50)">50</a>
+			                    </li>
+			                    <li>
+			                        <a ng-click="filter(100)">100</a>
+			                    </li>
+			                </ul>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+        </div>
+        
+	</div>
+</div>

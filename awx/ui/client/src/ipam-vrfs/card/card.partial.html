@@ -1,45 +1,196 @@
 <div class="tab-pane" id="ipam-prefixes-panel">
 	<aw-limit-panels max-panels="2" panel-container="ipam-prefixes-panel"></aw-limit-panels>
-	<div ui-view></div>
+	<div ui-view></div>                
+	<div class="tab-pane Panel" id="management_jobs" ng-show="showPane">
+    
+		<div class="Form-header">
+			<div class="Form-title">{{paneTitle}}</div>
+			<div class="Form-header--fields"></div>
+			<div class="Form-exitHolder">
+				<button class="Form-exit" ng-click="formCancel()"><i class="fa fa-times-circle"></i></button>
+			</div>
+		</div>
+		
+		<form class="Form" name="vrfs_form" id="vrfs_form" autocomplete="off" novalidate="" >
+	
+			<div class="form-group Form-formGroup ">
+				<label class="Form-inputLabelContainer" for="name">
+					<span class="Form-requiredAsterisk">*</span>		
+					<span class="Form-inputLabel" translate="">Name</span>
+				</label>
+				<div>
+					<input type="text" ng-model="name" name="name" id="vrfs_name" class="form-control Form-textInput ng-pristine" required="" capitalize="">
+				</div>
+			</div>
+						
+			<div class="form-group Form-formGroup ">
+				<label class="Form-inputLabelContainer ">		
+					<span class="Form-inputLabel" translate="">Description</span>
+				</label>
+				<div>
+					<input type="text" ng-model="description" name="description" id="vrfs_description" class="form-control Form-textInput ng-pristine" required="">
+				</div>
+			</div>
+
+			<div class="form-group Form-formGroup ">
+				<label class="Form-inputLabelContainer ">
+					<span class="Form-inputLabel" translate="">Router Distinguisher</span>
+				</label>
+				<div>
+					<input type="text" ng-model="rd" name="rd" id="vrfs_rd" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="" >
+				</div>
+			</div>
+						
+			<div class="form-group Form-formGroup ">
+				<label class="Form-inputLabelContainer ">	
+					<span class="Form-inputLabel" translate="">Enforce Unique</span>
+				</label>
+				<div>
+					<input type="text" ng-model="enforce_unique" name="enforce_unique" id="vrfs_enforce_unique" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="">
+				</div>
+			</div>
+
+		</form>
+		
+		<div class="buttons Form-buttons" id="user_controls">
+			<button type="button" class="btn btn-sm Form-cancelButton" id="vrfs_cancel_btn" ng-show="(user_obj.summary_fields.user_capabilities.edit || canAdd)" ng-click="formCancel()"> Cancel</button>
+			<button type="button" class="btn btn-sm Form-cancelButton ng-hide" id="vrfs_close_btn" ng-show="!(user_obj.summary_fields.user_capabilities.edit || canAdd)" ng-click="formCancel()"> Close</button>
+			<button type="button" class="btn btn-sm Form-saveButton" id="vrfs_save_btn" ng-click="formSubmit()" ng-disabled="vrfs_form.$invalid ||  vrfs_form.$pending" disabled="disabled"> {{submitTitle}}</button>
+		</div>
+	</div>
+	
 	<div class="tab-pane Panel" id="management_jobs">
 		<div class="List-title">
 			<div class="List-titleText" translate>
 				IPAM VRFS
 			</div>
 			<span class="badge List-titleBadge ng-binding">
-				{{ mgmtCards.length }}
+				{{ vrfLists.length }}
 			</span>
 		</div>
-		<div class="MgmtCards">
-			<div class="MgmtCards-card"
-				ng-repeat="card in mgmtCards">
-				<!-- Begin Card Header -->
-				<div class="MgmtCards-header">
-					<h3 class="MgmtCards-label"> {{ card.name }}</h3>
-					<div class="MgmtCards-actionItems">
-						<button class="MgmtCards-actionItem List-actionButton"
-							ng-click='submitJob(card.id, card.name)'
-							ng-show='current_user.is_superuser'
-							data-placement="top" aw-tool-tip="{{'Launch Management Job'|translate}}" data-original-title="" title="">
-							<i class="MgmtCards-actionItemIcon icon-launch"></i>
-						</button>
-						<button class="MgmtCards-actionItem List-actionButton"
-							ng-click='configureSchedule(card.id)'
-							data-placement="top" aw-tool-tip="{{'Schedule Management Job'|translate}}" data-original-title="" title="">
-							<i class="MgmtCards-actionItemIcon fa fa-calendar"></i>
-						</button>
-						<button class="MgmtCards-actionItem List-actionButton"
-							ng-click='goToNotifications(card, card.id)'
-							ng-show='current_user.is_superuser'
-							data-placement="top" aw-tool-tip="{{'Configure Notifications'|translate}}" data-original-title="" title="" ng-class="{'List-editButton--selected': activeCard === card.id && cardAction === 'notifications'}">
-							<i class="MgmtCards-actionItemIcon fa fa-bell-o"></i>
-						</button>
-					</div>
+		<div class="List-well">
+			<div class="List-actionHolder">
+				<div class="List-actions">
+					<button toolbar-button="" mode="options.mode" aw-tool-tip="Create a new VRF" data-tip-watch="" data-placement="top" data-container="" class="at-Button--add" id="button-add" data-title="" ng-disabled="" ng-click="formCreate()" toolbar="true" aw-feature="" data-original-title="" title="">
+			        	<i class="fa undefined fa-lg"></i>
+			        </button>
 				</div>
-				<!-- End Card Header -->
-				<!-- Begin Card Body -->
-				<p>{{card.description || "Place organization description here"}}</p>
-				<!-- End Card Body -->
 			</div>
+
+			<div>
+				<smart-search
+					django-model="${itm}"
+					search-size="${width}"
+					base-path="${ collection.basePath }"
+					iterator="${collection.iterator}"
+					list="list"
+					collection="${collection.iterator}"
+					dataset="${collection.iterator}_dataset"
+					search-tags="searchTags">
+				</smart-search>
+			</div>
+
+			<div class="list-table-container">
+				<table id="datacenters_table" class="List-table" is-extended="false">
+					<thead>
+						<tr class="List-tableHeaderRow">
+							<th id="project-status-header" class="List-tableHeader list-header List-staticColumn--smallStatus list-header-noSort" ng-click="columnNoSort !== 'true' &amp;&amp; toggleColumnOrderBy()" ng-class="{'list-header-noSort' : columnNoSort === 'true'}" base-path="projects" collection="projects" dataset="project_dataset" column-sort="" column-field="status" column-iterator="project" column-no-sort="true" column-label="" column-custom-class="List-staticColumn--smallStatus" query-set="project_queryset"></th>
+							<th id="project-name-header" class="List-tableHeader list-header col-lg-4 col-md-4 col-sm-4 col-xs-7 List-staticColumnAdjacent" column-field="name" column-iterator="project" column-no-sort="undefined" column-label="Name" column-custom-class="col-lg-4 col-md-4 col-sm-4 col-xs-7 List-staticColumnAdjacent" query-set="project_queryset"> NAME</th>
+							<th id="project-scm_type-header" class="List-tableHeader list-header col-lg-2 col-md-2 col-sm-2 hidden-xs" column-field="scm_site" column-iterator="project" column-no-sort="undefined" column-label="Site" column-custom-class="col-lg-2 col-md-2 col-sm-2 hidden-xs" query-set="project_queryset">RD</th>
+							<th id="project-scm_revision-header" class="List-tableHeader list-header List-tableCell col-lg-2 col-md-2 hidden-sm hidden-xs" column-field="scm_location" column-iterator="project" column-no-sort="undefined" column-label="Location" column-custom-class="List-tableCell col-lg-2 col-md-2 hidden-sm hidden-xs" query-set="project_queryset">ENFORCE UNIQUE</th>
+
+							<th class="List-tableHeader List-tableHeader--actions actions-column col-lg-4 col-md-3 col-sm-4 col-xs-5" translate="">Actions</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr class="List-tableRow vrfs_class ng-scope" ng-repeat="item in vrfLists">
+							<td class="List-tableCell username-column col-md-3 col-sm-3 col-xs-9"/>
+							<td class="List-tableCell username-column col-md-3 col-sm-3 col-xs-9">
+								<a href="" ng-click="editClick($index)" class="ng-binding">{{ item.name }}</a>
+							</td>
+							<td class="List-tableCell col-md-3 col-sm-3 hidden-xs ng-binding">{{ item.rd }}</td>
+							<td class="List-tableCell col-md-3 col-sm-3 hidden-xs ng-binding">{{ item.enforce_unique }}</td>
+							<td class="List-actionsContainer">
+								<div class="List-actionButtonCell List-tableCell">
+									<button id="edit-action" class="List-actionButton" data-placement="top" ng-click="editClick($index)" aw-tool-tip="Edit VRF" data-original-title="" title=""><i class="fa fa-pencil"></i> </button>
+									<button id="delete-action" class="List-actionButton List-actionButton--delete" data-placement="top" ng-click="deleteClick(item.id, item.name)" aw-tool-tip="Delete VRF" data-original-title="" title=""><i class="fa fa-trash-o"></i> </button>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="Paginate page-row">
+			    <div class="Paginate-wrapper ng-hide" ng-hide="vrfLists.length <= pageSize">
+			        <ul class="Paginate-controls pagination">
+			            <!-- first -->
+			            <li class="Paginate-controls--first Paginate-controls--item ng-hide" ng-hide="pageRange.length < maxVisiblePages || pageRange[0] === 1">
+			                <a href="" ng-click="toPage(1)">
+			                    <i class="fa fa-angle-double-left"></i>
+			                </a>
+			            </li>
+			            <!-- previous -->
+			            <li class="Paginate-controls--previous Paginate-controls--item disabled" ng-class="{disabled: current === 1}">
+			                <a href="" ng-click="toPage(current - 1)">
+			                    <i class="fa fa-angle-left"></i>
+			                </a>
+			            </li>
+			            <!-- range -->
+			            <!-- ngRepeat: page in pageRange --><li class="Paginate-controls--item ng-scope" ng-repeat="page in pageRange">
+			                <a href="" ng-class="{'Paginate-controls--active': page === current}" ng-click="toPage(page)" class="ng-binding Paginate-controls--active">1</a>
+			            </li><!-- end ngRepeat: page in pageRange -->
+			            <!-- next -->
+			            <li class="Paginate-controls--next Paginate-controls--item disabled" ng-class="{disabled: current === last}">
+			                <a href="" ng-click="toPage(current + 1)">
+			                    <i class="fa fa-angle-right"></i>
+			                </a>
+			            </li>
+			            <!-- last -->
+			            <li class="Paginate-controls--item Paginate-controls--last ng-hide" ng-hide="(pageRange.length < maxVisiblePages || pageRange[pageRange.length-1] === last)">
+			                <a href="" id="last-page-set" ng-click="toPage(last)">
+			                    <i class="fa fa-angle-double-right"></i>
+			                </a>
+			            </li>
+			        </ul>
+			        <span class="Paginate-pager--pageof ng-binding">Page
+			                <span id="current-page" class="ng-binding">1</span> of
+			        <span id="total-pages" class="ng-binding">1</span>
+			        </span>
+			    </div>
+			    <div class="Paginate-total page-label" ng-hide="vrfLists.length === 0">
+			        <!-- TODO: Move the ITEMS line into paginate.directive.js
+			             so that i18n.sprintf("A of B") can be used but
+			             it seems $sce.trustAsHtml() does not work with html tag.
+			         -->
+			        <span class="Paginate-itemsOf ng-binding">ITEMS&nbsp;
+			            <span class="ng-binding">1 - 1</span>
+			            <span ng-hide="vrfLists.length <= basePageSize" class="ng-binding ng-hide">of 1</span>
+			        </span>
+			        <div class="Paginate-filteringDropdowns ng-hide" ng-hide="hideViewPerPage || vrfLists.length <= basePageSize">
+			            <div class="Paginate-filterLabel" translate="">VIEW PER PAGE</div>
+			            <div class="DashboardGraphs-periodDropdown">
+			                <a role="button" data-toggle="dropdown" data-target="#" href="/page.html" class="DashboardGraphs-filterDropdownText">
+			                    <translate>20</translate> <i class="fa fa-angle-down DashboardGraphs-filterIcon"></i>
+			                </a>
+			                <ul class="dropdown-menu DashboardGraphs-filterDropdownItems
+			                    DashboardGraphs-filterDropdownItems--period Paginate-dropdown" role="menu" aria-labelledby="period-dropdown">
+			                    <li>
+			                        <a ng-click="filter(20)" translate="">20</a>
+			                    </li>
+			                    <li>
+			                        <a ng-click="filter(50)" translate="">50</a>
+			                    </li>
+			                    <li>
+			                        <a ng-click="filter(100)" translate="">100</a>
+			                    </li>
+			                </ul>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+        </div>
+        
 	</div>
 </div>
