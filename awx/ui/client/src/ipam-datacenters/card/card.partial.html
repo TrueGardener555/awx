@@ -21,22 +21,22 @@
 	
 			<div ng-show="flashMessage != null &amp;&amp; flashMessage != undefined" class="alert alert-info ng-binding ng-hide"></div>
 			<div class="form-group Form-formGroup" ng-show = "tabId == 1">
-				<label class="Form-inputLabelContainer" for="name">
+				<label class="Form-inputLabelContainer">
 					<span class="Form-requiredAsterisk">*</span>		
 					<span class="Form-inputLabel">Name</span>
 				</label>
 				<div>
-					<input type="text" ng-model="name" name="name" id="datacenters_name" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="" capitalize="">
-					<div class="error" ng-show="datacenter_form.datacenters_name.$dirty &amp;&amp; datacenter_form.datacenters_name.$error.required">Please enter a value.</div>
+					<input type="text" ng-model="datacenter_name" name="datacenter_name" id="datacenters_name" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="" capitalize="">
+					<div class="error" ng-show="datacenter_form.datacenter_name.$error.required">Please enter a value.</div>
 				</div>
 			</div>
-						
+
 			<div class="form-group Form-formGroup " ng-show = "tabId == 1">
 				<label class="Form-inputLabelContainer ">		
 					<span class="Form-inputLabel">Description</span>
 				</label>
 				<div>
-					<input type="text" ng-model="description" name="description" id="datacenters_description" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="">
+					<input type="text" ng-model="description" name="description" id="datacenters_description" class="form-control Form-textInput">
 				</div>
 			</div>
 
@@ -45,7 +45,7 @@
 					<span class="Form-inputLabel">Site</span>
 				</label>
 				<div>
-					<input type="text" ng-model="site" name="site" id="datacenters_site" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="" >
+					<input type="text" ng-model="site" name="site" id="datacenters_site" class="form-control Form-textInput">
 				</div>
 			</div>
 						
@@ -54,7 +54,7 @@
 					<span class="Form-inputLabel">Location</span>
 				</label>
 				<div>
-					<input type="text" ng-model="location" name="location" id="datacenters_location" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="">
+					<input type="text" ng-model="location" name="location" id="datacenters_location" class="form-control Form-textInput">
 				</div>
 			</div>
 
@@ -63,7 +63,7 @@
 					<span class="Form-inputLabel">Facility</span>
 				</label>
 				<div>
-					<input type="text" ng-model="facility" name="facility" id="datacenters_facility" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="">
+					<input type="text" ng-model="facility" name="facility" id="datacenters_facility" class="form-control Form-textInput ng-pristine">
 				</div>
 			</div>
 			
@@ -72,7 +72,7 @@
 					<span class="Form-inputLabel">Contact Name</span>
 				</label>
 				<div>
-					<input type="text" ng-model="contact_name" name="contact_name" id="datacenters_contact_name" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="">
+					<input type="text" ng-model="contact_name" name="contact_name" id="datacenters_contact_name" class="form-control Form-textInput ng-pristine ng-untouched">
 				</div>
 			</div>
 			
@@ -81,7 +81,7 @@
 					<span class="Form-inputLabel">Contact Phone</span>
 				</label>
 				<div>
-					<input type="text" ng-model="contact_phone" name="contact_phone" id="datacenters_contact_phone" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="">
+					<input type="text" ng-model="contact_phone" name="contact_phone" id="datacenters_contact_phone" class="form-control Form-textInput">
 				</div>
 			</div>
 
@@ -92,31 +92,26 @@
 					<span class="Form-inputLabel">Contact Email</span>
 				</label>
 				<div>
-					<input type="email" ng-model="contact_email" name="contact_email" id="datacenters_contact_email" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required ng-invalid-email" required="">
-					<div class="error ng-hide" id="user-email-required-error" ng-show="datacenter_form.contact_email.$dirty &amp;&amp; datacenter_form.contact_email.$error.required">Please enter a value.</div>
-					<div class="error" id="user-email-email-error" ng-show="datacenter_form.contact_email.$dirty &amp;&amp; datacenter_form.contact_email.$error.email">Please enter a valid email address.</div>
-					<div class="error api-error ng-binding" id="datacenter-contact_email-api-error" ng-bind="contact_email_api_error"></div>
+					<input type="email" ng-model="contact_email" name="contact_email" id="datacenters_contact_email" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required ng-invalid-email">
+					<div class="error ng-hide" ng-show="datacenter_form.contact_email.$dirty &amp;&amp; datacenter_form.contact_email.$error.email">Please enter a valid email address.</div>
 				</div>
 			</div>
 			
-			<div class="form-group Form-formGroup " ng-show = "tabId == 2">
+			<div class="form-group Form-formGroup Form-formGroup--fullWidth " ng-show = "tabId == 2">
 				<label class="Form-inputLabelContainer ">		
 					<span class="Form-inputLabel">Physical Address</span>
 				</label>
 				<div>
-					<textarea rows="2" ng-model="physical_address" name="physical_address" class="form-control Form-textArea Form-formGroup--fullWidth Form-monospace ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" id="datacenters_physical_address"></textarea>
-					<div class="error ng-hide" id="datacenter-comments-required-error" ng-show="datacenter_form.comments.$dirty &amp;&amp; datacenter_form.comments.$error.required">Please enter a value.</div>
-					<div class="error api-error ng-binding" id="datacenter_form-comments-api-error" ng-bind="script_api_error"></div>
+					<textarea rows="2" ng-model="physical_address" name="physical_address" class="form-control Form-textArea Form-formGroup--fullWidth Form-monospace"></textarea>
 				</div>
-
 			</div>
 			
-			<div class="form-group Form-formGroup " ng-show = "tabId == 2">
+			<div class="form-group Form-formGroup Form-formGroup--fullWidth " ng-show = "tabId == 2">
 				<label class="Form-inputLabelContainer ">	
 					<span class="Form-inputLabel">Shipping Address</span>
 				</label>
 				<div>
-					<textarea rows="2" ng-model="shipping_address" name="shipping_address" class="form-control Form-textArea Form-formGroup--fullWidth Form-monospace ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" id="shipping_address"></textarea>
+					<textarea rows="2" ng-model="shipping_address" name="shipping_address" class="form-control Form-textArea Form-formGroup--fullWidth Form-monospace"></textarea>
 				</div>
 
 			</div>
@@ -124,13 +119,10 @@
 			
 			<div class="form-group Form-formGroup Form-formGroup--fullWidth" ng-show = "tabId == 3">
 				<label class="Form-inputLabelContainer ">
-					<span class="Form-requiredAsterisk">*</span>		
 					<span class="Form-inputLabel">Comments</span>
 				</label>
 				<div>
-					<textarea rows="10" ng-model="comments" name="comments" class="form-control Form-textArea Form-formGroup--fullWidth Form-monospace ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched" id="inventory_script_script"></textarea>
-					<div class="error ng-hide" id="datacenter-comments-required-error" ng-show="datacenter_form.comments.$dirty &amp;&amp; datacenter_form.comments.$error.required">Please enter a value.</div>
-					<div class="error api-error ng-binding" id="datacenter_form-comments-api-error" ng-bind="script_api_error"></div>
+					<textarea rows="10" ng-model="comments" name="comments" class="form-control Form-textArea Form-formGroup--fullWidth Form-monospace ng-pristine ng-empty ng-touched"></textarea>
 				</div>
 			</div>
 		</form>
@@ -138,7 +130,7 @@
 		<div class="buttons Form-buttons" id="user_controls">
 			<button type="button" class="btn btn-sm Form-cancelButton" ng-show="(user_obj.summary_fields.user_capabilities.edit || canAdd)" ng-click="formCancel()"> Cancel</button>
 			<button type="button" class="btn btn-sm Form-cancelButton ng-hide" ng-show="!(user_obj.summary_fields.user_capabilities.edit || canAdd)" ng-click="formCancel()"> Close</button>
-			<button type="button" class="btn btn-sm Form-saveButton" ng-click="formSubmit()" ng-disabled="datacenter_form.$invalid ||  datacenter_form.$pending" disabled="disabled"> {{submitTitle}}</button>
+			<button type="button" class="btn btn-sm Form-saveButton" ng-click="formSubmit()"> {{submitTitle}}</button>
 		</div>
 	</div>
 	

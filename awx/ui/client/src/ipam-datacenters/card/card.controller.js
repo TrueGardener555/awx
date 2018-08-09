@@ -14,6 +14,9 @@ function( Wait, CreateDialog, GetBasePath, Rest, ProcessErrors, $rootScope, $sta
                 var defaultUrl = GetBasePath('ipam_datacenters');
 				var edit_id;
 
+				//Variable for Alerting Fill in
+				$scope.nameDirty = false;
+
 				$scope.tabId = 1;
 				$scope.searchExamples = ["id:>10", "created:>=2000-01-01T00:00:00Z", "created:<2000-01-01", "name:foobar"];
 				$scope.keyFields = ["name", "description", "site", "location", "facility", "physical_address", "shipping_address", "contact_name", "contact_phone", "contact_email", "comments"];
@@ -44,7 +47,6 @@ function( Wait, CreateDialog, GetBasePath, Rest, ProcessErrors, $rootScope, $sta
             	
 				$scope.selected1 = "is-selected"; 
 				$scope.TabClick = function(tabId){
-					console.log(tabId);
                 	$scope.tabId = tabId;
                 	if (tabId == 1)
                 	{
@@ -73,7 +75,10 @@ function( Wait, CreateDialog, GetBasePath, Rest, ProcessErrors, $rootScope, $sta
             	};
             	
 				var resetUi = function(){
-					$scope.name = "";
+
+					$scope.TabClick(1);
+
+					$scope.datacenter_name = "";
 					$scope.description = "";
 					$scope.site = "";
 					$scope.location = "";
@@ -105,7 +110,7 @@ function( Wait, CreateDialog, GetBasePath, Rest, ProcessErrors, $rootScope, $sta
 					edit_id = $scope.apidataLists[Id].id;
 					$scope.paneTitle = "Edit Datacenter / " + $scope.apidataLists[Id].name;
 
-					$scope.name = $scope.apidataLists[Id].name;
+					$scope.datacenter_name = $scope.apidataLists[Id].name;
 					$scope.description = $scope.apidataLists[Id].description;
 					$scope.site = $scope.apidataLists[Id].site;
 					$scope.location = $scope.apidataLists[Id].location;
@@ -123,48 +128,53 @@ function( Wait, CreateDialog, GetBasePath, Rest, ProcessErrors, $rootScope, $sta
 				}
 				/* Include all function as New, Update*/
             	$scope.formSubmit = function(){
-					if($scope.paneType == 1)
+					console.log($scope.datacenter_name);
+					if($scope.datacenter_name)
 					{
-						//Create New Event
-						var datacenter = { 'name':$scope.name, 'description': $scope.description, 'site':$scope.site, 'location':$scope.location,  'facility':$scope.facility,
-							'physical_address':$scope.physical_address, 'shipping_address':$scope.shipping_address, 'contact_name':$scope.contact_name, 'contact_phone':$scope.contact_phone,
-							'contact_email':$scope.contact_email, 'comments':$scope.comments };
+						if($scope.paneType == 1)
+						{
+							//Create New Event
+							var datacenter = { 'name':$scope.datacenter_name, 'description': $scope.description, 'site':$scope.site, 'location':$scope.location,  'facility':$scope.facility,
+								'physical_address':$scope.physical_address, 'shipping_address':$scope.shipping_address, 'contact_name':$scope.contact_name, 'contact_phone':$scope.contact_phone,
+								'contact_email':$scope.contact_email, 'comments':$scope.comments };
 
-						Rest.setUrl(defaultUrl);            		
-						Rest.post(datacenter)
-							.then(({data}) => {
-								getipamDatacenters();
-								resetUi();
-								$scope.showPane = false;
-							})
-							.catch(({data, status}) => {
-								ProcessErrors($scope, data, status, null, {hdr: i18n._('Error!'),
-								msg: i18n.sprintf(i18n._('Call to %s failed. Return status: %d'), (defaultUrl === undefined) ? "undefined" : defaultUrl, status )});
-							});
+							Rest.setUrl(defaultUrl);            		
+							Rest.post(datacenter)
+								.then(({data}) => {
+									getipamDatacenters();
+									resetUi();
+									$scope.showPane = false;
+								})
+								.catch(({data, status}) => {
+									ProcessErrors($scope, data, status, null, {hdr: i18n._('Error!'),
+									msg: i18n.sprintf(i18n._('Call to %s failed. Return status: %d'), (defaultUrl === undefined) ? "undefined" : defaultUrl, status )});
+								});
 
 
+						}
+						else
+						{
+							//Edit Submit (Update) Event.
+							var datacenter = { 'name':$scope.datacenter_name, 'description': $scope.description, 'site':$scope.site, 'location':$scope.location,  'facility':$scope.facility,
+								'physical_address':$scope.physical_address, 'shipping_address':$scope.shipping_address, 'contact_name':$scope.contact_name, 'contact_phone':$scope.contact_phone,
+								'contact_email':$scope.contact_email, 'comments':$scope.comments };
+
+							Rest.setUrl(defaultUrl + edit_id + '/');      
+							Rest.put(datacenter)
+								.then(({data}) => {
+									getipamDatacenters();
+									resetUi();
+									$scope.showPane = false;
+								})
+								.catch(({data, status}) => {
+									ProcessErrors($scope, data, status, null, {hdr: i18n._('Error!'),
+									msg: i18n.sprintf(i18n._('Call to %s failed. Return status: %d'), (defaultUrl === undefined) ? "undefined" : defaultUrl, status )});
+								});
+						}
 					}
 					else
 					{
-						//Edit Submit (Update) Event.
-						var datacenter = { 'name':$scope.name, 'description': $scope.description, 'site':$scope.site, 'location':$scope.location,  'facility':$scope.facility,
-							'physical_address':$scope.physical_address, 'shipping_address':$scope.shipping_address, 'contact_name':$scope.contact_name, 'contact_phone':$scope.contact_phone,
-							'contact_email':$scope.contact_email, 'comments':$scope.comments };
-
-						Rest.setUrl(defaultUrl + edit_id + '/');      
-						Rest.put(datacenter)
-							.then(({data}) => {
-								getipamDatacenters();
-
-								resetUi();
-								$scope.showPane = false;
-							})
-							.catch(({data, status}) => {
-								ProcessErrors($scope, data, status, null, {hdr: i18n._('Error!'),
-								msg: i18n.sprintf(i18n._('Call to %s failed. Return status: %d'), (defaultUrl === undefined) ? "undefined" : defaultUrl, status )});
-							});
-						
-
+						$scope.TabClick(1);
 					}
             	}
 
@@ -207,7 +217,6 @@ function( Wait, CreateDialog, GetBasePath, Rest, ProcessErrors, $rootScope, $sta
                 	if ($scope.sortColumn == column) {
                 		return $scope.reverseSort ? 'fa-sort-down' : 'fa-sort-up';
                 	}
-                	
                 	return 'fa-sort';
                 }
                 

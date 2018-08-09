@@ -33,9 +33,9 @@ class CreatedUpdatedModel(models.Model):
 class Rir(CreatedUpdatedModel):
     """
     RIR
-    """	
+    """ 
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=200, blank=True, null=True)
 
     class Meta:
         ordering = ['name']
@@ -62,10 +62,17 @@ class Vrf(CreatedUpdatedModel):
     are said to exist in the "global" table.)
     """
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=200, blank=True, null=True)
     rd = models.CharField(max_length=21, verbose_name='Route distinguisher')
     enforce_unique = models.BooleanField(default=True, verbose_name='Enforce unique space',
                                          help_text="Prevent duplicate prefixes/IP addresses within this VRF")
+    datacenter = models.ForeignKey(
+        'Datacenter', 
+        related_name='vrfs', 
+        on_delete=models.PROTECT, 
+        blank=True, 
+        null=True
+    )
 
     class Meta:
         ordering = ['name']
@@ -90,7 +97,7 @@ class Vrf(CreatedUpdatedModel):
 class Datacenter(CreatedUpdatedModel):
     """
     Datacenter
-    """	
+    """ 
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=200, blank=True)
     site = models.CharField(max_length=50, blank=True)
@@ -126,7 +133,14 @@ class Aggregate(CreatedUpdatedModel):
     rir = models.ForeignKey('Rir', related_name='aggregates', on_delete=models.PROTECT, verbose_name='RIR')
     date_added = models.DateField(blank=True, null=True)
     description = models.CharField(max_length=100, blank=True)
-   
+    datacenter = models.ForeignKey(
+        'Datacenter', 
+        related_name='aggregates', 
+        on_delete=models.PROTECT, 
+        blank=True, 
+        null=True
+    )
+
     class Meta:
         ordering = ['family', 'prefix']
 
@@ -330,11 +344,11 @@ class InfrastructureTemplate(CreatedUpdatedModel):
         on_delete=models.SET_NULL,
     )
     datacenter = models.ForeignKey(
-    	'Datacenter', 
-    	related_name='%(class)ss',
-    	on_delete=models.PROTECT, 
-    	blank=True, 
-    	null=True
+        'Datacenter', 
+        related_name='%(class)ss',
+        on_delete=models.PROTECT, 
+        blank=True, 
+        null=True
     )
     svc_enabled = JSONField(
         blank=True,
@@ -556,11 +570,11 @@ class DeviceTemplate(CreatedUpdatedModel):
     fqdn = models.CharField(max_length=200, blank=True)
     model = models.CharField(max_length=200, blank=True)
     sn = models.CharField(
-    	max_length=200, 
-    	blank=True,
-    	verbose_name=_('Serial Number'),
-    	help_text=_("Specifies the serial number of the device if exist"),
-    	)
+        max_length=200, 
+        blank=True,
+        verbose_name=_('Serial Number'),
+        help_text=_("Specifies the serial number of the device if exist"),
+        )
     hosts = JSONField(
         blank=True,
         default={},
@@ -582,11 +596,11 @@ class DeviceTemplate(CreatedUpdatedModel):
         on_delete=models.SET_NULL,
     )
     datacenter = models.ForeignKey(
-    	'Datacenter', 
-    	related_name='%(class)ss',
-    	on_delete=models.PROTECT, 
-    	blank=True, 
-    	null=True
+        'Datacenter', 
+        related_name='%(class)ss',
+        on_delete=models.PROTECT, 
+        blank=True, 
+        null=True
     )
     opts = JSONField(
         blank=True,
@@ -624,11 +638,11 @@ class VirtualHost(DeviceTemplate):
     """
 
     provider = models.ForeignKey(
-    	'Provider', 
-    	related_name='%(class)ss',
-    	on_delete=models.PROTECT, 
-    	blank=True, 
-    	null=True
+        'Provider', 
+        related_name='%(class)ss',
+        on_delete=models.PROTECT, 
+        blank=True, 
+        null=True
     )
 
     class Meta:

@@ -217,7 +217,7 @@ class BaseSerializer(serializers.ModelSerializer):
     __metaclass__ = BaseSerializerMetaclass
 
     class Meta:
-        fields = ('id', 'type', 'url',
+        fields = ('id', 'type', 'url', 'summary_fields',
                   'name', 'description')
         summary_fields = ()
         summarizable_fields = ()
@@ -227,7 +227,7 @@ class BaseSerializer(serializers.ModelSerializer):
     url            = serializers.CharField(source='get_absolute_url', read_only=True)
     # url            = serializers.SerializerMethodField()
     # related        = serializers.SerializerMethodField()
-    # summary_fields = serializers.SerializerMethodField()
+    summary_fields = serializers.SerializerMethodField('_get_summary_fields', read_only=True)
 
     # make certain fields read only
     # created       = serializers.SerializerMethodField()
@@ -246,6 +246,36 @@ class BaseSerializer(serializers.ModelSerializer):
             return obj.get_absolute_url(request=self.context.get('request'))
 
 
+    def _get_summary_fields(self, obj):
+        return {} if obj is None else self.get_summary_fields(obj)
+
+
+    def get_summary_fields(self, obj):
+        # code here to calculate the result
+        # or return obj.calc_result() if you have that calculation in the model
+        # datacenter_name = serializers.ReadOnlyField(source='datacenter.name',)
+        # return "some result"
+
+        summary_fields = OrderedDict()
+
+        fk = 'datacenter'
+        fields = ['id', 'name']
+        
+        summary_fields[fk] = OrderedDict()
+        
+        fkval = getattr(obj, fk, None)
+
+        for field in fields:
+            fval = getattr(fkval, field, None)
+            summary_fields[fk][field] = fval
+
+        return summary_fields
+
+
+
+
+
+
 # Serializers define the API representation.
 class IpamRirSerializer(BaseSerializer):
     class Meta:
@@ -253,15 +283,31 @@ class IpamRirSerializer(BaseSerializer):
         fields = '__all__'
         # fields = ('*','-description')
 
+    def get_summary_fields(self, obj):
+        summary_fields = super(IpamRirSerializer, self).get_summary_fields(obj)
+        summary_fields = {}
+        return summary_fields
+
+
+
 
 class IpamVrfSerializer(BaseSerializer):
     
     # url = serializers.HyperlinkedIdentityField(view_name='vrfs', lookup_field='slug')
+    # datacenter_name = serializers.RelatedField(source='datacenter', read_only=True)
+    # owner = serializers.ReadOnlyField(source='owner.username')
+
+    # datacenter_name = serializers.ReadOnlyField(source='datacenter.name',)
+
+    summary_fields = serializers.SerializerMethodField()
 
     class Meta:
         model = Vrf
         fields = '__all__'
         # fields = ('url', 'name', 'description', 'rd', 'enforce_unique')
+        # read_only_fields = ('datacenter_name',)
+
+
         
 
 class IpamDatacenterSerializer(BaseSerializer):
@@ -276,6 +322,14 @@ class IpamDatacenterSerializer(BaseSerializer):
         #   'shipping_address', 'contact_name', 'contact_phone', 
         #   'contact_email', 'comments'
         #   )
+
+    def get_summary_fields(self, obj):
+        summary_fields = super(IpamDatacenterSerializer, self).get_summary_fields(obj)
+        # summary_fields['datacenter'] = {}
+        summary_fields = {}
+        return summary_fields
+
+
 
 
 class IpamAggregateSerializer(BaseSerializer):
