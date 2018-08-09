@@ -184,6 +184,140 @@ class Prefix(CreatedUpdatedModel):
 
 
 
+    def clean(self):
+
+        if self.prefix:
+
+            # Disallow host masks
+            if self.prefix.version == 4 and self.prefix.prefixlen == 32:
+                raise ValidationError({
+                    'prefix': "Cannot create host addresses (/32) as prefixes. Create an IPv4 address instead."
+                })
+            elif self.prefix.version == 6 and self.prefix.prefixlen == 128:
+                raise ValidationError({
+                    'prefix': "Cannot create host addresses (/128) as prefixes. Create an IPv6 address instead."
+                })
+
+            # Enforce unique IP space (if applicable)
+            if (self.vrf is None and settings.ENFORCE_GLOBAL_UNIQUE) or (self.vrf and self.vrf.enforce_unique):
+                duplicate_prefixes = self.get_duplicates()
+                if duplicate_prefixes:
+                    raise ValidationError({
+                        'prefix': "Duplicate prefix found in {}: {}".format(
+                            "VRF {}".format(self.vrf) if self.vrf else "global table",
+                            duplicate_prefixes.first(),
+                        )
+                    })
+
+    def save(self, *args, **kwargs):
+        if self.prefix:
+            # Clear host bits from prefix
+            self.prefix = self.prefix.cidr
+            # Infer address family from IPNetwork object
+            self.family = self.prefix.version
+        super(Prefix, self).save(*args, **kwargs)
+
+
+
+    def get_status_class(self):
+        return STATUS_CHOICE_CLASSES[self.status]
+
+    def get_duplicates(self):
+        return Prefix.objects.filter(vrf=self.vrf, prefix=str(self.prefix)).exclude(pk=self.pk)
+
+    def get_child_prefixes(self):
+        """
+        Return all Prefixes within this Prefix and VRF.
+        """
+        return Prefix.objects.filter(prefix__net_contained=str(self.prefix), vrf=self.vrf)
+
+    def get_child_ips(self):
+        """
+        Return all IPAddresses within this Prefix and VRF.
+        """
+        return IPAddress.objects.filter(address__net_host_contained=str(self.prefix), vrf=self.vrf)
+
+    def get_available_prefixes(self):
+        """
+        Return all available Prefixes within this prefix as an IPSet.
+        """
+        prefix = netaddr.IPSet(self.prefix)
+        child_prefixes = netaddr.IPSet([child.prefix for child in self.get_child_prefixes()])
+        available_prefixes = prefix - child_prefixes
+
+        return available_prefixes
+
+    def get_available_ips(self):
+        """
+        Return all available IPs within this prefix as an IPSet.
+        """
+        prefix = netaddr.IPSet(self.prefix)
+        child_ips = netaddr.IPSet([ip.address.ip for ip in self.get_child_ips()])
+        available_ips = prefix - child_ips
+
+        # Remove unusable IPs from non-pool prefixes
+        if not self.is_pool:
+            available_ips -= netaddr.IPSet([
+                netaddr.IPAddress(self.prefix.first),
+                netaddr.IPAddress(self.prefix.last),
+            ])
+
+        return available_ips
+
+    def get_first_available_prefix(self):
+        """
+        Return the first available child prefix within the prefix (or None).
+        """
+        available_prefixes = self.get_available_prefixes()
+        if not available_prefixes:
+            return None
+        return available_prefixes.iter_cidrs()[0]
+
+    def get_first_available_ip(self):
+        """
+        Return the first available IP within the prefix (or None).
+        """
+        available_ips = self.get_available_ips()
+        if not available_ips:
+            return None
+        return '{}/{}'.format(next(available_ips.__iter__()), self.prefix.prefixlen)
+
+    def get_utilization(self):
+        """
+        Determine the utilization of the prefix and return it as a percentage. For Prefixes with a status of
+        "container", calculate utilization based on child prefixes. For all others, count child IP addresses.
+        """
+        if self.status == PREFIX_STATUS_CONTAINER:
+            queryset = Prefix.objects.filter(prefix__net_contained=str(self.prefix), vrf=self.vrf)
+            child_prefixes = netaddr.IPSet([p.prefix for p in queryset])
+            return int(float(child_prefixes.size) / self.prefix.size * 100)
+        else:
+            child_count = self.get_child_ips().count()
+            prefix_size = self.prefix.size
+            if self.family == 4 and self.prefix.prefixlen < 31 and not self.is_pool:
+                prefix_size -= 2
+            return int(float(child_count) / prefix_size * 100)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class IPAddressManager(models.Manager):
 
     def get_queryset(self):
