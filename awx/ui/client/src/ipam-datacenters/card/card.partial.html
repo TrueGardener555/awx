@@ -42,19 +42,23 @@
 
 			<div class="form-group Form-formGroup " ng-show = "tabId == 1">
 				<label class="Form-inputLabelContainer ">
+					<span class="Form-requiredAsterisk">*</span>		
 					<span class="Form-inputLabel">Site</span>
 				</label>
 				<div>
-					<input type="text" ng-model="site" name="site" id="datacenters_site" class="form-control Form-textInput">
+					<input type="text" ng-model="site" name="site" id="datacenters_site" class="form-control Form-textInput" required="">
+					<div class="error" ng-show="datacenter_form.site.$error.required">Please enter a value.</div>
 				</div>
 			</div>
 						
 			<div class="form-group Form-formGroup " ng-show = "tabId == 1">
 				<label class="Form-inputLabelContainer ">	
+					<span class="Form-requiredAsterisk">*</span>		
 					<span class="Form-inputLabel">Location</span>
 				</label>
 				<div>
-					<input type="text" ng-model="location" name="location" id="datacenters_location" class="form-control Form-textInput">
+					<input type="text" ng-model="location" name="location" id="datacenters_location" class="form-control Form-textInput" required="">
+					<div class="error" ng-show="datacenter_form.location.$error.required">Please enter a value.</div>
 				</div>
 			</div>
 
@@ -168,8 +172,8 @@
 				<div class="SmartSearch-tags" ng-show="searchTags">
 			        <div class="SmartSearch-tagSection">
 			            <div class="SmartSearch-flexContainer">
-				            <div class="SmartSearch-tagContainer ng-scope">
-			                    <div class="SmartSearch-deleteContainer">
+				            <div class="SmartSearch-tagContainer" ng-repeat="searchString in searchList">
+			                    <div class="SmartSearch-deleteContainer" ng-click="removeTerm($index)">
 			                        <i class="fa fa-times SmartSearch-tagDelete"></i>
 			                    </div>
 			                    <div class="SmartSearch-tag SmartSearch-tag--deletable">
@@ -228,7 +232,7 @@
 					</thead>
 
 					<tbody>
-						<tr ng-class="[users.active_class, {'List-tableRow--selected' : $stateParams['item_id'] == item.id}]" id="2" class="List-tableRow users_class ng-scope" ng-repeat="item in apidataLists | orderBy:sortColumn:reverseSort">
+						<tr ng-class="[users.active_class, {'List-tableRow--selected' : $stateParams['item_id'] == item.id}]" id="2" class="List-tableRow users_class ng-scope" ng-repeat="item in apidataLists | filter:{name:searchTerm} | orderBy:sortColumn:reverseSort">
 							<td class="List-tableCell username-column col-md-3 col-sm-3 col-xs-9"/>
 							<td class="List-tableCell username-column col-md-3 col-sm-3 col-xs-9">
 								<a href="" ng-click="editClick($index)" class="ng-binding">{{ item.name }}</a>

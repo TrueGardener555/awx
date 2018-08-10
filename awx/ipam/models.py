@@ -36,6 +36,8 @@ class Rir(CreatedUpdatedModel):
     """ 
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=200, blank=True, null=True)
+    registry = models.CharField(max_length=200, blank=True, null=True, verbose_name='Internet Registry')
+    region = models.CharField(max_length=200, blank=True, null=True)
 
     class Meta:
         ordering = ['name']
@@ -150,6 +152,53 @@ class Aggregate(CreatedUpdatedModel):
     def get_absolute_url(self, request=None):
         return reverse('api:ipam_aggregate-detail', kwargs={'pk': self.pk}, request=request)
 
+    def clean(self):
+
+        if self.prefix:
+
+            # Clear host bits from prefix
+            self.prefix = self.prefix.cidr
+
+            # Ensure that the aggregate being added is not covered by an existing aggregate
+            covering_aggregates = Aggregate.objects.filter(prefix__net_contains_or_equals=str(self.prefix))
+            if self.pk:
+                covering_aggregates = covering_aggregates.exclude(pk=self.pk)
+            if covering_aggregates:
+                raise ValidationError({
+                    'prefix': "Aggregates cannot overlap. {} is already covered by an existing aggregate ({}).".format(
+                        self.prefix, covering_aggregates[0]
+                    )
+                })
+
+            # Ensure that the aggregate being added does not cover an existing aggregate
+            covered_aggregates = Aggregate.objects.filter(prefix__net_contained=str(self.prefix))
+            if self.pk:
+                covered_aggregates = covered_aggregates.exclude(pk=self.pk)
+            if covered_aggregates:
+                raise ValidationError({
+                    'prefix': "Aggregates cannot overlap. {} covers an existing aggregate ({}).".format(
+                        self.prefix, covered_aggregates[0]
+                    )
+                })
+
+    def save(self, *args, **kwargs):
+        if self.prefix:
+            # Infer address family from IPNetwork object
+            self.family = self.prefix.version
+        super(Aggregate, self).save(*args, **kwargs)
+
+
+    def get_utilization(self):
+        """
+        Determine the prefix utilization of the aggregate and return it as a percentage.
+        """
+        queryset = Prefix.objects.filter(prefix__net_contained_or_equal=str(self.prefix))
+        child_prefixes = netaddr.IPSet([p.prefix for p in queryset])
+        return int(float(child_prefixes.size) / self.prefix.size * 100)
+
+
+
+
 
 # @python_2_unicode_compatible
 class Prefix(CreatedUpdatedModel):
@@ -158,7 +207,7 @@ class Prefix(CreatedUpdatedModel):
     VRFs. A Prefix must be assigned a status and may optionally be assigned a used-define Role. A Prefix can also be
     assigned to a VLAN where appropriate.
     """
-    family = models.PositiveSmallIntegerField(choices=AF_CHOICES, default=4 ,editable=True)
+    family = models.PositiveSmallIntegerField(choices=AF_CHOICES, editable=False)
     prefix = IPNetworkField(help_text="IPv4 or IPv6 network with mask")
     datacenter = models.ForeignKey('Datacenter', related_name='prefixes', on_delete=models.PROTECT, blank=True, null=True)
     vrf = models.ForeignKey('Vrf', related_name='prefixes', on_delete=models.PROTECT, blank=True, null=True,
@@ -309,15 +358,6 @@ class Prefix(CreatedUpdatedModel):
 
 
 
-
-
-
-
-
-
-
-
-
 class IPAddressManager(models.Manager):
 
     def get_queryset(self):
@@ -344,7 +384,7 @@ class IPAddress(CreatedUpdatedModel):
     which has a NAT outside IP, that Interface's Device can use either the inside or outside IP as its primary IP.
     """
     datacenter = models.ForeignKey('Datacenter', related_name='ip_addresses', on_delete=models.PROTECT, blank=True, null=True)
-    family = models.PositiveSmallIntegerField(choices=AF_CHOICES, default=4, editable=True)
+    family = models.PositiveSmallIntegerField(choices=AF_CHOICES, editable=False)
     address = IPAddressField(help_text="IPv4 or IPv6 address (with mask)")
     vrf = models.ForeignKey('VRF', related_name='ip_addresses', on_delete=models.PROTECT, blank=True, null=True,
                             verbose_name='VRF')
@@ -366,6 +406,36 @@ class IPAddress(CreatedUpdatedModel):
 
     def get_absolute_url(self, request=None):
         return reverse('api:ipam_ip_address-detail', kwargs={'pk': self.pk}, request=request)
+
+
+
+    def get_duplicates(self):
+        return IPAddress.objects.filter(vrf=self.vrf, address__net_host=str(self.address.ip)).exclude(pk=self.pk)
+
+    def clean(self):
+
+        if self.address:
+
+            # Enforce unique IP space (if applicable)
+            if (self.vrf is None and settings.ENFORCE_GLOBAL_UNIQUE) or (self.vrf and self.vrf.enforce_unique):
+                duplicate_ips = self.get_duplicates()
+                if duplicate_ips:
+                    raise ValidationError({
+                        'address': "Duplicate IP address found in {}: {}".format(
+                            "VRF {}".format(self.vrf) if self.vrf else "global table",
+                            duplicate_ips.first(),
+                        )
+                    })
+
+    def save(self, *args, **kwargs):
+        if self.address:
+            # Infer address family from IPAddress object
+            self.family = self.address.version
+        super(IPAddress, self).save(*args, **kwargs)
+
+
+
+
 
 
 @python_2_unicode_compatible

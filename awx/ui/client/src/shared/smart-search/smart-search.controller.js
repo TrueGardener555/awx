@@ -20,6 +20,7 @@ function SmartSearchController (
         .then(config => init(config));
 
     function init (config) {
+
         let version;
 
         try {
@@ -169,6 +170,8 @@ function SmartSearchController (
     }
 
     $scope.addTerms = terms => {
+
+        
         const { singleSearchParam } = $scope;
         const unmodifiedQueryset = _.clone(queryset);
 
@@ -203,6 +206,7 @@ function SmartSearchController (
         $scope.searchTerm = null;
 
         generateSearchTags();
+
     };
     // remove tag, merge new queryset, $state.go
     $scope.removeTerm = index => {
