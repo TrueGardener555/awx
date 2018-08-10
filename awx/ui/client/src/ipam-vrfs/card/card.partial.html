@@ -50,27 +50,29 @@
 					<div class="error" ng-show="vrfs_form.rd.$error.required">Please enter a value.</div>
 				</div>
 			</div>
-						
+
 			<div class="form-group Form-formGroup " ng-show = "tabId == 1">
 				<label class="Form-inputLabelContainer ">	
-					<span class="Form-requiredAsterisk">*</span>		
 					<span class="Form-inputLabel">ENFORCE UNIQUWE</span>
 				</label>
 				<div>
-					<input type="text" ng-model="location" name="location" id="vrfs_location" class="form-control Form-textInput" required="">
-					<div class="error" ng-show="vrfs_form.location.$error.required">Please enter a value.</div>
+					<input type="checkbox" ng-model = "enforce_unique" name="enforce_unique" class="form-control"> ENFORCE UNIQUE<br>
 				</div>
 			</div>
 
 			<div class="form-group Form-formGroup " ng-show = "tabId == 1">
 				<label class="Form-inputLabelContainer ">
+					<span class="Form-requiredAsterisk">*</span>	
 					<span class="Form-inputLabel">DATACENTER</span>
 				</label>
 				<div>
-					<input type="text" ng-model="facility" name="facility" id="vrfs_facility" class="form-control Form-textInput ng-pristine">
+					<select placeholder="Choose a Datacenter" ng-model="datacenters" on-open="loadDatacenter()" class="form-control Form-dropDown" >
+						<option value="" disabled selected>Choose a Datacenter</option>
+						<option ng-value="vrf_datacenter.name" ng-repeat="vrf_datacenter in VRFDatacenters" >{{vrf_datacenter.name}}</md-option>
+					<select>
 				</div>
 			</div>
-			
+
 		</form>
 		
 		<div class="buttons Form-buttons" id="user_controls">
@@ -159,12 +161,16 @@
 								NAME
 								<i class="fa columnSortIcon ng-scope {{ getSortClass('name') }}"></i>
 							</th>
-							<th id="project-scm_type-header" class="List-tableHeader list-header col-lg-2 col-md-2 col-sm-2 hidden-xs" ng-click="sortData('site')">
-								SITE
+							<th id="project-scm_type-header" class="List-tableHeader list-header col-lg-2 col-md-2 col-sm-2 hidden-xs" ng-click="sortData('rd')">
+								RD
 								<i class="fa columnSortIcon ng-scope {{ getSortClass('site') }}"></i>
 							</th>
-							<th id="project-scm_revision-header" class="List-tableHeader list-header List-tableCell col-lg-2 col-md-2 hidden-sm hidden-xs" ng-click="sortData('location')">
-								LOCATION
+							<th id="project-scm_revision-header" class="List-tableHeader list-header List-tableCell col-lg-2 col-md-2 hidden-sm hidden-xs" ng-click="sortData('datacenter')">
+								DATACENTER
+								<i class="fa columnSortIcon ng-scope {{ getSortClass('location') }}"></i>
+							</th>
+							<th id="project-scm_revision-header" class="List-tableHeader list-header List-tableCell col-lg-2 col-md-2 hidden-sm hidden-xs" ng-click="sortData('enforce_unique')">
+								ENFORCE
 								<i class="fa columnSortIcon ng-scope {{ getSortClass('location') }}"></i>
 							</th>
 
@@ -178,8 +184,9 @@
 							<td class="List-tableCell username-column col-md-3 col-sm-3 col-xs-9">
 								<a href="" ng-click="editClick($index)" class="ng-binding">{{ item.name }}</a>
 							</td>
-							<td class="List-tableCell first_name-column col-md-3 col-sm-3 hidden-xs ng-binding">{{ item.site }}</td>
-							<td class="List-tableCell last_name-column col-md-3 col-sm-3 hidden-xs ng-binding">{{ item.location }}</td>
+							<td class="List-tableCell first_name-column col-md-3 col-sm-3 hidden-xs ng-binding">{{ item.rd }}</td>
+							<td class="List-tableCell last_name-column col-md-3 col-sm-3 hidden-xs ng-binding">{{ item.summary_fields.datacenter.name }}</td>
+							<td class="List-tableCell last_name-column col-md-3 col-sm-3 hidden-xs ng-binding">{{ item.enforce_unique }}</td>
 							<td class="List-actionsContainer">
 								<div class="List-actionButtonCell List-tableCell">
 									<button id="edit-action" class="List-actionButton" data-placement="top" ng-click="editClick($index)" aw-tool-tip="Edit VRF" data-original-title="" title=""><i class="fa fa-pencil"></i> </button>

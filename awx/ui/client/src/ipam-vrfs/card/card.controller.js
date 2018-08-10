@@ -37,6 +37,23 @@ export default
 					});
 			};
 
+			$scope.loadDatacenter = function() {
+				console.log("HAHA");
+				Rest.setUrl(GetBasePath('ipam_datacenters') + "?order_by=name");
+				Rest.get()
+					.then(({ data }) => {
+						$scope.VRFDatacenters = data.results;
+						console.log($scope.VRFDatacenters);
+
+						Wait('stop');
+					})
+					.catch(({ data, status }) => {
+						ProcessErrors($scope, data, status, null, {
+							hdr: i18n._('Error!'),
+							msg: i18n.sprintf(i18n._('Call to %s failed. Return status: %d'), (defaultUrl === undefined) ? "undefined" : defaultUrl, status)
+						});
+					});
+			};
 			getIpamVrfs();
 
 			$scope.showKeyPane = false;
@@ -80,8 +97,9 @@ export default
 				$scope.vrfs_name = "";
 				$scope.description = "";
 				$scope.rd = "";
-				$scope.enforce_unique = "";
+				$scope.enforce_unique = false;
 				$scope.vrfs = "";
+				$scope.loadDatacenter();
 			}
 
 			$scope.formCreate = function () {
