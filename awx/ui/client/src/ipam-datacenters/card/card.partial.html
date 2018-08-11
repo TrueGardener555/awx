@@ -204,7 +204,7 @@
 			        </div>
 			    </div>
 			    
-				<button toolbar-button="" mode="options.mode" aw-tool-tip="Create a new user" data-tip-watch="" data-placement="top" data-container="" class="at-Button--add" id="button-add" data-title="" ng-disabled="" ng-click="$eval(options.ngClick)" ng-show="canAdd &amp;&amp; canEdit" toolbar="true" aw-feature="" data-original-title="" title="">
+				<button toolbar-button="" mode="options.mode" aw-tool-tip="Create a new Datacenter" data-tip-watch="" data-placement="top" data-container="" class="at-Button--add" id="button-add" data-title="" ng-disabled="" ng-click="$eval(options.ngClick)" ng-show="canAdd &amp;&amp; canEdit" toolbar="true" aw-feature="" data-original-title="" title="">
             		<i class="fa undefined fa-lg"></i>
             	</button>
 			</div>
@@ -212,17 +212,17 @@
 				<table id="datacenters_table" class="List-table" is-extended="false">
 					<thead>
 						<tr class="List-tableHeaderRow">
-							<th id="project-status-header" class="List-tableHeader list-header List-staticColumn--smallStatus list-header-noSort" ng-click="columnNoSort !== 'true' &amp;&amp; toggleColumnOrderBy()" ng-class="{'list-header-noSort' : columnNoSort === 'true'}" base-path="projects" collection="projects" dataset="project_dataset" column-sort="" column-field="status" column-iterator="project" column-no-sort="true" column-label="" column-custom-class="List-staticColumn--smallStatus" query-set="project_queryset">
+							<th class="List-tableHeader list-header List-staticColumn--smallStatus" ng-click="columnNoSort !== 'true' &amp;&amp; toggleColumnOrderBy()" ng-class="{'list-header-noSort' : columnNoSort === 'true'}" column-sort="" column-field="status" column-no-sort="true" column-label="" column-custom-class="List-staticColumn--smallStatus">
 							</th>
-							<th id="project-name-header" class="List-tableHeader list-header col-lg-4 col-md-4 col-sm-4 col-xs-7 List-staticColumnAdjacent" ng-click="sortData('name')"> 
+							<th class="List-tableHeader list-header col-lg-4 col-md-4 col-sm-4 col-xs-7 List-staticColumnAdjacent" ng-click="sortData('name')"> 
 								NAME
 								<i class="fa columnSortIcon ng-scope {{ getSortClass('name') }}"></i>
 							</th>
-							<th id="project-scm_type-header" class="List-tableHeader list-header col-lg-2 col-md-2 col-sm-2 hidden-xs" ng-click="sortData('site')">
+							<th class="List-tableHeader list-header col-lg-2 col-md-2 col-sm-2 hidden-xs" ng-click="sortData('site')">
 								SITE
 								<i class="fa columnSortIcon ng-scope {{ getSortClass('site') }}"></i>
 							</th>
-							<th id="project-scm_revision-header" class="List-tableHeader list-header List-tableCell col-lg-2 col-md-2 hidden-sm hidden-xs" ng-click="sortData('location')">
+							<th class="List-tableHeader list-header List-tableCell col-lg-2 col-md-2 hidden-sm hidden-xs" ng-click="sortData('location')">
 								LOCATION
 								<i class="fa columnSortIcon ng-scope {{ getSortClass('location') }}"></i>
 							</th>
@@ -232,16 +232,16 @@
 					</thead>
 
 					<tbody>
-						<tr ng-class="[users.active_class, {'List-tableRow--selected' : $stateParams['item_id'] == item.id}]" id="2" class="List-tableRow users_class ng-scope" ng-repeat="item in apidataLists | filter:{name:searchTerm} | orderBy:sortColumn:reverseSort">
+						<tr ng-class = "{'List-tableRow--selected' : edit_id === item.id}" class="List-tableRow ng-scope " ng-repeat="item in apidataLists | filter:{name:searchTerm} | orderBy:sortColumn:reverseSort">
 							<td class="List-tableCell username-column col-md-3 col-sm-3 col-xs-9"/>
 							<td class="List-tableCell username-column col-md-3 col-sm-3 col-xs-9">
-								<a href="" ng-click="editClick($index)" class="ng-binding">{{ item.name }}</a>
+								<a href="" ng-click="editClick(item.id)" class="ng-binding">{{ item.name }}</a>
 							</td>
 							<td class="List-tableCell first_name-column col-md-3 col-sm-3 hidden-xs ng-binding">{{ item.site }}</td>
 							<td class="List-tableCell last_name-column col-md-3 col-sm-3 hidden-xs ng-binding">{{ item.location }}</td>
 							<td class="List-actionsContainer">
 								<div class="List-actionButtonCell List-tableCell">
-									<button id="edit-action" class="List-actionButton" data-placement="top" ng-click="editClick($index)" aw-tool-tip="Edit Datacenter" data-original-title="" title=""><i class="fa fa-pencil"></i> </button>
+									<button id="edit-action" ng-class = "{'List-editButton--selected' : edit_id === item.id}" class="List-actionButton" data-placement="top" ng-click="editClick(item.id)" aw-tool-tip="Edit Datacenter" data-original-title="" title=""><i class="fa fa-pencil"></i> </button>
 									<button id="delete-action" class="List-actionButton List-actionButton--delete" data-placement="top" ng-click="deleteDatacenter(item.id, item.name)" aw-tool-tip="Delete Datacenter" data-original-title="" title=""><i class="fa fa-trash-o"></i> </button>
 								</div>
 							</td>

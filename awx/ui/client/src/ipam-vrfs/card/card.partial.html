@@ -11,16 +11,10 @@
 			</div>
 		</div>
 		
-		<div class="Form-tabHolder">
-			<div id="datacenter_tab" class="Form-tab {{ selected1 }}" ng-click="TabClick(1)">Details</div>
-			<div id="contacts_tab" class="Form-tab {{ selected2 }}" ng-click="TabClick(2)">Contacts</div>
-			<div id="comment_tab" class="Form-tab {{ selected3 }}" ng-click="TabClick(3)"">Comments</div>
-		</div>
-
 		<form class="Form" name="vrfs_form" id="vrfs_form" autocomplete="off" novalidate="" >
 	
 			<div ng-show="flashMessage != null &amp;&amp; flashMessage != undefined" class="alert alert-info ng-binding ng-hide"></div>
-			<div class="form-group Form-formGroup" ng-show = "tabId == 1">
+			<div class="form-group Form-formGroup" >
 				<label class="Form-inputLabelContainer">
 					<span class="Form-requiredAsterisk">*</span>		
 					<span class="Form-inputLabel">Name</span>
@@ -31,7 +25,7 @@
 				</div>
 			</div>
 
-			<div class="form-group Form-formGroup " ng-show = "tabId == 1">
+			<div class="form-group Form-formGroup " >
 				<label class="Form-inputLabelContainer ">		
 					<span class="Form-inputLabel">Description</span>
 				</label>
@@ -40,7 +34,7 @@
 				</div>
 			</div>
 
-			<div class="form-group Form-formGroup " ng-show = "tabId == 1">
+			<div class="form-group Form-formGroup " >
 				<label class="Form-inputLabelContainer ">
 					<span class="Form-requiredAsterisk">*</span>		
 					<span class="Form-inputLabel">ROUTER DISTINGUISHER</span>
@@ -51,24 +45,24 @@
 				</div>
 			</div>
 
-			<div class="form-group Form-formGroup " ng-show = "tabId == 1">
+			<div class="form-group Form-formGroup " >
 				<label class="Form-inputLabelContainer ">	
-					<span class="Form-inputLabel">ENFORCE UNIQUWE</span>
+					<span class="Form-inputLabel">ENFORCE UNIQUE</span>
 				</label>
 				<div>
-					<input type="checkbox" ng-model = "enforce_unique" name="enforce_unique" class="form-control"> ENFORCE UNIQUE<br>
+					<input type="checkbox" ng-model = "enforce_unique" name="enforce_unique"> ENFORCE UNIQUE<br>
 				</div>
 			</div>
 
-			<div class="form-group Form-formGroup " ng-show = "tabId == 1">
+			<div class="form-group Form-formGroup " >
 				<label class="Form-inputLabelContainer ">
 					<span class="Form-requiredAsterisk">*</span>	
 					<span class="Form-inputLabel">DATACENTER</span>
 				</label>
 				<div>
-					<select placeholder="Choose a Datacenter" ng-model="datacenters" on-open="loadDatacenter()" class="form-control Form-dropDown" >
-						<option value="" disabled selected>Choose a Datacenter</option>
-						<option ng-value="vrf_datacenter.name" ng-repeat="vrf_datacenter in VRFDatacenters" >{{vrf_datacenter.name}}</md-option>
+					<select placeholder="Choose a Datacenter" ng-model="datacenter"  ng-click="selectDatacenter($index)" class="form-control Form-dropDown" >
+						<option value="" selected>Choose a Datacenter</option>
+						<option value="{{vrf_datacenter.id}}" ng-repeat="vrf_datacenter in VRFDatacenters" >{{vrf_datacenter.name}}</md-option>
 					<select>
 				</div>
 			</div>
@@ -80,7 +74,7 @@
 			<button type="button" class="btn btn-sm Form-saveButton" ng-click="formSubmit()"> {{submitTitle}}</button>
 		</div>
 	</div>
-	
+
 	<div class="tab-pane Panel" id="management_jobs">
 		<div class="List-title">
 			<div class="List-titleText" translate>
@@ -163,33 +157,32 @@
 							</th>
 							<th id="project-scm_type-header" class="List-tableHeader list-header col-lg-2 col-md-2 col-sm-2 hidden-xs" ng-click="sortData('rd')">
 								RD
-								<i class="fa columnSortIcon ng-scope {{ getSortClass('site') }}"></i>
+								<i class="fa columnSortIcon ng-scope {{ getSortClass('rd') }}"></i>
 							</th>
 							<th id="project-scm_revision-header" class="List-tableHeader list-header List-tableCell col-lg-2 col-md-2 hidden-sm hidden-xs" ng-click="sortData('datacenter')">
 								DATACENTER
-								<i class="fa columnSortIcon ng-scope {{ getSortClass('location') }}"></i>
+								<i class="fa columnSortIcon ng-scope {{ getSortClass('datacenter') }}"></i>
 							</th>
 							<th id="project-scm_revision-header" class="List-tableHeader list-header List-tableCell col-lg-2 col-md-2 hidden-sm hidden-xs" ng-click="sortData('enforce_unique')">
 								ENFORCE
-								<i class="fa columnSortIcon ng-scope {{ getSortClass('location') }}"></i>
+								<i class="fa columnSortIcon ng-scope {{ getSortClass('enforce_unique') }}"></i>
 							</th>
-
 							<th class="List-tableHeader List-tableHeader--actions actions-column col-lg-4 col-md-3 col-sm-4 col-xs-5">Actions</th>
 						</tr>
 					</thead>
 
 					<tbody>
-						<tr ng-class="[users.active_class, {'List-tableRow--selected' : $stateParams['item_id'] == item.id}]" id="2" class="List-tableRow users_class ng-scope" ng-repeat="item in apidataLists | filter:{name:searchTerm} | orderBy:sortColumn:reverseSort">
+						<tr ng-class="{'List-tableRow--selected' : edit_id === item.id}" id="2" class="List-tableRow users_class ng-scope" ng-repeat="item in apidataLists | filter:{name:searchTerm} | orderBy:sortColumn:reverseSort">
 							<td class="List-tableCell username-column col-md-3 col-sm-3 col-xs-9"/>
 							<td class="List-tableCell username-column col-md-3 col-sm-3 col-xs-9">
-								<a href="" ng-click="editClick($index)" class="ng-binding">{{ item.name }}</a>
+								<a href="" ng-click="editClick(item.id)" class="ng-binding">{{ item.name }}</a>
 							</td>
 							<td class="List-tableCell first_name-column col-md-3 col-sm-3 hidden-xs ng-binding">{{ item.rd }}</td>
 							<td class="List-tableCell last_name-column col-md-3 col-sm-3 hidden-xs ng-binding">{{ item.summary_fields.datacenter.name }}</td>
 							<td class="List-tableCell last_name-column col-md-3 col-sm-3 hidden-xs ng-binding">{{ item.enforce_unique }}</td>
 							<td class="List-actionsContainer">
 								<div class="List-actionButtonCell List-tableCell">
-									<button id="edit-action" class="List-actionButton" data-placement="top" ng-click="editClick($index)" aw-tool-tip="Edit VRF" data-original-title="" title=""><i class="fa fa-pencil"></i> </button>
+									<button id="edit-action" ng-class="{'List-editButton--selected' : edit_id === item.id}" class="List-actionButton" data-placement="top" ng-click="editClick(item.id)" aw-tool-tip="Edit VRF" data-original-title="" title=""><i class="fa fa-pencil"></i> </button>
 									<button id="delete-action" class="List-actionButton List-actionButton--delete" data-placement="top" ng-click="deletevrfs(item.id, item.name)" aw-tool-tip="Delete VRFS" data-original-title="" title=""><i class="fa fa-trash-o"></i> </button>
 								</div>
 							</td>

@@ -63,6 +63,75 @@ from awx.main.views import *
 # from awx.api.urls import *
 
 
+
+
+
+DEFAULT_SUMMARY_FIELDS = ('id', 'name', 'description')# , 'created_by', 'modified_by')#, 'type')
+
+
+# Keys are fields (foreign keys) where, if found on an instance, summary info
+# should be added to the serialized data.  Values are a tuple of field names on
+# the related object to include in the summary data (if the field is present on
+# the related object).
+SUMMARIZABLE_FK_FIELDS = {
+    'datacenter': DEFAULT_SUMMARY_FIELDS,
+    'vrf': DEFAULT_SUMMARY_FIELDS,
+    'prefix': ('id', 'family', 'prefix', 'status', 'is_pool', ),
+    'vlan': DEFAULT_SUMMARY_FIELDS + ('vid', ),
+    # 'application': ('id', 'name', 'client_id'),
+    # 'team': DEFAULT_SUMMARY_FIELDS,
+    # 'inventory': DEFAULT_SUMMARY_FIELDS + ('has_active_failures',
+    #                                        'total_hosts',
+    #                                        'hosts_with_active_failures',
+    #                                        'total_groups',
+    #                                        'groups_with_active_failures',
+    #                                        'has_inventory_sources',
+    #                                        'total_inventory_sources',
+    #                                        'inventory_sources_with_failures',
+    #                                        'organization_id',
+    #                                        'kind',
+    #                                        'insights_credential_id',),
+    # 'host': DEFAULT_SUMMARY_FIELDS + ('has_active_failures',
+    #                                   'has_inventory_sources'),
+    # 'group': DEFAULT_SUMMARY_FIELDS + ('has_active_failures',
+    #                                    'total_hosts',
+    #                                    'hosts_with_active_failures',
+    #                                    'total_groups',
+    #                                    'groups_with_active_failures',
+    #                                    'has_inventory_sources'),
+    # 'project': DEFAULT_SUMMARY_FIELDS + ('status', 'scm_type'),
+    # 'source_project': DEFAULT_SUMMARY_FIELDS + ('status', 'scm_type'),
+    # 'project_update': DEFAULT_SUMMARY_FIELDS + ('status', 'failed',),
+    # 'credential': DEFAULT_SUMMARY_FIELDS + ('kind', 'cloud', 'credential_type_id'),
+    # 'vault_credential': DEFAULT_SUMMARY_FIELDS + ('kind', 'cloud', 'credential_type_id'),
+    # 'job': DEFAULT_SUMMARY_FIELDS + ('status', 'failed', 'elapsed'),
+    # 'job_template': DEFAULT_SUMMARY_FIELDS,
+    # 'workflow_job_template': DEFAULT_SUMMARY_FIELDS,
+    # 'workflow_job': DEFAULT_SUMMARY_FIELDS,
+    # 'schedule': DEFAULT_SUMMARY_FIELDS + ('next_run',),
+    # 'unified_job_template': DEFAULT_SUMMARY_FIELDS + ('unified_job_type',),
+    # 'last_job': DEFAULT_SUMMARY_FIELDS + ('finished', 'status', 'failed', 'license_error'),
+    # 'last_job_host_summary': DEFAULT_SUMMARY_FIELDS + ('failed',),
+    # 'last_update': DEFAULT_SUMMARY_FIELDS + ('status', 'failed', 'license_error'),
+    # 'current_update': DEFAULT_SUMMARY_FIELDS + ('status', 'failed', 'license_error'),
+    # 'current_job': DEFAULT_SUMMARY_FIELDS + ('status', 'failed', 'license_error'),
+    # 'inventory_source': ('source', 'last_updated', 'status'),
+    # 'custom_inventory_script': DEFAULT_SUMMARY_FIELDS,
+    # 'source_script': ('name', 'description'),
+    # 'role': ('id', 'role_field'),
+    # 'notification_template': DEFAULT_SUMMARY_FIELDS,
+    # 'instance_group': {'id', 'name', 'controller_id'},
+    # 'insights_credential': DEFAULT_SUMMARY_FIELDS,
+}
+
+
+
+
+
+
+
+
+
 def reverse_gfk(content_object, request):
     '''
     Computes a reverse for a GenericForeignKey field.
@@ -258,16 +327,36 @@ class BaseSerializer(serializers.ModelSerializer):
 
         summary_fields = OrderedDict()
 
-        fk = 'datacenter'
-        fields = ['id', 'name']
+        # fk = 'datacenter'
+        # fields = ['id', 'name']
         
-        summary_fields[fk] = OrderedDict()
+        # summary_fields[fk] = OrderedDict()
         
-        fkval = getattr(obj, fk, None)
+        # fkval = getattr(obj, fk, None)
 
-        for field in fields:
-            fval = getattr(fkval, field, None)
-            summary_fields[fk][field] = fval
+        # for field in fields:
+        #     fval = getattr(fkval, field, None)
+        #     summary_fields[fk][field] = fval
+
+        all_field_names = self.fields.keys()
+        summary_field_keys = list(SUMMARIZABLE_FK_FIELDS.keys())
+
+        # summary_fields['all_fields'] =  all_field_names
+        # summary_fields['summary_field_keys'] =  summary_field_keys
+        # summary_fields['diff'] =  list(set(all_field_names) & set(summary_field_keys))
+
+        field_names = list(set(all_field_names) & set(summary_field_keys))
+
+        for fk in field_names:
+            summary_fields[fk] = OrderedDict()
+            fields = SUMMARIZABLE_FK_FIELDS[fk]
+            fkval = getattr(obj, fk, None)
+
+            for field in fields:
+                fval = getattr(fkval, field, None)
+                summary_fields[fk][field] = fval
+
+
 
         return summary_fields
 
@@ -283,10 +372,10 @@ class IpamRirSerializer(BaseSerializer):
         fields = '__all__'
         # fields = ('*','-description')
 
-    def get_summary_fields(self, obj):
-        summary_fields = super(IpamRirSerializer, self).get_summary_fields(obj)
-        summary_fields = {}
-        return summary_fields
+    # def get_summary_fields(self, obj):
+    #     summary_fields = super(IpamRirSerializer, self).get_summary_fields(obj)
+    #     summary_fields = {}
+    #     return summary_fields
 
 
 
@@ -323,11 +412,11 @@ class IpamDatacenterSerializer(BaseSerializer):
         #   'contact_email', 'comments'
         #   )
 
-    def get_summary_fields(self, obj):
-        summary_fields = super(IpamDatacenterSerializer, self).get_summary_fields(obj)
-        # summary_fields['datacenter'] = {}
-        summary_fields = {}
-        return summary_fields
+    # def get_summary_fields(self, obj):
+    #     summary_fields = super(IpamDatacenterSerializer, self).get_summary_fields(obj)
+    #     # summary_fields['datacenter'] = {}
+    #     summary_fields = {}
+    #     return summary_fields
 
 
 
@@ -347,6 +436,39 @@ class IpamPrefixSerializer(BaseSerializer):
         # fields = ('prefix', 'description', 
         #   'vrf', 'family', 'datacenter', 'vrf', 'is_pool',
         #   )
+
+    # def get_summary_fields1(self, obj):
+    #     summary_fields = super(IpamPrefixSerializer, self).get_summary_fields(obj)
+    #     # summary_fields['datacenter'] = {}
+
+
+
+
+
+
+
+    #     all_field_names = self.fields.keys()
+    #     summary_field_keys = list(SUMMARIZABLE_FK_FIELDS.keys())
+
+    #     # summary_fields['all_fields'] =  all_field_names
+    #     # summary_fields['summary_field_keys'] =  summary_field_keys
+    #     # summary_fields['diff'] =  list(set(all_field_names) & set(summary_field_keys))
+
+    #     field_names = list(set(all_field_names) & set(summary_field_keys))
+
+    #     for fk in field_names:
+    #         summary_fields[fk] = OrderedDict()
+    #         fields = SUMMARIZABLE_FK_FIELDS[fk]
+    #         fkval = getattr(obj, fk, None)
+
+    #         for field in fields:
+    #             fval = getattr(fkval, field, None)
+    #             summary_fields[fk][field] = fval
+
+    #     # if field_names:
+    #     #     summary_fields['danny'] =  field_names
+
+    #     return summary_fields
 
 
 class IpamIPAddressSerializer(BaseSerializer):

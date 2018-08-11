@@ -11,7 +11,7 @@
 			</div>
 		</div>
 		
-		<form class="Form" name="datacenter_form" id="datacenter_form" autocomplete="off" novalidate="" >
+		<form class="Form" name="rir_form" id="rir_form" autocomplete="off" novalidate="" >
 	
 			<div ng-show="flashMessage != null &amp;&amp; flashMessage != undefined" class="alert alert-info ng-binding ng-hide"></div>
 			<div class="form-group Form-formGroup ">
@@ -20,9 +20,8 @@
 					<span class="Form-inputLabel" translate="">Name</span>
 				</label>
 				<div>
-					<input type="text" ng-model="name" name="name" id="rir_name" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="" capitalize="">
-					<div class="error ng-hide" id="user-first_name-required-error" ng-show="datacenter_form.first_name.$dirty &amp;&amp; datacenter_form.first_name.$error.required">Please enter a value.</div>
-					<div class="error api-error ng-binding" id="user-first_name-api-error" ng-bind="first_name_api_error"></div>
+					<input type="text" ng-model="rir_name" name="rir_name" id="rir_name" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="">
+					<div class="error ng-hide" ng-show="rir_form.rir_name.$error.required">Please enter a value.</div>
 				</div>
 			</div>
 						
@@ -37,19 +36,23 @@
 
 			<div class="form-group Form-formGroup ">
 				<label class="Form-inputLabelContainer ">
-					<span class="Form-inputLabel" translate="">Type</span>
+					<span class="Form-requiredAsterisk">*</span>
+					<span class="Form-inputLabel" translate="">Registry</span>
 				</label>
 				<div>
-					<input type="text" ng-model="type" name="type" id="rir_type" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="" >
+					<input type="text" ng-model="registry" name="registry" id="rir_registry" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="" >
+					<div class="error ng-hide" ng-show="rir_form.rir_registry.$error.required">Please enter a value.</div>
 				</div>
 			</div>
 						
 			<div class="form-group Form-formGroup ">
 				<label class="Form-inputLabelContainer ">	
+					<span class="Form-requiredAsterisk">*</span>
 					<span class="Form-inputLabel" translate="">Region</span>
 				</label>
 				<div>
 					<input type="text" ng-model="region" name="region" id="rir_region" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="">
+					<div class="error ng-hide" ng-show="rir_form.rir_region.$error.required">Please enter a value.</div>
 				</div>
 			</div>
 
@@ -58,7 +61,7 @@
 		<div class="buttons Form-buttons" id="user_controls">
 			<button type="button" class="btn btn-sm Form-cancelButton" id="datacenters_user_cancel_btn" ng-show="(user_obj.summary_fields.user_capabilities.edit || canAdd)" ng-click="formCancel()"> Cancel</button>
 			<button type="button" class="btn btn-sm Form-cancelButton ng-hide" id="user_close_btn" ng-show="!(user_obj.summary_fields.user_capabilities.edit || canAdd)" ng-click="formCancel()"> Close</button>
-			<button type="button" class="btn btn-sm Form-saveButton" id="user_save_btn" ng-click="formSubmit()" ng-disabled="datacenter_form.$invalid ||  datacenter_form.$pending" disabled="disabled"> {{submitTitle}}</button>
+			<button type="button" class="btn btn-sm Form-saveButton" id="user_save_btn" ng-click="formSubmit()" ng-disabled="rir_form.$invalid ||  rir_form.$pending" disabled="disabled"> {{submitTitle}}</button>
 		</div>
 	</div>
 	
@@ -68,7 +71,7 @@
 				IPAM RIRS
 			</div>
 			<span class="badge List-titleBadge ng-binding">
-				{{ rirLists.length }}
+				{{ apidataLists.length }}
 			</span>
 		</div>
 		<div class="List-well">
@@ -80,44 +83,92 @@
 				</div>
 			</div>
 
-			<div>
-				<smart-search
-					django-model="${itm}"
-					search-size="${width}"
-					base-path="${ collection.basePath }"
-					iterator="${collection.iterator}"
-					list="list"
-					collection="${collection.iterator}"
-					dataset="${collection.iterator}_dataset"
-					search-tags="searchTags">
-				</smart-search>
+			<div class="SmartSearch row">
+				<div class="SmartSearch-bar">
+					<div class="SmartSearch-searchTermContainer">
+	            		<form name="smartSearch" class="SmartSearch-form" aw-enter-key="addTerms(searchTerm)" novalidate="">
+	                		<input class="SmartSearch-input" ng-model="searchTerm" placeholder="Search" ng-disabled="disableSearch">
+	            		</form>
+	            		<div type="submit" class="SmartSearch-searchButton" ng-disabled="!searchTerm" ng-click="addTerms(searchTerm)" disabled="disabled">
+	                		<i class="fa fa-search"></i>
+	            		</div>
+	        		</div>
+					<div class="SmartSearch-keyToggle btn" ng-class="{'is-active': showKeyPane}" ng-click="toggleKeyPane()">Key</div>
+				</div>
+				
+				<div class="SmartSearch-tags" ng-show="searchTags">
+			        <div class="SmartSearch-tagSection">
+			            <div class="SmartSearch-flexContainer">
+				            <div class="SmartSearch-tagContainer" ng-repeat="searchString in searchList">
+			                    <div class="SmartSearch-deleteContainer" ng-click="removeTerm($index)">
+			                        <i class="fa fa-times SmartSearch-tagDelete"></i>
+			                    </div>
+			                    <div class="SmartSearch-tag SmartSearch-tag--deletable">
+			                        <span class="SmartSearch-name ng-binding">{{ searchString }}</span>
+			                    </div>
+			                </div>
+			                <a href="" class="SmartSearch-clearAll" ng-click="clearAllTerms()">CLEAR ALL</a>
+			            </div>
+			        </div>
+			    </div>
+				
+				<div class="SmartSearch-keyPane row ng-scope" ng-show="showKeyPane">
+			        <div class="SmartSearch-keyRow">
+			            <div class="SmartSearch-examples">
+			                <div class="SmartSearch-examples--title">
+			                    <b>EXAMPLES:</b>
+			                </div>
+			                <div class="SmartSearch-examples--search ng-binding ng-scope" ng-repeat="searchExample in searchExamples">{{ searchExample }}</div>
+			            </div>
+			        </div>
+			        <div class="SmartSearch-keyRow">
+			            <b>FIELDS:</b> <span ng-repeat="field in keyFields">{{ field }}<span ng-if="!$last" class="ng-scope">, </span></span>
+			        </div>
+			        <div class="SmartSearch-keyRow">
+			            <b class="ng-binding">ADDITIONAL INFORMATION:</b>
+			                <span>{{ 'For additional information on advanced search search syntax please see the Ansible Tower' | translate }}
+            				<a href="https://docs.ansible.com/ansible-tower/1.0.6/html/userguide/search_sort.html"> {{ 'documentation' | translate }}</a>.</span>
+			        </div>
+			    </div>
+			    
+				<button toolbar-button="" mode="options.mode" aw-tool-tip="Create a new rir" data-tip-watch="" data-placement="top" data-container="" class="at-Button--add" id="button-add" data-title="" ng-disabled="" ng-click="$eval(options.ngClick)" ng-show="canAdd &amp;&amp; canEdit" toolbar="true" aw-feature="" data-original-title="" title="">
+            		<i class="fa undefined fa-lg"></i>
+            	</button>
 			</div>
 
 			<div class="list-table-container">
 				<table id="datacenters_table" class="List-table" is-extended="false">
 					<thead>
 						<tr class="List-tableHeaderRow">
-							<th id="project-status-header" class="List-tableHeader list-header List-staticColumn--smallStatus list-header-noSort" ng-click="columnNoSort !== 'true' &amp;&amp; toggleColumnOrderBy()" ng-class="{'list-header-noSort' : columnNoSort === 'true'}" base-path="projects" collection="projects" dataset="project_dataset" column-sort="" column-field="status" column-iterator="project" column-no-sort="true" column-label="" column-custom-class="List-staticColumn--smallStatus" query-set="project_queryset"></th>
-							<th id="project-name-header" class="List-tableHeader list-header col-lg-4 col-md-4 col-sm-4 col-xs-7 List-staticColumnAdjacent" column-field="name" column-iterator="project" column-no-sort="undefined" column-label="Name" column-custom-class="col-lg-4 col-md-4 col-sm-4 col-xs-7 List-staticColumnAdjacent" query-set="project_queryset"> NAME</th>
-							<th id="project-scm_type-header" class="List-tableHeader list-header col-lg-2 col-md-2 col-sm-2 hidden-xs" column-field="scm_site" column-iterator="project" column-no-sort="undefined" column-label="Site" column-custom-class="col-lg-2 col-md-2 col-sm-2 hidden-xs" query-set="project_queryset">TYPE</th>
-							<th id="project-scm_revision-header" class="List-tableHeader list-header List-tableCell col-lg-2 col-md-2 hidden-sm hidden-xs" column-field="scm_location" column-iterator="project" column-no-sort="undefined" column-label="Location" column-custom-class="List-tableCell col-lg-2 col-md-2 hidden-sm hidden-xs" query-set="project_queryset">REGION</th>
-
+							<th class="List-tableHeader list-header List-staticColumn--smallStatus list-header-noSort" ng-click="columnNoSort !== 'true' &amp;&amp; toggleColumnOrderBy()" ng-class="{'list-header-noSort' : columnNoSort === 'true'}" column-sort="" column-field="status" column-iterator="project" column-no-sort="true" column-label="" column-custom-class="List-staticColumn--smallStatus" ></th>
+							<th class="List-tableHeader list-header col-lg-4 col-md-4 col-sm-4 col-xs-7 List-staticColumnAdjacent" ng-click="sortData('name')"> 
+								NAME
+								<i class="fa columnSortIcon ng-scope {{ getSortClass('name') }}"></i>
+							</th>
+							<th class="List-tableHeader list-header col-lg-2 col-md-2 col-sm-2 hidden-xs" ng-click="sortData('registry')">
+								REGISTRY
+								<i class="fa columnSortIcon ng-scope {{ getSortClass('registry') }}"></i>
+							</th>
+							<th class="List-tableHeader list-header List-tableCell col-lg-2 col-md-2 hidden-sm hidden-xs" ng-click="sortData('region')">
+								REGION
+								<i class="fa columnSortIcon ng-scope {{ getSortClass('region') }}"></i>
+							</th>
 							<th class="List-tableHeader List-tableHeader--actions actions-column col-lg-4 col-md-3 col-sm-4 col-xs-5" translate="">Actions</th>
 						</tr>
 					</thead>
 
 					<tbody>
-						<tr ng-class="[users.active_class, {'List-tableRow--selected' : $stateParams['item_id'] == item.id}]" id="2" class="List-tableRow users_class ng-scope" ng-repeat="item in rirLists">
+						<tr ng-class = "{'List-tableRow--selected' : edit_id === item.id}" class="List-tableRow users_class ng-scope" ng-repeat="item in apidataLists | filter:{name:searchTerm} | orderBy:sortColumn:reverseSort">
 							<td class="List-tableCell username-column col-md-3 col-sm-3 col-xs-9"/>
 							<td class="List-tableCell username-column col-md-3 col-sm-3 col-xs-9">
-								<a href="" ng-click="editClick($index)" class="ng-binding">{{ item.name }}</a>
+								<a href="" ng-click="editClick(item.id)" class="ng-binding">{{ item.name }}</a>
 							</td>
-							<td class="List-tableCell first_name-column col-md-3 col-sm-3 hidden-xs ng-binding">{{ item.rir_type }}</td>
-							<td class="List-tableCell last_name-column col-md-3 col-sm-3 hidden-xs ng-binding">{{ item.rir_region }}</td>
+							<td class="List-tableCell first_name-column col-md-3 col-sm-3 hidden-xs ng-binding">{{ item.registry }}</td>
+							<td class="List-tableCell last_name-column col-md-3 col-sm-3 hidden-xs ng-binding">{{ item.region }}</td>
 							<td class="List-actionsContainer">
 								<div class="List-actionButtonCell List-tableCell">
-									<button id="edit-action" class="List-actionButton" data-placement="top" ng-click="editClick($index)" aw-tool-tip="Edit RIR" data-original-title="" title=""><i class="fa fa-pencil"></i> </button>
-									<button id="delete-action" class="List-actionButton List-actionButton--delete" data-placement="top" ng-click="deleteClick(item.id, item.name)" aw-tool-tip="Delete RIR" data-original-title="" title=""><i class="fa fa-trash-o"></i> </button>
+									<button id="edit-action"  ng-class = "{'List-editButton--selected' : edit_id === item.id}" class="List-actionButton" data-placement="top" ng-click="editClick(item.id)" aw-tool-tip="Edit RIR" data-original-title="" title=""><i class="fa fa-pencil"></i> </button>
+									<button id="delete-action" class="List-actionButton List-actionButton--delete" data-placement="top" ng-click="deleteRIR(item.id, item.name)" aw-tool-tip="Delete RIR" data-original-title="" title=""><i class="fa fa-trash-o"></i> </button>
 								</div>
 							</td>
 						</tr>
