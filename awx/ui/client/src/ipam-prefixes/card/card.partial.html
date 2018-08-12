@@ -86,7 +86,6 @@
 				</label>
 				<div>
 					<select placeholder="Choose a Status" ng-model="status"  ng-click="selectStatus($index)" class="form-control Form-dropDown" >
-						<option value="" selected>Choose a Status</option>
 						<option value="{{prefix_status.id}}" ng-repeat="prefix_status in PrefixStatus" >{{prefix_status.name}}</md-option>
 					<select>
 				</div>
@@ -205,16 +204,16 @@
 					</thead>
 
 					<tbody>
-						<tr ng-class="{'List-tableRow--selected' : edit_id === item.id}" id="2" class="List-tableRow users_class ng-scope" ng-repeat="item in apidataLists | filter:{name:searchTerm} | orderBy:sortColumn:reverseSort">
+						<tr ng-class="{'List-tableRow--selected' : edit_id === item.id}" class="List-tableRow users_class ng-scope" ng-repeat="item in apidataLists | filter:{name:searchTerm} | orderBy:sortColumn:reverseSort">
 							<td class="List-tableCell "/>
 							<td class="List-tableCell ">
 								<a href="" ng-click="editClick(item.id)" class="ng-binding">{{ item.prefix }}</a>
 							</td>
 							<td class="List-tableCell ng-binding">{{ item.summary_fields.datacenter.name }}</td>
-							<td class="List-tableCell ng-binding">{{ item.vrf}}</td>
-							<td class="List-tableCell ng-binding">{{ item.vlan}}</td>
+							<td class="List-tableCell ng-binding">{{ item.summary_fields.vrf.name }}</td>
+							<td class="List-tableCell ng-binding">{{ item.summary_fields.vlan.name }}</td>
 							<td class="List-tableCell ng-binding">{{ item.is_pool}}</td>
-							<td class="List-tableCell ng-binding">{{ item.status}}</td>
+							<td class="List-tableCell ng-binding">{{ item.summary_fields.status.name}}</td>
 							<td class="List-actionsContainer">
 								<div class="List-actionButtonCell List-tableCell">
 									<button id="edit-action" ng-class="{'List-editButton--selected' : edit_id === item.id}" class="List-actionButton" data-placement="top" ng-click="editClick(item.id)" aw-tool-tip="Edit Prefix" data-original-title="" title=""><i class="fa fa-pencil"></i> </button>

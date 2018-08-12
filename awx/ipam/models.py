@@ -130,7 +130,7 @@ class Aggregate(CreatedUpdatedModel):
     An aggregate exists at the root level of the IP address space hierarchy in NetBox. Aggregates are used to organize
     the hierarchy and track the overall utilization of available address space. Each Aggregate is assigned to a RIR.
     """
-    family = models.PositiveSmallIntegerField(choices=AF_CHOICES)
+    family = models.PositiveSmallIntegerField(choices=AF_CHOICES, editable=False)
     prefix = IPNetworkField()
     rir = models.ForeignKey('Rir', related_name='aggregates', on_delete=models.PROTECT, verbose_name='RIR')
     date_added = models.DateField(blank=True, null=True)

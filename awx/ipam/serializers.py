@@ -68,6 +68,8 @@ from awx.main.views import *
 
 DEFAULT_SUMMARY_FIELDS = ('id', 'name', 'description')# , 'created_by', 'modified_by')#, 'type')
 
+EXCLUDE_SUMMARY_FIELDS = ('prefix',)# , 'created_by', 'modified_by')#, 'type')
+
 
 # Keys are fields (foreign keys) where, if found on an instance, summary info
 # should be added to the serialized data.  Values are a tuple of field names on
@@ -78,6 +80,7 @@ SUMMARIZABLE_FK_FIELDS = {
     'vrf': DEFAULT_SUMMARY_FIELDS,
     'prefix': ('id', 'family', 'prefix', 'status', 'is_pool', ),
     'vlan': DEFAULT_SUMMARY_FIELDS + ('vid', ),
+    'rir': DEFAULT_SUMMARY_FIELDS + ('registry', 'region', ),
     # 'application': ('id', 'name', 'client_id'),
     # 'team': DEFAULT_SUMMARY_FIELDS,
     # 'inventory': DEFAULT_SUMMARY_FIELDS + ('has_active_failures',
@@ -123,9 +126,6 @@ SUMMARIZABLE_FK_FIELDS = {
     # 'instance_group': {'id', 'name', 'controller_id'},
     # 'insights_credential': DEFAULT_SUMMARY_FIELDS,
 }
-
-
-
 
 
 
@@ -338,7 +338,7 @@ class BaseSerializer(serializers.ModelSerializer):
         #     fval = getattr(fkval, field, None)
         #     summary_fields[fk][field] = fval
 
-        all_field_names = self.fields.keys()
+        all_field_names = list(set(self.fields.keys()) - set(EXCLUDE_SUMMARY_FIELDS))
         summary_field_keys = list(SUMMARIZABLE_FK_FIELDS.keys())
 
         # summary_fields['all_fields'] =  all_field_names
@@ -355,6 +355,34 @@ class BaseSerializer(serializers.ModelSerializer):
             for field in fields:
                 fval = getattr(fkval, field, None)
                 summary_fields[fk][field] = fval
+
+
+        # Status
+        fk = 'status'
+        if fk in all_field_names:
+            # fk = 'status'
+            ftype_model = get_type_for_model(self.Meta.model)
+
+            if ftype_model == 'prefix':
+                STATUS_CHOICES = copy.deepcopy(STATUS_PREFIX_SUMMARY)
+            elif ftype_model == 'ip_address':
+                STATUS_CHOICES = copy.deepcopy(STATUS_IPADDRESS_SUMMARY)
+            else:
+                STATUS_CHOICES = copy.deepcopy(STATUS_PREFIX_SUMMARY)
+
+            summary_fields[fk] = OrderedDict()
+            fkval = getattr(obj, fk, None)
+
+            fval = STATUS_CHOICES[fkval]
+
+            fields = OrderedDict()
+            fields['id'] = fkval
+            fields['name'] = fval
+            fields['type'] = ftype_model
+            fields['debug'] = fkval #STATUS_CHOICES[fkval]
+
+            
+            summary_fields[fk] = fields
 
 
 

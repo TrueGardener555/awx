@@ -1,45 +1,252 @@
-<div class="tab-pane" id="ipam-prefixes-panel">
-	<aw-limit-panels max-panels="2" panel-container="ipam-prefixes-panel"></aw-limit-panels>
-	<div ui-view></div>
+<div class="tab-pane" id="ipam-aggregates-panel">
+	<aw-limit-panels max-panels="2" panel-container="ipam-aggregates-panel"></aw-limit-panels>
+	<div ui-view></div>                
+	<div class="tab-pane Panel" ng-show="showPane">
+    
+		<div class="Form-header">
+			<div class="Form-title">{{paneTitle}}</div>
+			<div class="Form-header--fields"></div>
+			<div class="Form-exitHolder">
+				<button class="Form-exit" ng-click="formCancel()"><i class="fa fa-times-circle"></i></button>
+			</div>
+		</div>
+		
+		<form class="Form" name="aggregates_form" id="aggregates_form" autocomplete="off" novalidate="" >
+	
+			<div ng-show="flashMessage != null &amp;&amp; flashMessage != undefined" class="alert alert-info ng-binding ng-hide"></div>
+			<div class="form-group Form-formGroup" >
+				<label class="Form-inputLabelContainer">
+					<span class="Form-requiredAsterisk">*</span>		
+					<span class="Form-inputLabel">Prefix</span>
+				</label>
+				<div>
+					<input type="text" ng-model="prefix" name="prefix" id="prefix" class="form-control Form-textInput ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="" capitalize="">
+					<div class="error" ng-show="aggregates_form.prefix.$error.required">Please enter a value.</div>
+				</div>
+			</div>
+
+			<div class="form-group Form-formGroup " >
+				<label class="Form-inputLabelContainer ">		
+					<span class="Form-inputLabel">Description</span>
+				</label>
+				<div>
+					<input type="text" ng-model="description" name="description" class="form-control Form-textInput">
+				</div>
+			</div>
+
+			<div class="form-group Form-formGroup " >
+				<label class="Form-inputLabelContainer ">
+					<span class="Form-requiredAsterisk">*</span>	
+					<span class="Form-inputLabel">DATACENTER</span>
+				</label>
+				<div>
+					<select placeholder="Choose a Datacenter" ng-model="datacenter"  ng-click="selectDatacenter($index)" class="form-control Form-dropDown" >
+						<option value="" selected>Choose a Datacenter</option>
+						<option value="{{aggregate_datacenter.id}}" ng-repeat="aggregate_datacenter in AggregateDatacenters" >{{aggregate_datacenter.name}}</md-option>
+					<select>
+				</div>
+			</div>
+
+			<div class="form-group Form-formGroup " >
+				<label class="Form-inputLabelContainer ">
+					<span class="Form-inputLabel">RIR</span>
+				</label>
+				<div>
+					<select placeholder="Choose a VRF" ng-model="rir"  ng-click="selectVRF($index)" class="form-control Form-dropDown" >
+						<option value="" selected>Choose a RIR</option>
+						<option value="{{aggregate_rir.id}}" ng-repeat="aggregate_rir in AggregateRIRs" >{{aggregate_rir.name}}</md-option>
+					<select>
+				</div>
+			</div>
+
+		</form>
+		
+		<div class="buttons Form-buttons" id="user_controls">
+			<button type="button" class="btn btn-sm Form-cancelButton" ng-click="formCancel()"> Cancel</button>
+			<button type="button" class="btn btn-sm Form-saveButton" ng-click="formSubmit()"> {{submitTitle}}</button>
+		</div>
+	</div>
+
 	<div class="tab-pane Panel" id="management_jobs">
 		<div class="List-title">
 			<div class="List-titleText" translate>
-				IPAM AGGREGATES
+				IPAM AGGREGATE
 			</div>
 			<span class="badge List-titleBadge ng-binding">
-				{{ mgmtCards.length }}
+				{{ apidataLists.length }}
 			</span>
 		</div>
-		<div class="MgmtCards">
-			<div class="MgmtCards-card"
-				ng-repeat="card in mgmtCards track by card.id" ng-class="{'MgmtCards-card--selected': activeCard === card.id}">
-				<!-- Begin Card Header -->
-				<div class="MgmtCards-header">
-					<h3 class="MgmtCards-label"> {{ card.name }}</h3>
-					<div class="MgmtCards-actionItems">
-						<button class="MgmtCards-actionItem List-actionButton"
-							ng-click='submitJob(card.id, card.name)'
-							ng-show='current_user.is_superuser'
-							data-placement="top" aw-tool-tip="{{'Launch Management Job'|translate}}" data-original-title="" title="">
-							<i class="MgmtCards-actionItemIcon icon-launch"></i>
-						</button>
-						<button class="MgmtCards-actionItem List-actionButton"
-							ng-click='configureSchedule(card.id)'
-							data-placement="top" aw-tool-tip="{{'Schedule Management Job'|translate}}" data-original-title="" title="">
-							<i class="MgmtCards-actionItemIcon fa fa-calendar"></i>
-						</button>
-						<button class="MgmtCards-actionItem List-actionButton"
-							ng-click='goToNotifications(card, card.id)'
-							ng-show='current_user.is_superuser'
-							data-placement="top" aw-tool-tip="{{'Configure Notifications'|translate}}" data-original-title="" title="" ng-class="{'List-editButton--selected': activeCard === card.id && cardAction === 'notifications'}">
-							<i class="MgmtCards-actionItemIcon fa fa-bell-o"></i>
-						</button>
-					</div>
+		<div class="List-well">
+			<div class="List-actionHolder">
+				<div class="List-actions">
+					<button toolbar-button="" mode="options.mode" aw-tool-tip="Create a new Aggregate" data-tip-watch="" data-placement="top" data-container="" class="at-Button--add" id="button-add" data-title="" ng-disabled="" ng-click="formCreate()" toolbar="true" aw-feature="" data-original-title="" title="">
+			        	<i class="fa undefined fa-lg"></i>
+			        </button>
 				</div>
-				<!-- End Card Header -->
-				<!-- Begin Card Body -->
-				<p>{{card.description || "Place organization description here"}}</p>
-				<!-- End Card Body -->
 			</div>
+
+			<div class="SmartSearch row">
+				<div class="SmartSearch-bar">
+					<div class="SmartSearch-searchTermContainer">
+	            		<form name="smartSearch" class="SmartSearch-form" aw-enter-key="addTerms(searchTerm)" novalidate="">
+	                		<input class="SmartSearch-input" ng-model="searchTerm" placeholder="Search" ng-disabled="disableSearch">
+	            		</form>
+	            		<div type="submit" class="SmartSearch-searchButton" ng-disabled="!searchTerm" ng-click="addTerms(searchTerm)" disabled="disabled">
+	                		<i class="fa fa-search"></i>
+	            		</div>
+	        		</div>
+					<div class="SmartSearch-keyToggle btn" ng-class="{'is-active': showKeyPane}" ng-click="toggleKeyPane()">Key</div>
+				</div>
+				
+				<div class="SmartSearch-tags" ng-show="searchTags">
+			        <div class="SmartSearch-tagSection">
+			            <div class="SmartSearch-flexContainer">
+				            <div class="SmartSearch-tagContainer" ng-repeat="searchString in searchList">
+			                    <div class="SmartSearch-deleteContainer" ng-click="removeTerm($index)">
+			                        <i class="fa fa-times SmartSearch-tagDelete"></i>
+			                    </div>
+			                    <div class="SmartSearch-tag SmartSearch-tag--deletable">
+			                        <span class="SmartSearch-name ng-binding">{{ searchString }}</span>
+			                    </div>
+			                </div>
+			                <a href="" class="SmartSearch-clearAll" ng-click="clearAllTerms()">CLEAR ALL</a>
+			            </div>
+			        </div>
+			    </div>
+				
+				<div class="SmartSearch-keyPane row ng-scope" ng-show="showKeyPane">
+			        <div class="SmartSearch-keyRow">
+			            <div class="SmartSearch-examples">
+			                <div class="SmartSearch-examples--title">
+			                    <b>EXAMPLES:</b>
+			                </div>
+			                <div class="SmartSearch-examples--search ng-binding ng-scope" ng-repeat="searchExample in searchExamples">{{ searchExample }}</div>
+			            </div>
+			        </div>
+			        <div class="SmartSearch-keyRow">
+			            <b>FIELDS:</b> <span ng-repeat="field in keyFields">{{ field }}<span ng-if="!$last" class="ng-scope">, </span></span>
+			        </div>
+			        <div class="SmartSearch-keyRow">
+			            <b class="ng-binding">ADDITIONAL INFORMATION:</b>
+			                <span>{{ 'For additional information on advanced search search syntax please see the Ansible Tower' | translate }}
+            				<a href="https://docs.ansible.com/ansible-tower/1.0.6/html/userguide/search_sort.html"> {{ 'documentation' | translate }}</a>.</span>
+			        </div>
+			    </div>
+			    
+				<button toolbar-button="" mode="options.mode" aw-tool-tip="Create a new user" data-tip-watch="" data-placement="top" data-container="" class="at-Button--add" id="button-add" data-title="" ng-disabled="" ng-click="$eval(options.ngClick)" ng-show="canAdd &amp;&amp; canEdit" toolbar="true" aw-feature="" data-original-title="" title="">
+            		<i class="fa undefined fa-lg"></i>
+            	</button>
+			</div>
+			<div class="list-table-container">
+				<table id="aggregates_table" class="List-table" is-extended="false">
+					<thead>
+						<tr class="List-tableHeaderRow">
+							<th class="List-tableHeader list-header List-staticColumn--smallStatus list-header-noSort" column-custom-class="List-staticColumn--smallStatus">
+							</th>
+							<th class="List-tableHeader list-header List-staticColumnAdjacent" ng-click="sortData('prefix')"> 
+								PREFIX
+								<i class="fa columnSortIcon ng-scope {{ getSortClass('prefix') }}"></i>
+							</th>
+							<th class="List-tableHeader list-header " ng-click="sortData('datacenter')">
+								DATACENTER
+								<i class="fa columnSortIcon ng-scope {{ getSortClass('datacenter') }}"></i>
+							</th>
+							<th class="List-tableHeader list-header List-tableCell " ng-click="sortData('rir')">
+								RIR
+								<i class="fa columnSortIcon ng-scope {{ getSortClass('rir') }}"></i>
+							</th>
+							<th class="List-tableHeader List-tableHeader--actions">Actions</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr ng-class="{'List-tableRow--selected' : edit_id === item.id}" class="List-tableRow users_class ng-scope" ng-repeat="item in apidataLists | filter:{prefix:searchTerm} | orderBy:sortColumn:reverseSort">
+							<td class="List-tableCell "/>
+							<td class="List-tableCell ">
+								<a href="" ng-click="editClick(item.id)" class="ng-binding">{{ item.prefix }}</a>
+							</td>
+							<td class="List-tableCell ng-binding">{{ item.summary_fields.datacenter.name }}</td>
+							<td class="List-tableCell ng-binding">{{ item.summary_fields.rir.name }}</td>
+							<td class="List-actionsContainer">
+								<div class="List-actionButtonCell List-tableCell">
+									<button id="edit-action" ng-class="{'List-editButton--selected' : edit_id === item.id}" class="List-actionButton" data-placement="top" ng-click="editClick(item.id)" aw-tool-tip="Edit Prefix" data-original-title="" title=""><i class="fa fa-pencil"></i> </button>
+									<button id="delete-action" class="List-actionButton List-actionButton--delete" data-placement="top" ng-click="deleteaggregate(item.id, item.prefix)" aw-tool-tip="Delete Prefix" data-original-title="" title=""><i class="fa fa-trash-o"></i> </button>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="Paginate page-row">
+			    <div class="Paginate-wrapper ng-hide" ng-hide="apidataLists.length <= pageSize">
+			        <ul class="Paginate-controls pagination">
+			            <!-- first -->
+			            <li class="Paginate-controls--first Paginate-controls--item ng-hide" ng-hide="pageRange.length < maxVisiblePages || pageRange[0] === 1">
+			                <a href="" ng-click="toPage(1)">
+			                    <i class="fa fa-angle-double-left"></i>
+			                </a>
+			            </li>
+			            <!-- previous -->
+			            <li class="Paginate-controls--previous Paginate-controls--item disabled" ng-class="{disabled: current === 1}">
+			                <a href="" ng-click="toPage(current - 1)">
+			                    <i class="fa fa-angle-left"></i>
+			                </a>
+			            </li>
+			            <!-- range -->
+			            <!-- ngRepeat: page in pageRange --><li class="Paginate-controls--item ng-scope" ng-repeat="page in pageRange">
+			                <a href="" ng-class="{'Paginate-controls--active': page === current}" ng-click="toPage(page)" class="ng-binding Paginate-controls--active">1</a>
+			            </li><!-- end ngRepeat: page in pageRange -->
+			            <!-- next -->
+			            <li class="Paginate-controls--next Paginate-controls--item disabled" ng-class="{disabled: current === last}">
+			                <a href="" ng-click="toPage(current + 1)">
+			                    <i class="fa fa-angle-right"></i>
+			                </a>
+			            </li>
+			            <!-- last -->
+			            <li class="Paginate-controls--item Paginate-controls--last ng-hide" ng-hide="(pageRange.length < maxVisiblePages || pageRange[pageRange.length-1] === last)">
+			                <a href="" id="last-page-set" ng-click="toPage(last)">
+			                    <i class="fa fa-angle-double-right"></i>
+			                </a>
+			            </li>
+			        </ul>
+			        <span class="Paginate-pager--pageof ng-binding">Page
+			                <span id="current-page" class="ng-binding">1</span> of
+			        <span id="total-pages" class="ng-binding">1</span>
+			        </span>
+			    </div>
+			    <div class="Paginate-total page-label" ng-hide="apidataLists.length === 0">
+			        <!-- TODO: Move the ITEMS line into paginate.directive.js
+			             so that i18n.sprintf("A of B") can be used but
+			             it seems $sce.trustAsHtml() does not work with html tag.
+			         -->
+			        <span class="Paginate-itemsOf ng-binding">ITEMS&nbsp;
+			            <span class="ng-binding">1 - 1</span>
+			            <span ng-hide="apidataLists.length <= basePageSize" class="ng-binding ng-hide">of 1</span>
+			        </span>
+			        <div class="Paginate-filteringDropdowns ng-hide" ng-hide="hideViewPerPage || apidataLists.length <= basePageSize">
+			            <div class="Paginate-filterLabel">VIEW PER PAGE</div>
+			            <div class="DashboardGraphs-periodDropdown">
+			                <a role="button" data-toggle="dropdown" data-target="#" href="/page.html" class="DashboardGraphs-filterDropdownText">
+			                    <translate>20</translate> <i class="fa fa-angle-down DashboardGraphs-filterIcon"></i>
+			                </a>
+			                <ul class="dropdown-menu DashboardGraphs-filterDropdownItems
+			                    DashboardGraphs-filterDropdownItems--period Paginate-dropdown" role="menu" aria-labelledby="period-dropdown">
+			                    <li>
+			                        <a ng-click="filter(20)">20</a>
+			                    </li>
+			                    <li>
+			                        <a ng-click="filter(50)">50</a>
+			                    </li>
+			                    <li>
+			                        <a ng-click="filter(100)">100</a>
+			                    </li>
+			                </ul>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+        </div>
+        
 	</div>
 </div>

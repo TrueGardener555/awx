@@ -82,6 +82,9 @@ export default
 							msg: i18n.sprintf(i18n._('Call to %s failed. Return status: %d'), (defaultUrl === undefined) ? "undefined" : defaultUrl, status)
 						});
 					});
+
+
+				$scope.PrefixStatus = [{'id':0, 'name':'Container'}, {'id':1, 'name':'Active'}, {'id':2, 'name':'Reserved'}, {'id':3, 'name': 'Deprecated'}];
 			};
 			getApiDatas();
 			$scope.loadData();
@@ -104,10 +107,11 @@ export default
 				$scope.prefix = "";
 				$scope.description = "";
 				$scope.datacenter = "";
-				$scope.vrfs = "";
-				$scope.vlans = "";
+				$scope.vrf = "";
+				$scope.vlan = "";
 				$scope.is_pool = false;
-				
+				$scope.status = "1";
+
 				$scope.edit_id = 0;
 			}
 
@@ -137,10 +141,11 @@ export default
 
 						$scope.prefix = data.prefix;
 						$scope.description = data.description;
-						$scope.datacenter = data.datacenter;
-						$scope.vrfs = data.vrf;
-						$scope.vlans =  data.vlan;
+						if(data.datacenter > 0) $scope.datacenter = data.datacenter.toString();
+						if(data.vrf > 0) $scope.vrf = data.vrf.toString();
+						if(data.vlan > 0) $scope.vlan =  data.vlan.toString();
 						$scope.is_pool = data.is_pool;
+						$scope.status = "" + data.status;
 
 						console.log("Edit DataID = " + $scope.datacenter);
 
@@ -221,7 +226,9 @@ export default
 				$scope.showModal = false;
 			}
 
-			$scope.deletevrfs = function (id, name) {
+			$scope.deleteprefix = function (id, name) {
+				resetUi();
+				$scope.showPane = false;
 				var action = function () {
 					$('#prompt-modal').modal('hide');
 					Wait('start');
@@ -234,7 +241,7 @@ export default
 				Prompt({
 					hdr: i18n._('Delete'),
 					resourceName: $filter('sanitize')(name),
-					body: '<div class="Prompt-bodyQuery">' + i18n._('Are you sure you want to delete this vrfs?') + '</div>',
+					body: '<div class="Prompt-bodyQuery">' + i18n._('Are you sure you want to delete this Prefix?') + '</div>',
 					action: action,
 					actionText: i18n._('DELETE')
 				});
