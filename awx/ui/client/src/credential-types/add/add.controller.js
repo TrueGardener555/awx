@@ -53,14 +53,21 @@ export default ['Rest', 'Wait',
                 });
 
             // apply form definition's default field values
+            console.log("before");
+            console.log(form);
+            console.log($scope);
             GenerateForm.applyDefaults(form, $scope);
-
+            console.log("after");
+            console.log(form);
+            console.log($scope);
+            
             // @issue @jmitchell - this setting probably collides with new RBAC can* implementation?
             $scope.canEdit = true;
 
             var callback = function() {
                 // Make sure the form controller knows there was a change
-                $scope[form.name + '_form'].$setDirty();
+                //$scope[form.name + '_form'].$setDirty();
+                //console.log(form.name);
             };
             $scope.parseTypeInputs = 'yaml';
             $scope.parseTypeInjectors = 'yaml';

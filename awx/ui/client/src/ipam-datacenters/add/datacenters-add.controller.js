@@ -29,91 +29,64 @@ export default ['$scope', '$rootScope', 'DatacenterForm', 'GenerateForm', 'Rest'
             GenerateForm.applyDefaults(form, $scope);
 
             $scope.isAddForm = true;
-            $scope.ldap_user = false;
-            $scope.not_ldap_user = !$scope.ldap_user;
-            $scope.ldap_dn = null;
-            $scope.socialAuthUser = false;
-            $scope.external_account = null;
-
-            Rest.setUrl(GetBasePath('ipam_datacenters'));
-            Rest.options()
-                .then(({data}) => {
-                    if (!data.actions.POST) {
-                        $state.go("^");
-                        Alert(i18n._('Permission Error'), i18n._('You do not have permission to add a user.'), 'alert-info');
-                    }
-                });
-
-            $scope.user_type_options = user_type_options;
-            $scope.user_type = user_type_options[0];
-            $scope.$watch('user_type', user_type_sync($scope));
-            CreateSelect2({
-                element: '#user_user_type',
-                multiple: false
-            });
+            
+			$scope.select0 = 'is-selected';
+			$scope.tabId = 0;
         }
 
-        function user_type_sync($scope) {
-            return (type_option) => {
-                $scope.is_superuser = false;
-                $scope.is_system_auditor = false;
-                switch (type_option.type) {
-                    case 'system_administrator':
-                        $scope.is_superuser = true;
-                        break;
-                    case 'system_auditor':
-                        $scope.is_system_auditor = true;
-                        break;
-                }
-            };
-        }
+		$scope.select = function(param)
+		{
+			$scope.tabId = param;
+			if ($scope.tabId == 0) {
+				$scope.select0 = "is-selected";
+				$scope.select1 = "";
+				$scope.select2 = "";
+			}
+			else if ($scope.tabId == 1) {
+				$scope.select0 = "";
+				$scope.select1 = "is-selected";
+				$scope.select2 = "";
 
+			}
+			else if ($scope.tabId == 2) {
+				$scope.select0 = "";
+				$scope.select1 = "";
+				$scope.select2 = "is-selected";
+			}
+
+		};
         // Save
         $scope.formSave = function() {
             var fld, data = {};
-            if ($scope[form.name + '_form'].$valid) {
-                if ($scope.organization !== undefined && $scope.organization !== null && $scope.organization !== '') {
-                    Rest.setUrl(defaultUrl + $scope.organization + '/ipam_datacenters/');
-                    for (fld in form.fields) {
-                        if (form.fields[fld].realName) {
-                            data[form.fields[fld].realName] = $scope[fld];
-                        } else {
-                            data[fld] = $scope[fld];
-                        }
-                    }
-                    data.is_superuser = $scope.is_superuser;
-                    data.is_system_auditor = $scope.is_system_auditor;
-                    Wait('start');
-                    Rest.post(data)
-                        .then(({data}) => {
-                            var base = $location.path().replace(/^\//, '').split('/')[0];
-                            if (base === 'users') {
-                                $rootScope.flashMessage = i18n._('New user successfully created!');
-                                $rootScope.$broadcast("EditIndicatorChange", "users", data.id);
-                                $state.go('users.edit', { user_id: data.id }, { reload: true });
-                            } else {
-                                ReturnToCaller(1);
-                            }
-                        })
-                        .catch(({data, status}) => {
-                            ProcessErrors($scope, data, status, form, { hdr: i18n._('Error!'), msg: i18n._('Failed to add new user. POST returned status: ') + status });
-                        });
+            console.log("Save");
+            Rest.setUrl(defaultUrl);
+            for (fld in form.fields) {
+                if (form.fields[fld].realName) {
+                    data[form.fields[fld].realName] = $scope[fld];
                 } else {
-                    $scope.organization_name_api_error = i18n._('A value is required');
+                    data[fld] = $scope[fld];
                 }
             }
+			console.log(data);
+            Wait('start');
+            Rest.post(data)
+                .then(({data}) => {
+                    var base = $location.path().replace(/^\//, '').split('/')[0];
+                    if (base === 'ipam_datacenters') {
+                        $rootScope.flashMessage = i18n._('New datacenter successfully created!');
+                        $rootScope.$broadcast("EditIndicatorChange", "datacenter", data.id);
+                        $state.go('ipamDatacentersList.edit', { datacenter_id: data.id }, { reload: true });
+                    } else {
+                        ReturnToCaller(1);
+                    }
+                })
+                .catch(({data, status}) => {
+                    ProcessErrors($scope, data, status, form, { hdr: i18n._('Error!'), msg: i18n._('Failed to add new datacenter. POST returned status: ') + status });
+                });
         };
 
         $scope.formCancel = function() {
-            $state.go('ipam_datacenters');
-        };
-
-        // Password change
-        $scope.clearPWConfirm = function() {
-            // If password value changes, make sure password_confirm must be re-entered
-            $scope.password_confirm = '';
-            let passValidity = (!$scope.password || $scope.password === '') ? true : false;
-            $scope[form.name + '_form'].password_confirm.$setValidity('awpassmatch', passValidity);
+            $state.go('ipamDatacentersList');
         };
     }
 ];

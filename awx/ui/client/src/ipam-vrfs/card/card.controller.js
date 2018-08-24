@@ -12,7 +12,7 @@ export default
 			$scope, $filter, CreateSelect2, i18n, $transitions, Prompt, qs) {
 
 			var defaultUrl = GetBasePath('ipam_vrfs');
-			var datacenter_id;
+			// var datacenter_id;
 			$scope.edit_id = 0;
 
 			//Variable for Alerting Fill in
@@ -24,11 +24,18 @@ export default
 			$scope.pageSize = 20;
 
 			var getIpamVrfs = function () {
+				console.log("getIpamVrfs called");
 				Rest.setUrl(defaultUrl + "?order_by=name");
 				Rest.get()
 					.then(({ data }) => {
 						$scope.apidataLists = data.results;
+						console.log("getIpamVrfs called then");
 						Wait('stop');
+						
+					    CreateSelect2({
+	                        element: '#vrfs_datacenter_type',
+	                        multiple: false
+	                    });
 					})
 					.catch(({ data, status }) => {
 						ProcessErrors($scope, data, status, null, {
@@ -122,9 +129,9 @@ export default
 				$scope.edit_id = param;
 
 				Rest.setUrl(defaultUrl + $scope.edit_id + '/');
+				console.log("Url = " + defaultUrl + $scope.edit_id + '/');
 				Rest.get()
 					.then(({ data }) => {
-						Wait('stop');
 
 						$scope.paneTitle = "Edit VRF / " + data.name;
 
@@ -133,12 +140,15 @@ export default
 						$scope.rd =  data.rd;
 						$scope.enforce_unique =  data.enforce_unique;
 						$scope.vrfs =  data.vrfs;
-						$scope.datacenter = "" + data.datacenter;
+						// $scope.datacenter = "" + data.datacenter;
+						if(data.datacenter > 0) $scope.datacenter = data.datacenter.toString();
 						console.log("Edit DataID = " + $scope.datacenter);
 
 						$scope.submitTitle = "Update";
 						$scope.editselected = "List-editButton--selected";
 						$scope.showPane = true;
+
+						Wait('stop');
 					})
 					.catch(({ data, status }) => {
 						ProcessErrors($scope, data, status, null, {
@@ -149,12 +159,6 @@ export default
 
 			}
 
-			$scope.selectDatacenter = function(param)
-			{
-				datacenter_id = $scope.datacenter;
-				console.log(" Select " + datacenter_id);
-			}
-
 			/* Include all function as New, Update*/
 			$scope.formSubmit = function () {
 				console.log($scope.vrfs_name);
@@ -162,7 +166,7 @@ export default
 					if ($scope.paneType == 1) {
 						//Create New Event
 						var vrfs = {
-							'name': $scope.vrfs_name, 'description': $scope.description, 'rd': $scope.rd, 'enforce_unique': $scope.enforce_unique, 'datacenter': datacenter_id
+							'name': $scope.vrfs_name, 'description': $scope.description, 'rd': $scope.rd, 'enforce_unique': $scope.enforce_unique, 'datacenter': $scope.datacenter
 						};
 
 						Rest.setUrl(defaultUrl);
@@ -184,7 +188,7 @@ export default
 					else {
 						//Edit Submit (Update) Event.
 						var vrfs = {
-							'name': $scope.vrfs_name, 'description': $scope.description, 'rd': $scope.rd, 'enforce_unique': $scope.enforce_unique, 'datacenter': datacenter_id
+							'name': $scope.vrfs_name, 'description': $scope.description, 'rd': $scope.rd, 'enforce_unique': $scope.enforce_unique, 'datacenter': $scope.datacenter
 						};
 
 						Rest.setUrl(defaultUrl + $scope.edit_id + '/');

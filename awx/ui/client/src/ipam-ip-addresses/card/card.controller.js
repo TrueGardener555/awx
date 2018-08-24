@@ -28,6 +28,19 @@ export default
 					.then(({ data }) => {
 						$scope.apidataLists = data.results;
 						Wait('stop');
+
+						CreateSelect2({
+	                        element: '#ipadresses_datacenter_select',
+	                        multiple: false
+	                    });
+						CreateSelect2({
+	                        element: '#ipadresses_vrf_select',
+	                        multiple: false
+	                    });
+						CreateSelect2({
+	                        element: '#ipadresses_status_select',
+	                        multiple: false
+	                    });
 					})
 					.catch(({ data, status }) => {
 						ProcessErrors($scope, data, status, null, {

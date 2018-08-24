@@ -31,6 +31,10 @@ export default ['$scope', '$rootScope', '$stateParams', 'UserForm', 'Rest',
         init();
 
         function init() {
+        	
+        	
+			$scope.tabId = 1;;
+		
             $scope.canEdit = me.get('summary_fields.user_capabilities.edit');
             $scope.isOrgAdmin = me.get('related.admin_of_organizations.count') > 0;
             $scope.isCurrentlyLoggedInUser = (parseInt(id) === $rootScope.current_user.id);

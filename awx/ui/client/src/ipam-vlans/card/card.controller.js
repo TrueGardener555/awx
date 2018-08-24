@@ -27,6 +27,15 @@ export default
 					.then(({ data }) => {
 						$scope.apidataLists = data.results;
 						Wait('stop');
+
+						CreateSelect2({
+	                        element: '#vlans_datacenter_select',
+	                        multiple: false
+	                    });
+						CreateSelect2({
+	                        element: '#vlans_status_select',
+	                        multiple: false
+	                    });
 					})
 					.catch(({ data, status }) => {
 						ProcessErrors($scope, data, status, null, {

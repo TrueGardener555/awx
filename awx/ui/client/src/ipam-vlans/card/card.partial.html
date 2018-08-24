@@ -49,7 +49,7 @@
 					<span class="Form-inputLabel">DATACENTER</span>
 				</label>
 				<div>
-					<select placeholder="Choose a Datacenter" ng-model="datacenter"  ng-click="selectDatacenter($index)" class="form-control Form-dropDown" >
+					<select id="vlans_datacenter_select" placeholder="Choose a Datacenter" ng-model="datacenter"  ng-click="selectDatacenter($index)" class="form-control Form-dropDown" >
 						<option value="" selected>Choose a Datacenter</option>
 						<option value="{{vlans_datacenter.id}}" ng-repeat="vlans_datacenter in VLansDatacenters" >{{vlans_datacenter.name}}</md-option>
 					<select>
@@ -62,7 +62,7 @@
 					<span class="Form-inputLabel">Status</span>
 				</label>
 				<div>
-					<select placeholder="Choose a Status" ng-model="status"  ng-click="selectStatus($index)" class="form-control Form-dropDown" >
+					<select id="vlans_status_select" placeholder="Choose a Status" ng-model="status"  ng-click="selectStatus($index)" class="form-control Form-dropDown" >
 						<option value="{{vlans_status.id}}" ng-repeat="vlans_status in VLansStatus" >{{vlans_status.name}}</md-option>
 					<select>
 				</div>

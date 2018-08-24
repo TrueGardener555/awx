@@ -9,11 +9,12 @@ export default ['i18n', function(i18n) {
     return {
 
         name: 'ipam_datacenters',
-        stateTree: 'ipamDatacentersList',
         iterator: 'datacenter',
-        selectTitle: i18n._('Add Users'),
         editTitle: i18n._('IPAM DATACENTERS'),
         listTitle: i18n._('IPAM DATACENTERS'),
+        search: {
+            order_by: 'name'
+        },
         selectInstructions: '<p>Select existing users by clicking each user or checking the related checkbox. When finished, click the blue ' +
             '<em>Select</em> button, located bottom right.</p> <p>When available, a brand new user can be created by clicking the ' +
             '<i class=\"fa fa-plus\"></i> button.</p>',
@@ -40,46 +41,34 @@ export default ['i18n', function(i18n) {
             add: {
                 label: i18n._('Create New'),
                 mode: 'all', // One of: edit, select, all
-                ngClick: 'addUser()',
-                basePaths: ['organizations', 'users'], // base path must be in list, or action not available
-                awToolTip: i18n._('Create a new user'),
+                ngClick: 'addDatacenter()',
+                awToolTip: i18n._('Create a new datacenter'),
                 actionClass: 'at-Button--add',
                 actionId: 'button-add',
-                ngShow: 'canAdd && canEdit'
+                ngShow: 'canAdd'
             }
         },
 
         fieldActions: {
 
-            columnClass: 'col-md-3 col-sm-3 col-xs-3',
+            columnClass: 'col-md-2 col-sm-3 col-xs-3',
 
             edit: {
                 label: i18n._('Edit'),
-                ngClick: "editUser(user.id)",
                 icon: 'icon-edit',
+               	ngClick: "editDatacenter(datacenter.id)",
                 "class": 'btn-xs btn-default',
-                awToolTip: i18n._('Edit user'),
+                awToolTip: i18n._('Edit datacenter'),
                 dataPlacement: 'top',
-                ngShow: 'user.summary_fields.user_capabilities.edit'
-            },
-
-            view: {
-                label: i18n._('View'),
-                ngClick: "editUser(user.id)",
-                "class": 'btn-xs btn-default',
-                awToolTip: i18n._('View user'),
-                dataPlacement: 'top',
-                ngShow: '!user.summary_fields.user_capabilities.edit'
             },
 
             "delete": {
                 label: i18n._('Delete'),
-                ngClick: "deleteUser(user.id, user.username)",
+                ngClick: "deleteDatacenter(datacenter.id, datacenter.name)",
                 icon: 'icon-trash',
                 "class": 'btn-xs btn-danger',
-                awToolTip: i18n._('Delete user'),
+                awToolTip: i18n._('Delete datacenter'),
                 dataPlacement: 'top',
-                ngShow: 'user.summary_fields.user_capabilities.delete'
             }
         }
     };}];

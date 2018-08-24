@@ -7,12 +7,19 @@
 
 export default
 	['Wait', 'CreateDialog', 'GetBasePath', 'Rest', 'ProcessErrors', '$rootScope', '$state',
-		'$scope', '$filter', 'CreateSelect2', 'i18n', '$transitions', 'Prompt',
+		'$scope', '$filter', 'CreateSelect2', 'i18n', '$transitions', 'Prompt', 'initSurvey',
 		function (Wait, CreateDialog, GetBasePath, Rest, ProcessErrors, $rootScope, $state,
-			$scope, $filter, CreateSelect2, i18n, $transitions, Prompt, qs) {
+			$scope, $filter, CreateSelect2, i18n, $transitions, Prompt, SurveyControllerInit) {
 
 			var defaultUrl = GetBasePath('ipam_apps');
 			var edit_id;
+			$scope.paneShow = 1;
+			SurveyControllerInit({
+                    scope: $scope,
+                    parent_scope: $scope,
+                    id: 0,
+                    templateType: 'job_template'
+                });
 
 			//Variable for Alerting Fill in
 			$scope.nameDirty = false;
@@ -83,12 +90,14 @@ export default
 			};
 
 			$scope.formCancel = function () {
+				
 				resetUi();
 				$scope.showPane = false;
 			};
 
 			var resetUi = function () {
 				$scope.tabID = 1;
+				$scope.paneShow = 1;
 				$scope.WizardClick(0);
 
 				$scope.app_name = "";
@@ -109,17 +118,48 @@ export default
 			}
 
 			$scope.formCreate = function () {
+                /*CreateDialog({
+                    id: 'workflow-modal-dialog',
+                    scope: $scope,
+                    width: 500
+                    height: 300
+                    draggable: false,
+                    dialogClass: 'WorkflowMaker-dialog',
+                    position: ['center', 20],
+                    onClose: function() {
+                        $('#workflow-modal-dialog').empty();
+                        $('body').removeClass('WorkflowMaker-preventBodyScrolling');
+                    },
+                    onOpen: function() {
+                        Wait('stop');
+                        $('body').addClass('WorkflowMaker-preventBodyScrolling');
+
+                        // Let the modal height be variable based on the content
+                        // and set a uniform padding
+                        $('#workflow-modal-dialog').css({ 'padding': '20px' });
+                        $('#workflow-modal-dialog').outerHeight(300);
+                        $('#workflow-modal-dialog').outerWidth(500);
+
+                    },
+                    _allowInteraction: function(e) {
+                        return !!$(e.target).is('.select2-input') || this._super(e);
+                    },
+                    callback: 'WorkflowDialogReady'
+                });*/
+				//addSurvey();
+				
 				$scope.paneType = 1;	//Set as New
 				$scope.paneTitle = "New APP";
 				resetUi();
 				$scope.submitTitle = "Create a New";
 				$scope.showPane = true;
+				$scope.paneShow = 0;
 				console.log($scope.apidataLists);
 			}
 
 			$scope.editClick = function (Id) {
 				$scope.paneType = 2;	//Set as Edit
-
+				$scope.paneShow = 0;
 				edit_id = $scope.apidataLists[Id].id;
 				$scope.paneTitle = "Edit APP / " + $scope.apidataLists[Id].name;
 

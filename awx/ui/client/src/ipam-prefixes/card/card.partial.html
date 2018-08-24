@@ -40,7 +40,7 @@
 					<span class="Form-inputLabel">DATACENTER</span>
 				</label>
 				<div>
-					<select placeholder="Choose a Datacenter" ng-model="datacenter"  ng-click="selectDatacenter($index)" class="form-control Form-dropDown" >
+					<select  id = "prefix_datacenter_select" placeholder="Choose a Datacenter" ng-model="datacenter"  ng-click="selectDatacenter($index)" class="form-control Form-dropDown">
 						<option value="" selected>Choose a Datacenter</option>
 						<option value="{{prefix_datacenter.id}}" ng-repeat="prefix_datacenter in PrefixDatacenters" >{{prefix_datacenter.name}}</md-option>
 					<select>
@@ -52,8 +52,8 @@
 					<span class="Form-inputLabel">VRF</span>
 				</label>
 				<div>
-					<select placeholder="Choose a VRF" ng-model="vrf"  ng-click="selectVRF($index)" class="form-control Form-dropDown" >
-						<option value="" selected>Choose a VRF</option>
+					<select  id = "prefix_vrf_select" placeholder="Choose a VRF" ng-model="vrf"  ng-click="selectVRF($index)" class="form-control Form-dropDown" >
+						<option value="" selected>Global</option>
 						<option value="{{prefix_vrf.id}}" ng-repeat="prefix_vrf in PrefixVRFs" >{{prefix_vrf.name}}</md-option>
 					<select>
 				</div>
@@ -64,8 +64,8 @@
 					<span class="Form-inputLabel">VLan</span>
 				</label>
 				<div>
-					<select placeholder="Choose a VLAN" ng-model="vlan"  ng-click="selectVLAN($index)" class="form-control Form-dropDown" >
-						<option value="" selected>Choose a VLAN</option>
+					<select  id = "prefix_vlan_select" placeholder="Choose a VLAN" ng-model="vlan"  ng-click="selectVLAN($index)" class="form-control Form-dropDown" >
+						<option value="" selected>No VLan</option>
 						<option value="{{prefix_vlan.id}}" ng-repeat="prefix_vlan in PrefixVLans" >{{prefix_vlan.name}}</md-option>
 					<select>
 				</div>
@@ -73,10 +73,10 @@
 
 			<div class="form-group Form-formGroup " >
 				<label class="Form-inputLabelContainer ">	
-					<span class="Form-inputLabel">Is_Pool</span>
+					<span class="Form-inputLabel">Is Pool</span>
 				</label>
 				<div>
-					<input type="checkbox" ng-model = "is_pool" name="is_pool">POOL VALUE<br>
+					<input type="checkbox" ng-model = "is_pool" name="is_pool">Is Pool<br>
 				</div>
 			</div>
 
@@ -85,7 +85,7 @@
 					<span class="Form-inputLabel">Status</span>
 				</label>
 				<div>
-					<select placeholder="Choose a Status" ng-model="status"  ng-click="selectStatus($index)" class="form-control Form-dropDown" >
+					<select id = "prefix_status_select" placeholder="Choose a Status" ng-model="status"  ng-click="selectStatus($index)" class="form-control Form-dropDown" >
 						<option value="{{prefix_status.id}}" ng-repeat="prefix_status in PrefixStatus" >{{prefix_status.name}}</md-option>
 					<select>
 				</div>

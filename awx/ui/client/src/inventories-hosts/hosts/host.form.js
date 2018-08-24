@@ -71,9 +71,9 @@ function(i18n) {
                     class: 'Form-formGroup--fullWidth',
                     "default": "---",
                     awPopOver: "<p>" + i18n._("Enter inventory variables using either JSON or YAML syntax. Use the radio button to toggle between the two.") + "</p>" +
-                        "JSON:<br />\n" +
+                        "JSON__:<br />\n" +
                         "<blockquote>{<br />&emsp;\"somevar\": \"somevalue\",<br />&emsp;\"password\": \"magic\"<br /> }</blockquote>\n" +
-                        "YAML:<br />\n" +
+                        "YAML__:<br />\n" +
                         "<blockquote>---<br />somevar: somevalue<br />password: magic<br /></blockquote>\n" +
                         '<p>' + i18n.sprintf(i18n._('View JSON examples at %s'), '<a href="http://www.json.org" target="_blank">www.json.org</a>') + '</p>' +
                         '<p>' + i18n.sprintf(i18n._('View YAML examples at %s'), '<a href="http://docs.ansible.com/YAMLSyntax.html" target="_blank">docs.ansible.com</a>') + '</p>',

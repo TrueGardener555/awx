@@ -40,7 +40,7 @@
 					<span class="Form-inputLabel">DATACENTER</span>
 				</label>
 				<div>
-					<select placeholder="Choose a Datacenter" ng-model="datacenter"  ng-click="selectDatacenter($index)" class="form-control Form-dropDown" >
+					<select id="aggregate_datacenter_select" placeholder="Choose a Datacenter" ng-model="datacenter"  ng-click="selectDatacenter($index)" class="form-control Form-dropDown" >
 						<option value="" selected>Choose a Datacenter</option>
 						<option value="{{aggregate_datacenter.id}}" ng-repeat="aggregate_datacenter in AggregateDatacenters" >{{aggregate_datacenter.name}}</md-option>
 					<select>
@@ -52,7 +52,7 @@
 					<span class="Form-inputLabel">RIR</span>
 				</label>
 				<div>
-					<select placeholder="Choose a VRF" ng-model="rir"  ng-click="selectVRF($index)" class="form-control Form-dropDown" >
+					<select id="aggregate_rir_select" placeholder="Choose a RIR" ng-model="rir"  ng-click="selectVRF($index)" class="form-control Form-dropDown" >
 						<option value="" selected>Choose a RIR</option>
 						<option value="{{aggregate_rir.id}}" ng-repeat="aggregate_rir in AggregateRIRs" >{{aggregate_rir.name}}</md-option>
 					<select>

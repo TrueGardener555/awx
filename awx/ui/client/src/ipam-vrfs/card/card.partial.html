@@ -62,36 +62,10 @@
 
 				<div>
 					<div class="Form-dropDownContainer">
-						<select ng-style = "{'background':'#FCFCFC'}"  placeholder="Choose a Datacenter" ng-model="datacenter"  ng-click="selectDatacenter($index)" class="form-control Form-dropDown">
-							<option ng-style = "{'background':'#FCFCFC'}" value="" selected>Choose a Datacenter</option>
-							<option ng-style = "{'background':'#FCFCFC'}" value="{{vrf_datacenter.id}}" ng-repeat="vrf_datacenter in VRFDatacenters" >{{vrf_datacenter.name}}</md-option>
-						<select>
-
-						<span class="select2 select2-container select2-container--default select2-container--below select2-container--focus" dir="ltr" style="width: 100%;">
-							<span class="selection">
-								<span class="select2-selection select2-selection--single Form-dropDown" role="combobox" aria-haspopup="true" aria-expanded="true" tabindex="0" aria-labelledby="select2-project_scm_type-container">
-									<span class="select2-selection__rendered" id="select2-project_scm_type-container" title="Git">Git</span>
-									<span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
-								</span>
-							</span>
-							<span class="dropdown-wrapper" aria-hidden="false">
-								<span class="select2-dropdown select2-dropdown--below" dir="ltr">
-									<span class="select2-search select2-search--dropdown select2-search--hide">
-										<input class="select2-search__field" type="search" tabindex="-1" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" role="textbox">
-									</span>
-									<span class="select2-results">
-										<ul class="select2-results__options" role="tree" id="select2-project_scm_type-results" aria-expanded="false" aria-hidden="true">
-											<li class="select2-results__option" role="treeitem" aria-selected="false">Choose an SCM Type</li>
-											<li class="select2-results__option" id="select2-project_scm_type-result-nggy-manual" role="treeitem" aria-selected="false">Manual</li>
-											<li class="select2-results__option select2-results__option--highlighted" id="select2-project_scm_type-result-glgt-git" role="treeitem" aria-selected="true">Git</li>
-											<li class="select2-results__option" id="select2-project_scm_type-result-98fr-hg" role="treeitem" aria-selected="false">Mercurial</li>
-											<li class="select2-results__option" id="select2-project_scm_type-result-evug-svn" role="treeitem" aria-selected="false">Subversion</li>
-											<li class="select2-results__option" id="select2-project_scm_type-result-5ty1-insights" role="treeitem" aria-selected="false">Red Hat Insights</li>
-										</ul>
-									</span>
-								</span>
-							</span>
-						</span>
+						<select placeholder="Choose a Datacenter" ng-model="datacenter" class="form-control Form-dropDown" id="vrfs_datacenter_type">
+							<option value="">Choose a Datacenter</option>
+							<option value="{{vrf_datacenter.id}}" ng-repeat="vrf_datacenter in VRFDatacenters" >{{vrf_datacenter.name}}</option>
+						</select>
 					</div>
 				</div>
 			</div>
