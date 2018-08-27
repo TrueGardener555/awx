@@ -98,15 +98,15 @@ import { templateUrl } from '../../shared/template-url/template-url.factory';
 
 export default ['$compile', 'Attr', 'Icon',
     'Column', 'DropDown', 'SelectIcon', 'ActionButton', 'i18n',
-    function($compile, Attr, Icon, Column, DropDown,
+    function ($compile, Attr, Icon, Column, DropDown,
         SelectIcon, ActionButton, i18n) {
         return {
 
-            setList: function(list) {
+            setList: function (list) {
                 this.list = list;
             },
 
-            setOptions: function(options) {
+            setOptions: function (options) {
                 this.options = options;
             },
 
@@ -114,16 +114,16 @@ export default ['$compile', 'Attr', 'Icon',
 
             icon: Icon,
 
-            has: function(key) {
+            has: function (key) {
                 return (this.form[key] && this.form[key] !== null && this.form[key] !== undefined) ? true : false;
             },
 
-            buildHTML: function(list, options) {
+            buildHTML: function (list, options) {
                 this.setList(list);
                 return this.build(options);
             },
 
-            build: function(options) {
+            build: function (options) {
                 this.list = options.list;
                 this.options = options;
 
@@ -235,7 +235,7 @@ export default ['$compile', 'Attr', 'Icon',
 
                 if (options.showSearch !== false) {
                     // Message for when a search returns no results.  This should only get shown after a search is executed with no results.
-                    html +=`
+                    html += `
                         <div class="row" ng-show="${list.name}.length === 0 && !(searchTags | isEmpty)">
                             <div class="col-lg-12 List-searchNoResults" translate>No records matched your search.</div>
                         </div>
@@ -243,9 +243,9 @@ export default ['$compile', 'Attr', 'Icon',
                 }
 
                 // Show the "no items" box when loading is done and the user isn't actively searching and there are no results
-                if (options.showEmptyPanel === undefined || options.showEmptyPanel === true){
+                if (options.showEmptyPanel === undefined || options.showEmptyPanel === true) {
                     html += `<div class="List-noItems" ng-show="${list.name}.length === 0 && (searchTags | isEmpty)">`;
-                    html += (list.emptyListText) ? list.emptyListText :  i18n._("PLEASE ADD ITEMS TO THIS LIST");
+                    html += (list.emptyListText) ? list.emptyListText : i18n._("PLEASE ADD ITEMS TO THIS LIST");
                     html += "</div>";
                 }
 
@@ -293,16 +293,16 @@ export default ['$compile', 'Attr', 'Icon',
                 innerTable += "<tr ng-class=\"[" + list.iterator;
                 innerTable += (options.mode === 'lookup' || options.mode === 'select') ? ".success_class" : ".active_class";
 
-                let handleEditStateParams = function(stateParams){
+                let handleEditStateParams = function (stateParams) {
                     let matchingConditions = [];
 
-                    angular.forEach(stateParams, function(stateParam) {
+                    angular.forEach(stateParams, function (stateParam) {
                         matchingConditions.push(`$stateParams['` + stateParam + `'] == ${list.iterator}.id`);
                     });
                     return matchingConditions;
                 };
 
-                if(list && list.fieldActions && list.fieldActions.edit && list.fieldActions.edit.editStateParams) {
+                if (list && list.fieldActions && list.fieldActions.edit && list.fieldActions.edit.editStateParams) {
                     let matchingConditions = handleEditStateParams(list.fieldActions.edit.editStateParams);
                     innerTable += `, {'List-tableRow--selected' : ${matchingConditions.join(' || ')}}`;
                 }
@@ -413,12 +413,12 @@ export default ['$compile', 'Attr', 'Icon',
                                     innerTable += "class=\"List-actionButton ";
                                     innerTable += (field_action === 'delete' || field_action === 'cancel') ? "List-actionButton--delete" : "";
                                     innerTable += "\" ";
-                                    if(field_action === 'edit') {
+                                    if (field_action === 'edit') {
                                         // editStateParams allows us to handle cases where a list might have different types of resources in it.  As a result the edit
                                         // icon might now always point to the same state and differing states may have differing stateParams.  Specifically this occurs
                                         // on the Templates list where editing a workflow job template takes you to a state where the param is workflow_job_template_id.
                                         // You can also edit a Job Template from this list so the stateParam there would be job_template_id.
-                                        if(list.fieldActions[field_action].editStateParams) {
+                                        if (list.fieldActions[field_action].editStateParams) {
                                             let matchingConditions = handleEditStateParams(list.fieldActions[field_action].editStateParams);
                                             innerTable += `ng-class="{'List-editButton--selected' : ${matchingConditions.join(' || ')}}"`;
                                         }
@@ -493,7 +493,7 @@ export default ['$compile', 'Attr', 'Icon',
                 return html;
             },
 
-            buildHeader: function(options) {
+            buildHeader: function (options) {
                 var list = this.list,
                     fld, html;
 
@@ -502,9 +502,9 @@ export default ['$compile', 'Attr', 'Icon',
                         .addClass('col-xs-1 select-column List-tableHeader List-staticColumn--smallStatus')
                         .append(
                             $('<select-all>')
-                            .attr('selections-empty', 'selectedItems.length === 0')
-                            .attr('items-length', list.name + '.length')
-                            .attr('label', ''));
+                                .attr('selections-empty', 'selectedItems.length === 0')
+                                .attr('items-length', list.name + '.length')
+                                .attr('label', ''));
                 }
 
                 if (options === undefined) {
@@ -523,7 +523,7 @@ export default ['$compile', 'Attr', 'Icon',
                     html += "<th class=\"List-tableHeader select-column List-staticColumn--smallStatus\" translate></th>";
                 }
 
-                if (options.mode !== 'lookup'){
+                if (options.mode !== 'lookup') {
                     for (fld in list.fields) {
                         let customClass = list.fields[fld].columnClass || '';
                         html += `<th
@@ -555,7 +555,7 @@ export default ['$compile', 'Attr', 'Icon',
                             query-set="${list.iterator}_queryset">
                         </th>`;
 
-                    if(list.fields.info) {
+                    if (list.fields.info) {
                         customClass = list.fields.name.modalColumnClass || '';
                         const infoHeaderClass = _.get(list.fields.info, 'infoHeaderClass', 'List-tableHeader--info');
                         html += `<th
@@ -587,16 +587,21 @@ export default ['$compile', 'Attr', 'Icon',
                 return html;
             },
 
-            wrapPanel: function(html){
-                return `
-                <div class="Panel">${html}</div>`;
+            wrapPanel: function (html) {
+                return `<div class="Panel">${html}</div>`;
             },
 
-            insertFormView: function(){
-                return `<div ui-view="form"></div>`;
+            insertFormView: function (modaldlg) {
+                if (modaldlg) {
+                    //return `<div ui-view="form" id="modaldlg" class="modal fade in" style="display:block;"></div>`;
+                    return `<div ui-view="form" id="modaldlg" class="modal fade in"></div>`;
+                }
+                else {
+                    return `<div ui-view="form"></div>`;
+                }
             },
 
-            insertSchedulerView: function(){
+            insertSchedulerView: function () {
                 return `<div ui-view="scheduler"></div>`;
             }
         };

@@ -21,7 +21,7 @@ export default ['i18n', function(i18n) {
             stateTree: 'ipamDatacentersList',
             breadcrumbName: i18n._('IPAM DATACENTER'),
             showActions: true,
-            popupAdd: true,
+            modaldlg: "hahaha",
 			tabs: {
 				contacts: {
 					index: 1,

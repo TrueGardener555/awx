@@ -164,6 +164,7 @@ export default
                     // Not a very good way to do this
                     // Form sub-states expect to target ui-views related@stateName & modal@stateName
                     // Also wraps mess of generated HTML in a .Panel
+
                     wrapPanel(html, ignorePanel) {
                         if (ignorePanel) {
                             return `
@@ -192,6 +193,8 @@ export default
                         // Returns scope of form.
                         //
 
+                        console.log("inject");
+                        console.log(options);
                         var element, fld, set, show, self = this;
 
                         if (options.modal) {
@@ -209,6 +212,7 @@ export default
                             }
                         }
 
+                        console.log(element);
                         this.mode = options.mode;
                         this.modal = (options.modal) ? true : false;
                         this.setForm(form);
@@ -1444,14 +1448,12 @@ export default
                         //
                         var btn, button, fld, field, html = '', section, group,
                             sectionShow, offset, width, ngDisabled, itm;
-
-
+                       
                         // title and exit button
                         if (!(this.form.showHeader !== undefined && this.form.showHeader === false)) {
                             html += "<div class=\"Form-header\">";
                             html += "<div class=\"Form-title\">";
-                            // html += (options.mode === 'edit') ? this.form.editTitle : this.form.addTitle;
-                            html += (options.mode === 'edit') ? "this.form.editTitle" : "this.form.addTitle";
+                            html += (options.mode === 'edit') ? this.form.editTitle : this.form.addTitle;
                             if (this.form.name === "user") {
                                 html += "<span class=\"Form-title--is_superuser\" " +
                                     "ng-show='is_superuser'>" + i18n._("Admin") + "</span>";
@@ -1462,7 +1464,7 @@ export default
                                 html += "<span class=\"Form-title--is_external_account\" " +
                                     "ng-show='external_account'>{{external_account}}</span>";
                             }
-                            if (this.form.name === "smartinventory") {
+                            if (this.form.name === "smart inventory") {
                                 html += "<span class=\"Form-title--is_smartinventory\" " +
                                     ">" + i18n._("Smart Inventory") + "</span>";
                             }
@@ -1620,13 +1622,30 @@ export default
                                 html += (this.form.tabs[itm].ngIf) ? ` ng-if="${this.form.tabs[itm].ngIf}" ` : "";
                                 html += `ng-click="` + this.form.tabs[itm].ngClick + `" `;
                                 if (collection.awToolTip && collection.awToolTipTabEnabledInEditMode === true) {
-                                    html += `aw-tool-tip="${collection.awToolTip}" ` +
-                                        `aw-tip-placement="${collection.dataPlacement}" ` +
-                                        `data-tip-watch="${collection.dataTipWatch}" `;
+                                    html += `aw-tool-tip="${collection.awToolTip}"` +
+                                        `aw-tip-placement="${collection.dataPlacement}"` +
+                                        `data-tip-watch="${collection.dataTipWatch}"`;
                                 }
                                 html += `>${(collection.title || collection.editTitle)}</div>`;
                             }
                             html += "</div>";//tabHolder
+                        }
+                        
+                        //Added for Wizard Style
+                        if (!_.isEmpty(this.form.wizards)) {
+                            var collection, details = i18n._('Details');
+                            html += "<ul class=\"steps\">";
+
+                            for (itm in this.form.wizards) {
+                                collection = this.form.wizards[itm];
+                                var select_var = "status" + collection.index;
+                                console.log("TABS = " + select_var);
+                                html += `<li data-step="${collection.index}"` + `class="{{` + select_var + `}}" >`;
+                                html += `<span class = "step">${collection.index}</span>`;
+                                html += `<span class = "title">${(collection.title || collection.editTitle)}</span>`;
+                                html += `</li>`;
+                            }
+                            html += "</ul>";//Wizard Holder
                         }
                         //Modify Finished
                         html += "<form class=\"Form";
@@ -1727,19 +1746,27 @@ export default
 
                                         // Set default color and label for Save and Reset
                                         if (btn === 'save') {
-                                            button.label = i18n._('Save');
+                                            button.label = button.label || i18n._('Save');
+                                            button['class'] = 'Form-saveButton';
+                                        }
+                                        if (btn === 'previous') {
+                                            button.label = button.label || i18n._('< Prev');
+                                            button['class'] = 'Form-saveButton';
+                                        }
+                                        if (btn === 'next') {
+                                            button.label = button.label || i18n._('Next >');
                                             button['class'] = 'Form-saveButton';
                                         }
                                         if (btn === 'select') {
-                                            button.label = i18n._('Select');
+                                            if(button.label == "") button.label = i18n._('Select');
                                             button['class'] = 'Form-saveButton';
                                         }
                                         if (btn === 'cancel') {
-                                            button.label = i18n._('Cancel');
+                                            button.label = button.label || i18n._('Cancel');
                                             button['class'] = 'Form-cancelButton';
                                         }
                                         if (btn === 'close') {
-                                            button.label = i18n._('Close');
+                                            button.label = button.label || i18n._('Close');
                                             button['class'] = 'Form-cancelButton';
                                         }
                                         if (btn === 'launch') {

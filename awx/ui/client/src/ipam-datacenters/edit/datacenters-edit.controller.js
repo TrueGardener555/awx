@@ -39,7 +39,14 @@ export default ['$scope', '$rootScope', '$stateParams', 'DatacenterForm', 'Rest'
                     });
                 });
 			$scope.select0 = 'is-selected';
-			$scope.tabId = 0;
+            $scope.tabId = 0;
+            
+            // change to modal dialog
+            var element = document.getElementById("modaldlg");
+            element.style.display = "block";
+            var panel = element.getElementsByClassName("Panel ng-scope");
+            panel[0].classList.add("modal-dialog");
+            panel[0].style.width = "60%";
         }
 
 		function setScopeFields(data) {

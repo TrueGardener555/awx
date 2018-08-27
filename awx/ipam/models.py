@@ -13,10 +13,36 @@ from django.db.models.expressions import RawSQL
 # AWX
 from awx.api.versioning import reverse
 
+# AWX
+from awx.main.utils import encrypt_field, parse_yaml_or_json
+
 
 from django.utils.translation import ugettext_lazy as _
 #from awx.main.fields import JSONField, AskForField
 from django.contrib.postgres.fields import JSONField
+
+
+
+class VarsDictProperty(object):
+    '''
+    Retrieve a string of variables in YAML or JSON as a dictionary.
+    '''
+
+    def __init__(self, field='variables', key_value=False):
+        self.field = field
+        self.key_value = key_value
+
+    def __get__(self, obj, type=None):
+        if obj is None:
+            return self
+        v = getattr(obj, self.field)
+        if hasattr(v, 'items'):
+            return v
+        v = v.encode('utf-8')
+        return parse_yaml_or_json(v)
+
+    def __set__(self, obj, value):
+        raise AttributeError('readonly property')
 
 
 
@@ -817,6 +843,16 @@ class DeviceTemplate(CreatedUpdatedModel):
     primary_mac = models.CharField(max_length=200, blank=True)
     primary_domain = models.CharField(max_length=200, blank=True)
 
+    # opts
+
+    opts_dict = VarsDictProperty('opts')
+
+
+    def save(self, *args, **kwargs):
+        if self.opts:
+            # format to json before saving object
+            self.opts = self.opts_dict
+        super(DeviceTemplate, self).save(*args, **kwargs)
 
 
 
@@ -895,6 +931,37 @@ class Registry(DeviceTemplate):
     def get_absolute_url(self, request=None):
         return reverse('api:ipam_registry-detail', kwargs={'pk': self.pk}, request=request)
 
+
+
+
+
+
+class DeviceOptionsTemplate(CreatedUpdatedModel):
+    """
+    Template for all devices (physical and virtual)
+    """
+    class Meta:
+        abstract = True
+
+    hosts = JSONField(
+        blank=True,
+        default={},
+        editable=True,
+        null=True,
+    )
+    artifacts = JSONField(
+        blank=True,
+        default={},
+        editable=True,
+        null=True,
+    )
+
+    opts = JSONField(
+        blank=True,
+        default={},
+        editable=True,
+        null=True,
+    )
 
 
 

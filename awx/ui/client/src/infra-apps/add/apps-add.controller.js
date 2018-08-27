@@ -12,15 +12,15 @@ const user_type_options = [
  { type: 'system_administrator', label: N_('System Administrator') },
 ];
 
-export default ['$scope', '$rootScope', 'DatacenterForm', 'GenerateForm', 'Rest',
+export default ['$scope', '$rootScope', 'AppForm', 'GenerateForm', 'Rest',
     'Alert', 'ProcessErrors', 'ReturnToCaller', 'GetBasePath',
     'Wait', 'CreateSelect2', '$state', '$location', 'i18n',
-    function($scope, $rootScope, DatacenterForm, GenerateForm, Rest, Alert,
+    function($scope, $rootScope, AppForm, GenerateForm, Rest, Alert,
     ProcessErrors, ReturnToCaller, GetBasePath, Wait, CreateSelect2,
     $state, $location, i18n) {
 
-        var defaultUrl = GetBasePath('ipam_datacenters'),
-            form = DatacenterForm;
+        var defaultUrl = GetBasePath('ipam_apps'),
+            form = AppForm;
 
         init();
 
@@ -32,37 +32,59 @@ export default ['$scope', '$rootScope', 'DatacenterForm', 'GenerateForm', 'Rest'
 
             $scope.isAddForm = true;
             
-			$scope.select0 = 'is-selected';
-            $scope.tabId = 0;
-            
+			$scope.status1 = "active";
+            $scope.tabId = 1;
+			$scope.previous = "CLOSE";
+			$scope.next = "NEXT";
             // change to modal dialog
+            
             var element = document.getElementById("modaldlg");
             element.style.display = "block";
             var panel = element.getElementsByClassName("Panel ng-scope");
             panel[0].classList.add("modal-dialog");
             panel[0].style.width = "60%";
+
         }
-
-		$scope.select = function(param)
-		{
-			$scope.tabId = param;
-			if ($scope.tabId == 0) {
-				$scope.select0 = "is-selected";
-				$scope.select1 = "";
-				$scope.select2 = "";
+ 
+		$scope.WizardClick = function (clickID) {
+			if (clickID == 1) {
+				if($scope.tabId > 1)
+					$scope.tabId = $scope.tabId - 1;
 			}
-			else if ($scope.tabId == 1) {
-				$scope.select0 = "";
-				$scope.select1 = "is-selected";
-				$scope.select2 = "";
+			else if (clickID == 2) {
+				if($scope.tabId < 3)
+					$scope.tabId = $scope.tabId + 1;
+				if($scope.tab == 2)
+				{
+					var fld, data = {};
+		            Rest.setUrl(defaultUrl);
+		            for (fld in form.fields) {
+		                if (form.fields[fld].realName) {
+		                    data[form.fields[fld].realName] = $scope[fld];
+		                } else {
+		                    data[fld] = $scope[fld]; 
+		                }
+		            }
+		            console.log(data);
+		            $scope.opts = data;
+				}
+			}
 
+			if ($scope.tabId == 1) {
+				$scope.status1 = "active";
+				$scope.status2 = "";
+				$scope.status3 = "";
 			}
 			else if ($scope.tabId == 2) {
-				$scope.select0 = "";
-				$scope.select1 = "";
-				$scope.select2 = "is-selected";
+				$scope.status1 = "complete";
+				$scope.status2 = "active";
+				$scope.status3 = "";
 			}
-
+			else if ($scope.tabId == 3) {
+				$scope.status1 = "complete";
+				$scope.status2 = "complete";
+				$scope.status3 = "active";
+			}
 		};
         // Save
         $scope.formSave = function() {
@@ -79,21 +101,21 @@ export default ['$scope', '$rootScope', 'DatacenterForm', 'GenerateForm', 'Rest'
             Rest.post(data)
                 .then(({data}) => {
                     var base = $location.path().replace(/^\//, '').split('/')[0];
-                    if (base === 'ipam_datacenters') {
-                        $rootScope.flashMessage = i18n._('New datacenter successfully created!');
-                        $rootScope.$broadcast("EditIndicatorChange", "datacenter", data.id);
-                        $state.go('ipamDatacentersList.edit', { datacenter_id: data.id }, { reload: true });
+                    if (base === 'ipam_apps') {
+                        $rootScope.flashMessage = i18n._('New App successfully created!');
+                        $rootScope.$broadcast("EditIndicatorChange", "App", data.id);
+                        $state.go('infraAppsList.edit', { app_id: data.id }, { reload: true });
                     } else {
                         ReturnToCaller(1);
                     }
                 })
                 .catch(({data, status}) => {
-                    ProcessErrors($scope, data, status, form, { hdr: i18n._('Error!'), msg: i18n._('Failed to add new datacenter. POST returned status: ') + status });
+                    ProcessErrors($scope, data, status, form, { hdr: i18n._('Error!'), msg: i18n._('Failed to add new App. POST returned status: ') + status });
                 });
         };
 
         $scope.formCancel = function() {
-            $state.go('ipamDatacentersList');
+            $state.go('infraAppsList');
         };
     }
 ];
