@@ -22,23 +22,23 @@ export default ['i18n', function(i18n) {
             breadcrumbName: i18n._('INFRA APP'),
             showActions: true,
 			wizards: {
-				npt: {
+				basic: {
 					index: 1,
-					name: 'NPT',
+					name: 'Variable',
                     type: 'collection',
-                    title: i18n._('NPT'),
+                    title: i18n._('Variable'),
 				},
-				servers: {
+				relation: {
 					index:2,
-					name: 'Servers',
+					name: 'Relation',
 	                type: 'collection',
-	                title: i18n._('Servers'),
+	                title: i18n._('Relation'),
 				},
-				deploy: {
+				opts: {
 					index:3,
-					name: 'Deploy',
+					name: 'Option',
 	                type: 'collection',
-	                title: i18n._('Deploy'),
+	                title: i18n._('Option'),
 				}
 			},
             fields: {
@@ -132,14 +132,13 @@ export default ['i18n', function(i18n) {
                     ngModel: 'credential',
                     ngOptions: 'item as item.label for item in credential_type_options',
                     ngDisabled: '!(user_obj.summary_fields.user_capabilities.edit || canAdd)',
-                    required: true,
 					ngShow: 'tabId == 2',
                 }, 
 				opts: {
                     label: i18n._('Input Opts'),
                     class: 'Form-textAreaLabel Form-formGroup--fullWidth',
 	                type: 'textarea',
-	                rows: 6,
+	                rows: 15,
 	                default: '---',
 	                showParseTypeToggle: true,
 	                parseTypeName: 'parseTypeOpts',
@@ -154,18 +153,20 @@ export default ['i18n', function(i18n) {
             },
  
             buttons: {
-                cancel: {
-                    ngClick: 'formCancel()',
-                    ngShow: 'tabId == 1',
-                   	
-                },
 				previous:{
 					ngClick: 'WizardClick(1)',
+					ngShow: 'tabId > 1',
 				},
 				next:{
 					ngClick: 'WizardClick(2)',
+					ngShow: 'tabId < 3',
 				},
+                cancel: {
+                    ngClick: 'formCancel()',
+                    ngShow: 'tabId == 1',
+                },
                 save: {
+                	title:'Finish',
                     ngClick: 'formSave()',
 					ngShow: 'tabId == 3',
                 }

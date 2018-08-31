@@ -29,7 +29,6 @@ angular.module('ipamDatacentersList', [])
                     modes: ['add', 'edit'],
                     list: 'DatacenterList',
                     form: 'DatacenterForm',
-                    modalDlg: true,
                     controllers: {
                         list: DatacentersList,
                         add: DatacentersAdd,

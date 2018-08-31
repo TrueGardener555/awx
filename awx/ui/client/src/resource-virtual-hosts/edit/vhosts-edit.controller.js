@@ -73,7 +73,6 @@ GetBasePath, Wait, CreateSelect2, $state, i18n, ParseTypeChange, ParseVariableSt
 			                    break;
 			                }
 			            }
-			            
 			        })
 			    	.catch(({data, status}) => {
 			        	ProcessErrors($scope, data, status, form, { hdr: i18n._('Error!'), msg: i18n._('Failed to get datacenters. Get returned status: ') + status });

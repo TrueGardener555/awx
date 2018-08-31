@@ -1751,11 +1751,11 @@ export default
                                         }
                                         if (btn === 'previous') {
                                             button.label = button.label || i18n._('< Prev');
-                                            button['class'] = 'Form-saveButton';
+                                            button['class'] = 'Form-primaryButton';
                                         }
                                         if (btn === 'next') {
                                             button.label = button.label || i18n._('Next >');
-                                            button['class'] = 'Form-saveButton';
+                                            button['class'] = 'Form-primaryButton';
                                         }
                                         if (btn === 'select') {
                                             if(button.label == "") button.label = i18n._('Select');

@@ -6,11 +6,12 @@
 
 import { N_ } from "../../i18n";
 
-export default ['$scope', '$rootScope', '$stateParams', 'AppForm', 'Rest',
-    'ProcessErrors', 'GetBasePath', 'Wait', 'CreateSelect2',
-    '$state', 'i18n',
-    function($scope, $rootScope, $stateParams, AppForm, Rest, ProcessErrors,
-    GetBasePath, Wait, CreateSelect2, $state, i18n) {
+export default ['$scope', '$rootScope', '$stateParams', 'AppForm', 'GenerateForm', 'Rest','ParseTypeChange',
+    'Alert', 'ProcessErrors', 'ReturnToCaller', 'GetBasePath',
+    'Wait', 'CreateSelect2', '$state', '$location', 'i18n',
+    function($scope, $rootScope, $stateParams, AppForm, GenerateForm, Rest, ParseTypeChange, Alert,
+    ProcessErrors, ReturnToCaller, GetBasePath, Wait, CreateSelect2,
+    $state, $location, i18n) {
 
         var form = AppForm,
             master = {},
@@ -21,7 +22,6 @@ export default ['$scope', '$rootScope', '$stateParams', 'AppForm', 'Rest',
 
         function init() {
             Rest.setUrl(defaultUrl);
-            console.log("init");
             Wait('start');
             Rest.get(defaultUrl).then(({data}) => {
         		
@@ -47,7 +47,7 @@ export default ['$scope', '$rootScope', '$stateParams', 'AppForm', 'Rest',
                 $scope.requirements = data.requirements;
                 $scope.source = data.source;
                 var datacenter_value = data.datacenter;
-                var credential_value = data.datacenter;
+                var credential_value = data.credential;
                 
                 
 				//setScopeFields(data);
@@ -126,9 +126,11 @@ export default ['$scope', '$rootScope', '$stateParams', 'AppForm', 'Rest',
             panel[0].style.width = "60%";
         }
 
-
+		var callback = function() {
+            // Make sure the form controller knows there was a change
+            $scope[form.name + '_form'].$setDirty();
+        };
 		function getVars(str){
-
             // Quick function to test if the host vars are a json-object-string,
             // by testing if they can be converted to a JSON object w/o error.
             function IsJsonString(str) {
@@ -158,8 +160,54 @@ export default ['$scope', '$rootScope', '$stateParams', 'AppForm', 'Rest',
 					$scope.tabId = $scope.tabId - 1;
 			}
 			else if (clickID == 2) {
-				if($scope.tabId != 3)
+				 
+				if($scope.tabId < 3)
+				{
 					$scope.tabId = $scope.tabId + 1;
+				}
+				if($scope.tabId == 2)
+				{
+					var fld;
+					var data = "{";
+					for (fld in form.fields) {
+						
+						if(fld == "datacenter" || fld == "credential")
+						{
+							data += "'" + fld + "':";
+			            	if($scope[fld] != undefined) data += "'" + $scope[fld].value + "'";
+			            	else data += "''";
+			            	data += ",\n"; 
+			            	continue;
+						}
+		            	if(fld != "opts")
+		            	{
+			            	data += "'" + fld + "':";
+			            	if($scope[fld] != undefined) data += "'" + $scope[fld] + "'";
+			            	else data += "''";
+			            	data += ",\n"; 
+			            	/*
+			                if (form.fields[fld].realName) {
+			                    data = data[form.fields[fld].realName] = $scope[fld];
+			                }else {
+			                    data[fld] = $scope[fld]; 
+			                }*/
+			            }
+		            }
+		            
+		        	data += "}";
+		            
+		            $scope.opts = data;
+					$scope.parseTypeOpts = 'yaml';
+			        ParseTypeChange({
+			            scope: $scope,
+			            field_id: 'opts',
+			            variable: 'opts',
+			            onChange: callback,
+			            parse_variable: 'parseTypeOpts'
+			        });
+
+					//$scope.opts = getVars(data);
+				}
 			}
 
 			if ($scope.tabId == 1) {
@@ -199,8 +247,8 @@ export default ['$scope', '$rootScope', '$stateParams', 'AppForm', 'Rest',
                     data[key] = $scope[key];
                 }
             });
-			data.datacenter = $scope.datacenter.value;
-    		data.credential = $scope.credential.value;
+            if($scope.datacenter != null) data.datacenter = $scope.datacenter.value;
+            if($scope.credential != null) data.credential = $scope.credential.value;
     		data.opts = $scope.opts;
     		
             return data;
@@ -211,21 +259,22 @@ export default ['$scope', '$rootScope', '$stateParams', 'AppForm', 'Rest',
         };
 
         $scope.formSave = function() {
+        	console.log("Update");
             $rootScope.flashMessage = null;
-            if ($scope[form.name + '_form'].$valid) {
-                Rest.setUrl(defaultUrl + '/');
-                var data = processNewData(form.fields);
-                console.log(data);
-                Rest.put(data).then(() => {
-                        $state.go($state.current, null, { reload: true });
-                    })
-                    .catch(({data, status}) => {
-                        ProcessErrors($scope, data, status, null, {
-                            hdr: i18n._('Error!'),
-                            msg: i18n.sprintf(i18n._('Failed to retrieve App: %s. GET status: '), $stateParams.id) + status
-                        });
+            
+            Rest.setUrl(defaultUrl + '/');
+            var data = processNewData(form.fields);
+            console.log(data);
+            Rest.put(data).then(() => {
+                    //$state.go($state.current, null, { reload: true });
+                    $state.go('infraAppsList', null, { reload: true });
+                })
+                .catch(({data, status}) => {
+                    ProcessErrors($scope, data, status, null, {
+                        hdr: i18n._('Error!'),
+                        msg: i18n.sprintf(i18n._('Failed to retrieve Ipam: %s. GET status: '), $stateParams.id) + status
                     });
-            }
+                });
         };
     }
 ];

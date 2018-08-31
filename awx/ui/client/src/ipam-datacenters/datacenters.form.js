@@ -21,7 +21,6 @@ export default ['i18n', function(i18n) {
             stateTree: 'ipamDatacentersList',
             breadcrumbName: i18n._('IPAM DATACENTER'),
             showActions: true,
-            modaldlg: "hahaha",
 			tabs: {
 				contacts: {
 					index: 1,
@@ -92,7 +91,6 @@ export default ['i18n', function(i18n) {
                     label: i18n._('Contact Email'),
                     type: 'email',
                     ngDisabled: '!(user_obj.summary_fields.user_capabilities.edit || canAdd)',
-                    required: true,
 					ngShow: 'tabId == 1',
                 },
 				physical_address: {

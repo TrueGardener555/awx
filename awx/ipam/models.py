@@ -606,6 +606,19 @@ class InfrastructureTemplate(CreatedUpdatedModel):
     )
 
 
+    # opts
+
+    opts_dict = VarsDictProperty('opts')
+
+
+    def save(self, *args, **kwargs):
+        if self.opts:
+            # format to json before saving object
+            self.opts = self.opts_dict
+        super(InfrastructureTemplate, self).save(*args, **kwargs)
+
+
+
 
 
 class Provider(InfrastructureTemplate):

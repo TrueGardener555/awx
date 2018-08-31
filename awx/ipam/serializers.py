@@ -62,7 +62,8 @@ from awx.ipam.views import *
 from awx.main.views import *
 # from awx.api.urls import *
 
-
+# AWX
+# from awx.main.utils import encrypt_field, parse_yaml_or_json
 
 
 
@@ -389,6 +390,26 @@ class BaseSerializer(serializers.ModelSerializer):
         return summary_fields
 
 
+    def _get_related_fields(self, obj):
+        return {} if obj is None else self.get_related_fields(obj)
+
+
+    def get_related_fields(self, obj):
+        # code here to calculate the result
+        # or return obj.calc_result() if you have that calculation in the model
+        # datacenter_name = serializers.ReadOnlyField(source='datacenter.name',)
+        # return "some result"
+        related_fields = OrderedDict()
+        try:
+            opts_fields = parse_yaml_or_json( getattr(obj, 'opts', None) )
+        except Exception as e:
+            # raise e
+            opts_fields = OrderedDict()
+            pass
+        related_fields['opts'] = opts_fields
+
+        return related_fields
+        
 
 
 
@@ -537,6 +558,10 @@ class IpamProviderSerializer(BaseSerializer):
     # datacenter = serializers.HyperlinkedRelatedField(view_name='ipam_provider-list', lookup_field='providers', read_only=True)
     # datacenters = serializers.RelatedField(many=True,read_only=True)
 
+    related = serializers.SerializerMethodField('_get_related_fields', read_only=True)
+
+    # opts = serializers.JSONField(source='Provider.opts')
+
     class Meta:
         model = Provider
         fields = '__all__'
@@ -545,6 +570,19 @@ class IpamProviderSerializer(BaseSerializer):
         #   'scm_type', 'scm_url', 'scm_branch', 'scm_revision', 'svc_enabled', 'security', 
         #   'requirements', 'opts', 'source', 'credential', 'datacenter',
         #   )
+    def to_representation(self, instance):
+        data = super(IpamProviderSerializer, self).to_representation(instance)
+        # data.update(...)
+        # data['opts_data'] = parse_yaml_or_json( getattr(instance, 'opts', None) )
+        data['opts'] = parse_yaml_or_json( getattr(instance, 'opts', None) )
+        data['hosts'] = parse_yaml_or_json( getattr(instance, 'hosts', None) )
+        data['artifacts'] = parse_yaml_or_json( getattr(instance, 'artifacts', None) )
+        data['security'] = parse_yaml_or_json( getattr(instance, 'security', None) )
+        data['requirements'] = parse_yaml_or_json( getattr(instance, 'requirements', None) )
+        data['svc_enabled'] = parse_yaml_or_json( getattr(instance, 'svc_enabled', None) )
+        return data
+
+
 
 
 
@@ -558,9 +596,22 @@ class IpamStorageSerializer(BaseSerializer):
     # requirements = serializers.JSONField(default={})
     # security = serializers.JSONField(default={})
 
+    related = serializers.SerializerMethodField('_get_related_fields', read_only=True)
+
     class Meta:
         model = Storage
         fields = '__all__'
+
+    def to_representation(self, instance):
+        data = super(IpamStorageSerializer, self).to_representation(instance)
+        data['opts'] = parse_yaml_or_json( getattr(instance, 'opts', None) )
+        data['hosts'] = parse_yaml_or_json( getattr(instance, 'hosts', None) )
+        data['artifacts'] = parse_yaml_or_json( getattr(instance, 'artifacts', None) )
+        data['security'] = parse_yaml_or_json( getattr(instance, 'security', None) )
+        data['requirements'] = parse_yaml_or_json( getattr(instance, 'requirements', None) )
+        data['svc_enabled'] = parse_yaml_or_json( getattr(instance, 'svc_enabled', None) )
+        return data
+
 
 
 
@@ -579,6 +630,15 @@ class IpamServiceSerializer(BaseSerializer):
         model = Service
         fields = '__all__'
 
+    def to_representation(self, instance):
+        data = super(IpamServiceSerializer, self).to_representation(instance)
+        data['opts'] = parse_yaml_or_json( getattr(instance, 'opts', None) )
+        data['hosts'] = parse_yaml_or_json( getattr(instance, 'hosts', None) )
+        data['artifacts'] = parse_yaml_or_json( getattr(instance, 'artifacts', None) )
+        data['security'] = parse_yaml_or_json( getattr(instance, 'security', None) )
+        data['requirements'] = parse_yaml_or_json( getattr(instance, 'requirements', None) )
+        data['svc_enabled'] = parse_yaml_or_json( getattr(instance, 'svc_enabled', None) )
+        return data
 
 
 
@@ -593,10 +653,22 @@ class IpamNetworkSerializer(BaseSerializer):
     # requirements = serializers.JSONField(default={})
     # security = serializers.JSONField(default={})
 
+    related = serializers.SerializerMethodField('_get_related_fields', read_only=True)
+
     class Meta:
         model = Network
         fields = '__all__'
 
+
+    def to_representation(self, instance):
+        data = super(IpamNetworkSerializer, self).to_representation(instance)
+        data['opts'] = parse_yaml_or_json( getattr(instance, 'opts', None) )
+        data['hosts'] = parse_yaml_or_json( getattr(instance, 'hosts', None) )
+        data['artifacts'] = parse_yaml_or_json( getattr(instance, 'artifacts', None) )
+        data['security'] = parse_yaml_or_json( getattr(instance, 'security', None) )
+        data['requirements'] = parse_yaml_or_json( getattr(instance, 'requirements', None) )
+        data['svc_enabled'] = parse_yaml_or_json( getattr(instance, 'svc_enabled', None) )
+        return data
 
 
 
@@ -611,10 +683,21 @@ class IpamAppSerializer(BaseSerializer):
     # requirements = serializers.JSONField(default={})
     # security = serializers.JSONField(default={})
 
+    related = serializers.SerializerMethodField('_get_related_fields', read_only=True)
+
     class Meta:
         model = App
         fields = '__all__'
 
+    def to_representation(self, instance):
+        data = super(IpamAppSerializer, self).to_representation(instance)
+        data['opts'] = parse_yaml_or_json( getattr(instance, 'opts', None) )
+        data['hosts'] = parse_yaml_or_json( getattr(instance, 'hosts', None) )
+        data['artifacts'] = parse_yaml_or_json( getattr(instance, 'artifacts', None) )
+        data['security'] = parse_yaml_or_json( getattr(instance, 'security', None) )
+        data['requirements'] = parse_yaml_or_json( getattr(instance, 'requirements', None) )
+        data['svc_enabled'] = parse_yaml_or_json( getattr(instance, 'svc_enabled', None) )
+        return data
 
 
 
@@ -629,11 +712,21 @@ class IpamNocSerializer(BaseSerializer):
     # requirements = serializers.JSONField(default={})
     # security = serializers.JSONField(default={})
 
+    related = serializers.SerializerMethodField('_get_related_fields', read_only=True)
+
     class Meta:
         model = Noc
         fields = '__all__'
 
-
+    def to_representation(self, instance):
+        data = super(IpamNocSerializer, self).to_representation(instance)
+        data['opts'] = parse_yaml_or_json( getattr(instance, 'opts', None) )
+        data['hosts'] = parse_yaml_or_json( getattr(instance, 'hosts', None) )
+        data['artifacts'] = parse_yaml_or_json( getattr(instance, 'artifacts', None) )
+        data['security'] = parse_yaml_or_json( getattr(instance, 'security', None) )
+        data['requirements'] = parse_yaml_or_json( getattr(instance, 'requirements', None) )
+        data['svc_enabled'] = parse_yaml_or_json( getattr(instance, 'svc_enabled', None) )
+        return data
 
 
 
@@ -647,11 +740,22 @@ class IpamBackupSerializer(BaseSerializer):
     # requirements = serializers.JSONField(default={})
     # security = serializers.JSONField(default={})
 
+    related = serializers.SerializerMethodField('_get_related_fields', read_only=True)
+
     class Meta:
         model = Backup
         fields = '__all__'
 
 
+    def to_representation(self, instance):
+        data = super(IpamBackupSerializer, self).to_representation(instance)
+        data['opts'] = parse_yaml_or_json( getattr(instance, 'opts', None) )
+        data['hosts'] = parse_yaml_or_json( getattr(instance, 'hosts', None) )
+        data['artifacts'] = parse_yaml_or_json( getattr(instance, 'artifacts', None) )
+        data['security'] = parse_yaml_or_json( getattr(instance, 'security', None) )
+        data['requirements'] = parse_yaml_or_json( getattr(instance, 'requirements', None) )
+        data['svc_enabled'] = parse_yaml_or_json( getattr(instance, 'svc_enabled', None) )
+        return data
 
 
 
@@ -665,11 +769,21 @@ class IpamDocumentationSerializer(BaseSerializer):
     # requirements = serializers.JSONField(default={})
     # security = serializers.JSONField(default={})
 
+    related = serializers.SerializerMethodField('_get_related_fields', read_only=True)
+
     class Meta:
         model = Documentation
         fields = '__all__'
 
-
+    def to_representation(self, instance):
+        data = super(IpamDocumentationSerializer, self).to_representation(instance)
+        data['opts'] = parse_yaml_or_json( getattr(instance, 'opts', None) )
+        data['hosts'] = parse_yaml_or_json( getattr(instance, 'hosts', None) )
+        data['artifacts'] = parse_yaml_or_json( getattr(instance, 'artifacts', None) )
+        data['security'] = parse_yaml_or_json( getattr(instance, 'security', None) )
+        data['requirements'] = parse_yaml_or_json( getattr(instance, 'requirements', None) )
+        data['svc_enabled'] = parse_yaml_or_json( getattr(instance, 'svc_enabled', None) )
+        return data
 
 
 
@@ -683,9 +797,21 @@ class IpamPkiSerializer(BaseSerializer):
     # requirements = serializers.JSONField(default={})
     # security = serializers.JSONField(default={})
 
+    related = serializers.SerializerMethodField('_get_related_fields', read_only=True)
+
     class Meta:
         model = Pki
         fields = '__all__'
+
+    def to_representation(self, instance):
+        data = super(IpamPkiSerializer, self).to_representation(instance)
+        data['opts'] = parse_yaml_or_json( getattr(instance, 'opts', None) )
+        data['hosts'] = parse_yaml_or_json( getattr(instance, 'hosts', None) )
+        data['artifacts'] = parse_yaml_or_json( getattr(instance, 'artifacts', None) )
+        data['security'] = parse_yaml_or_json( getattr(instance, 'security', None) )
+        data['requirements'] = parse_yaml_or_json( getattr(instance, 'requirements', None) )
+        data['svc_enabled'] = parse_yaml_or_json( getattr(instance, 'svc_enabled', None) )
+        return data
 
 
 
@@ -700,11 +826,23 @@ class IpamSecuritySerializer(BaseSerializer):
     # requirements = serializers.JSONField(default={})
     # security = serializers.JSONField(default={})
 
+    related = serializers.SerializerMethodField('_get_related_fields', read_only=True)
+
     class Meta:
         model = Security
         fields = '__all__'
 
 
+    def to_representation(self, instance):
+        data = super(IpamSecuritySerializer, self).to_representation(instance)
+        data['opts'] = parse_yaml_or_json( getattr(instance, 'opts', None) )
+        data['hosts'] = parse_yaml_or_json( getattr(instance, 'hosts', None) )
+        data['artifacts'] = parse_yaml_or_json( getattr(instance, 'artifacts', None) )
+        data['security'] = parse_yaml_or_json( getattr(instance, 'security', None) )
+        data['requirements'] = parse_yaml_or_json( getattr(instance, 'requirements', None) )
+        data['svc_enabled'] = parse_yaml_or_json( getattr(instance, 'svc_enabled', None) )
+        data['svc_enabled'] = parse_yaml_or_json( getattr(instance, 'svc_enabled', None) )
+        return data
 
 
 # BareMetal
@@ -714,12 +852,20 @@ class IpamBareMetalSerializer(BaseSerializer):
     # opts = serializers.JSONField(default={})
     # hosts = serializers.JSONField(default={})
 
+    related = serializers.SerializerMethodField('_get_related_fields', read_only=True)
+
 
     class Meta:
         model = BareMetal
         fields = '__all__'
 
 
+    def to_representation(self, instance):
+        data = super(IpamBareMetalSerializer, self).to_representation(instance)
+        data['opts'] = parse_yaml_or_json( getattr(instance, 'opts', None) )
+        data['hosts'] = parse_yaml_or_json( getattr(instance, 'hosts', None) )
+        data['artifacts'] = parse_yaml_or_json( getattr(instance, 'artifacts', None) )
+        return data
 
 
 # VirtualHost
@@ -729,11 +875,19 @@ class IpamVirtualHostSerializer(BaseSerializer):
     # opts = serializers.JSONField(default={})
     # hosts = serializers.JSONField(default={})
 
+    related = serializers.SerializerMethodField('_get_related_fields', read_only=True)
+
     class Meta:
         model = VirtualHost
         fields = '__all__'
 
 
+    def to_representation(self, instance):
+        data = super(IpamVirtualHostSerializer, self).to_representation(instance)
+        data['opts'] = parse_yaml_or_json( getattr(instance, 'opts', None) )
+        data['hosts'] = parse_yaml_or_json( getattr(instance, 'hosts', None) )
+        data['artifacts'] = parse_yaml_or_json( getattr(instance, 'artifacts', None) )
+        return data
 
 
 
@@ -744,14 +898,29 @@ class IpamNetworkGearSerializer(BaseSerializer):
     # opts = serializers.JSONField(default={})
     # hosts = serializers.JSONField(default={})
 
+    related = serializers.SerializerMethodField('_get_related_fields', read_only=True)
+
+    opts = serializers.JSONField(default={}, source='NetworkGear.opts')
+
     class Meta:
         model = NetworkGear
         fields = '__all__'
 
 
+    def to_representation(self, instance):
+        data = super(IpamNetworkGearSerializer, self).to_representation(instance)
+        data['opts'] = parse_yaml_or_json( getattr(instance, 'opts', None) )
+        data['hosts'] = parse_yaml_or_json( getattr(instance, 'hosts', None) )
+        data['artifacts'] = parse_yaml_or_json( getattr(instance, 'artifacts', None) )
+        return data
+
+
+
 
 # Registry
 class IpamRegistrySerializer(BaseSerializer):
+
+    related = serializers.SerializerMethodField('_get_related_fields', read_only=True)
 
     # artifacts = serializers.JSONField(default={})
     # opts = serializers.JSONField(default={})
@@ -763,7 +932,12 @@ class IpamRegistrySerializer(BaseSerializer):
 
 
 
-
+    def to_representation(self, instance):
+        data = super(IpamRegistrySerializer, self).to_representation(instance)
+        data['opts'] = parse_yaml_or_json( getattr(instance, 'opts', None) )
+        data['hosts'] = parse_yaml_or_json( getattr(instance, 'hosts', None) )
+        data['artifacts'] = parse_yaml_or_json( getattr(instance, 'artifacts', None) )
+        return data
 
 
 
