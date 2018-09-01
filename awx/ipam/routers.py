@@ -31,8 +31,8 @@ ipam_router.register(r'ipam_network_gears', IpamNetworkGearViewSet, base_name="i
 ipam_router.register(r'ipam_registries', IpamRegistryViewSet, base_name="ipam_registry")
 
 
-# TimeViewSet
-ipam_router.register(r'ipam_times', TimeViewSet, base_name="ipam_time")
+# IpamInfrastructureSourceViewSet
+ipam_router.register(r'ipam_infrastructure_sources', IpamInfrastructureSourceViewSet, base_name="ipam_infrastructure_source")
 
 
 

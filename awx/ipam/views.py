@@ -135,11 +135,11 @@ class IpamRegistryViewSet(viewsets.ModelViewSet):
 
 
 # Time
-class TimeViewSet(viewsets.ViewSet):
+class IpamInfrastructureSourceViewSet(viewsets.ViewSet):
     # queryset = Registry.objects.all()
     # serializer_class = IpamRegistrySerializer
 
-    def list(self, request, version=2):
+    def list(self, request, **kwargs):
         # pass
         return Response( sources.demo() )
 

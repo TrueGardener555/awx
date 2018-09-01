@@ -347,7 +347,7 @@ class ApiVersionRootView(APIView):
         data['ipam_virtual_hosts'] = reverse('api:ipam_virtual_host-list', request=request)
         data['ipam_network_gears'] = reverse('api:ipam_network_gear-list', request=request)
         data['ipam_registries'] = reverse('api:ipam_registry-list', request=request)
-        data['ipam_times'] = reverse('api:ipam_time-list', request=request)
+        data['ipam_infrastructure_sources'] = reverse('api:ipam_infrastructure_source-list', request=request)
         return Response(data)
 
 
