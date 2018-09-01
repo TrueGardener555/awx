@@ -1765,6 +1765,10 @@ export default
                                             button.label = button.label || i18n._('Cancel');
                                             button['class'] = 'Form-cancelButton';
                                         }
+                                        if (btn === 'wizardcancel') {
+                                            button.label = button.label || i18n._('Close');
+                                            button['class'] = 'Form-wizardcancelButton';
+                                        }
                                         if (btn === 'close') {
                                             button.label = button.label || i18n._('Close');
                                             button['class'] = 'Form-cancelButton';

@@ -73,6 +73,7 @@ from .oauth import urls as oauth_urls
 from rest_framework_swagger.views import get_swagger_view
 from awx.ipam.views import *
 from awx.ipam.routers import ipam_router
+# from awx.ipam.urls import *
 
 # from rest_framework import routers
 # from awx.api.views import IpamRirViewSet

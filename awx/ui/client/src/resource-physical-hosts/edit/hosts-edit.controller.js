@@ -42,22 +42,8 @@ GetBasePath, Wait, CreateSelect2, $state, i18n, ParseTypeChange, ParseVariableSt
 					var credential_value = data.credential;
 
 					//setScopeFields(data);
-					//Set YAML/JSON Oots
-					var callback = function() {
-			            // Make sure the form controller knows there was a change
-			            $scope[form.name + '_form'].$setDirty();
-			        };
-					$scope.opts = data.opts;//ParseVariableString(getVars(data.opts));
+					$scope.opts = ParseVariableString(data.opts);
 
-					$scope.parseTypeOpts = 'yaml';
-			        ParseTypeChange({
-			            scope: $scope,
-			            field_id: 'opts',
-			            variable: 'opts',
-			            onChange: callback,
-			            parse_variable: 'parseTypeOpts'
-			        });
-			        	
 			        var datacenter_options = [];
 					var datacenterLists = [];
 			    	Rest.setUrl(GetBasePath('ipam_datacenters'));
@@ -187,8 +173,23 @@ GetBasePath, Wait, CreateSelect2, $state, i18n, ParseTypeChange, ParseVariableSt
 			else if ($scope.tabId == 1) {
 				$scope.select0 = "";
 				$scope.select1 = "is-selected";
-			}
+				//Set YAML/JSON Oots
+				var callback = function() {
+		            // Make sure the form controller knows there was a change
+		            $scope[form.name + '_form'].$setDirty();
+		        };
+				
 
+				$scope.parseTypeOpts = 'yaml';
+		        ParseTypeChange({
+		            scope: $scope,
+		            field_id: 'opts',
+		            variable: 'opts',
+		            onChange: callback,
+		            parse_variable: 'parseTypeOpts'
+		        });
+			}
+			
 		};
 
         $scope.formCancel = function() {

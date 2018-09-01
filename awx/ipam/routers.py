@@ -29,3 +29,11 @@ ipam_router.register(r'ipam_bare_metals', IpamBareMetalViewSet, base_name="ipam_
 ipam_router.register(r'ipam_virtual_hosts', IpamVirtualHostViewSet, base_name="ipam_virtual_host")
 ipam_router.register(r'ipam_network_gears', IpamNetworkGearViewSet, base_name="ipam_network_gear")
 ipam_router.register(r'ipam_registries', IpamRegistryViewSet, base_name="ipam_registry")
+
+
+# TimeViewSet
+ipam_router.register(r'ipam_times', TimeViewSet, base_name="ipam_time")
+
+
+
+

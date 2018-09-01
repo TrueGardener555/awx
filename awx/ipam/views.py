@@ -1,9 +1,13 @@
 from django.shortcuts import render
 
-from rest_framework import  viewsets
+from rest_framework.response import Response
+
+from rest_framework import  viewsets, mixins
 from awx.ipam.models import * # noqa
 from awx.ipam.serializers import * # noqa
 
+from awx.ipam.utils import sources # noqa
+import datetime
 # Create your views here.
 
 
@@ -126,4 +130,58 @@ class IpamNetworkGearViewSet(viewsets.ModelViewSet):
 class IpamRegistryViewSet(viewsets.ModelViewSet):
     queryset = Registry.objects.all()
     serializer_class = IpamRegistrySerializer
+
+
+
+
+# Time
+class TimeViewSet(viewsets.ViewSet):
+    # queryset = Registry.objects.all()
+    # serializer_class = IpamRegistrySerializer
+
+    def list(self, request, version=2):
+        # pass
+        return Response( sources.demo() )
+
+    # def create(self, request):
+    #     pass
+
+    def retrieve(self, request, pk=None):
+        pass
+
+    # def update(self, request, pk=None):
+    #     pass
+
+    def partial_update(self, request, pk=None):
+        pass
+
+    def destroy(self, request, pk=None):
+        pass
+
+
+
+
+    # def get(self, request, format=None):
+    #     data = {
+    #       'current_time' : timezone.now()
+    #     }
+    #     return Response({ 
+    #             'current_time': timezone.now()
+    #             }) 
+
+
+    # def post(self, request, format=None):
+    #     data = {
+    #       'current_time' : timezone.now()
+    #     }
+    #     return Response({ 
+    #             'current_time': timezone.now()
+    #             }) 
+
+
+
+
+
+
+
 

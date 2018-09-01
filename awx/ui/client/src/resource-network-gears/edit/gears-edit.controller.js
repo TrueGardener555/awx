@@ -13,11 +13,16 @@ export default ['$scope', '$rootScope', '$stateParams', 'GearForm', 'Rest',
 GetBasePath, Wait, CreateSelect2, $state, i18n, ParseTypeChange, ParseVariableString, ToJSON) {
 
         var form = GearForm,
-            master = {},
-            id = $stateParams.networkgear_id,
-            defaultUrl = GetBasePath('ipam_network_gears') + id;
-        
-        init();
+        master = {},
+        id = $stateParams.networkgear_id,
+        defaultUrl = GetBasePath('ipam_network_gears') + id;
+
+		var callback = function() {
+            // Make sure the form controller knows there was a change
+            //$scope[form.name + '_form'].$setDirty();
+        };
+        if(init())
+        	init();
 
         function init() {
         	$scope.select0 = 'is-selected';
@@ -42,21 +47,7 @@ GetBasePath, Wait, CreateSelect2, $state, i18n, ParseTypeChange, ParseVariableSt
 					var credential_value = data.credential;
 
 					//setScopeFields(data);
-					//Set YAML/JSON Oots
-					var callback = function() {
-			            // Make sure the form controller knows there was a change
-			            $scope[form.name + '_form'].$setDirty();
-			        };
-					$scope.opts = data.opts;//ParseVariableString(getVars(data.opts));
-
-					$scope.parseTypeOpts = 'yaml';
-			        ParseTypeChange({
-			            scope: $scope,
-			            field_id: 'opts',
-			            variable: 'opts',
-			            onChange: callback,
-			            parse_variable: 'parseTypeOpts'
-			        });
+					$scope.opts = ParseVariableString(data.opts);
 			        	
 			        var datacenter_options = [];
 					var datacenterLists = [];
@@ -173,6 +164,7 @@ GetBasePath, Wait, CreateSelect2, $state, i18n, ParseTypeChange, ParseVariableSt
             data.datacenter = $scope.datacenter.value;
     		data.credential = $scope.credential.value;
     		data.opts = $scope.opts;
+    		console.log(data);
             return data;
         };
 
@@ -187,6 +179,18 @@ GetBasePath, Wait, CreateSelect2, $state, i18n, ParseTypeChange, ParseVariableSt
 			else if ($scope.tabId == 1) {
 				$scope.select0 = "";
 				$scope.select1 = "is-selected";
+				//Set YAML/JSON Oots
+
+				//$scope.opts = data.opts;//ParseVariableString(getVars(data.opts));
+				
+				$scope.parseTypeOpts = 'yaml';
+		        ParseTypeChange({
+		            scope: $scope,
+		            field_id: 'networkgear_opts',
+		            variable: 'opts',
+		            onChange: callback,
+		            parse_variable: 'parseTypeOpts'
+		        });
 			}
 
 		};

@@ -146,14 +146,17 @@ export default ['i18n', function(i18n) {
 	                dataTitle: i18n._('Input Opts'),
 	                dataPlacement: 'right',
 	                dataContainer: "body",
-	                id: 'opts',
                     ngDisabled: '!(user_obj.summary_fields.user_capabilities.edit || canAdd)',
 					ngShow: 'tabId == 3',
                 },
             },
  
             buttons: {
-				previous:{
+                wizardcancel: {
+                    ngClick: 'formCancel()',
+                    ngShow: 'tabId == 1',
+                },
+                previous:{
 					ngClick: 'WizardClick(1)',
 					ngShow: 'tabId > 1',
 				},
@@ -161,14 +164,11 @@ export default ['i18n', function(i18n) {
 					ngClick: 'WizardClick(2)',
 					ngShow: 'tabId < 3',
 				},
-                cancel: {
-                    ngClick: 'formCancel()',
-                    ngShow: 'tabId == 1',
-                },
                 save: {
                 	title:'Finish',
                     ngClick: 'formSave()',
 					ngShow: 'tabId == 3',
+					ngDisabled: true,
                 }
             }
         };}];

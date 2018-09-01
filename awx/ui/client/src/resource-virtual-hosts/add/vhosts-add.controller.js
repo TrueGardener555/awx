@@ -58,19 +58,6 @@ export default ['$scope', '$rootScope', 'VHostForm', 'GenerateForm', 'Rest',
             // apply form definition's default field values
             GenerateForm.applyDefaults(form, $scope);
 			
-			var callback = function() {
-                // Make sure the form controller knows there was a change
-                $scope[form.name + '_form'].$setDirty();
-            };
-            
-            $scope.parseTypeOpts = 'yaml';
-            ParseTypeChange({
-                scope: $scope,
-                field_id: 'opts',
-                variable: 'opts',
-                onChange: callback,
-                parse_variable: 'parseTypeOpts'
-            });
         }
 
 		$scope.select = function(param)
@@ -86,6 +73,19 @@ export default ['$scope', '$rootScope', 'VHostForm', 'GenerateForm', 'Rest',
 				$scope.select1 = "is-selected";
 				$scope.select2 = "";
 
+				var callback = function() {
+	                // Make sure the form controller knows there was a change
+	                $scope[form.name + '_form'].$setDirty();
+	            };
+	            
+	            $scope.parseTypeOpts = 'yaml';
+	            ParseTypeChange({
+	                scope: $scope,
+	                field_id: 'opts',
+	                variable: 'opts',
+	                onChange: callback,
+	                parse_variable: 'parseTypeOpts'
+	            });
 			}
 			else if ($scope.tabId == 2) {
 				$scope.select0 = "";

@@ -900,8 +900,6 @@ class IpamNetworkGearSerializer(BaseSerializer):
 
     related = serializers.SerializerMethodField('_get_related_fields', read_only=True)
 
-    opts = serializers.JSONField(default={}, source='NetworkGear.opts')
-
     class Meta:
         model = NetworkGear
         fields = '__all__'
@@ -913,6 +911,10 @@ class IpamNetworkGearSerializer(BaseSerializer):
         data['hosts'] = parse_yaml_or_json( getattr(instance, 'hosts', None) )
         data['artifacts'] = parse_yaml_or_json( getattr(instance, 'artifacts', None) )
         return data
+
+
+    # def create(self, validated_data):
+    #     return NetworkGear.objects.create(**validated_data)
 
 
 

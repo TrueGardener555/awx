@@ -14,10 +14,10 @@ const user_type_options = [
 
 export default ['$scope', '$rootScope', 'AppForm', 'GenerateForm', 'Rest','ParseTypeChange',
     'Alert', 'ProcessErrors', 'ReturnToCaller', 'GetBasePath',
-    'Wait', 'CreateSelect2', '$state', '$location', 'i18n',
+    'Wait', 'CreateSelect2', '$state', '$location', 'i18n','ParseVariableString',
     function($scope, $rootScope, AppForm, GenerateForm, Rest, ParseTypeChange, Alert,
     ProcessErrors, ReturnToCaller, GetBasePath, Wait, CreateSelect2,
-    $state, $location, i18n) {
+    $state, $location, i18n, ParseVariableString) {
 
         var defaultUrl = GetBasePath('ipam_apps'),
             form = AppForm;
@@ -36,8 +36,6 @@ export default ['$scope', '$rootScope', 'AppForm', 'GenerateForm', 'Rest','Parse
 			$scope.previous = "CLOSE";
 			$scope.next = "NEXT";
 			
-			$scope.parseTypeOpts = 'yaml';
-
 	        var datacenter_options = [];
 			var datacenterLists = [];
 	    	Rest.setUrl(GetBasePath('ipam_datacenters'));
@@ -139,7 +137,7 @@ export default ['$scope', '$rootScope', 'AppForm', 'GenerateForm', 'Rest','Parse
 				{
 					$scope.opts = "---";
 				}
-				if($scope.tabId == 2)
+				if($scope.tabId == 3)
 				{
 					var fld;
 					var data = "{";
@@ -159,27 +157,18 @@ export default ['$scope', '$rootScope', 'AppForm', 'GenerateForm', 'Rest','Parse
 			            	if($scope[fld] != undefined) data += "'" + $scope[fld] + "'";
 			            	else data += "''";
 			            	data += ",\n"; 
-			            	/*
-			                if (form.fields[fld].realName) {
-			                    data = data[form.fields[fld].realName] = $scope[fld];
-			                }else {
-			                    data[fld] = $scope[fld]; 
-			                }*/
 			            }
 		            }
 		        	data += "}";
-
-		            $scope.opts = data;
+		            $scope.opts = ParseVariableString(data);
 					$scope.parseTypeOpts = 'yaml';
 			        ParseTypeChange({
 			            scope: $scope,
-			            field_id: 'opts',
+			            field_id: 'app_opts',
 			            variable: 'opts',
 			            onChange: callback,
 			            parse_variable: 'parseTypeOpts'
 			        });
-
-					//$scope.opts = getVars(data);
 				}
 			}
 
@@ -208,8 +197,8 @@ export default ['$scope', '$rootScope', 'AppForm', 'GenerateForm', 'Rest','Parse
                     data[key] = $scope[key];
                 }
             });
-            data.datacenter = $scope.datacenter.value;
-    		data.credential = $scope.credential.value;
+			if($scope.datacenter != null) data.datacenter = $scope.datacenter.value;
+            if($scope.credential != null) data.credential = $scope.credential.value;
     		data.opts = $scope.opts;
     		
             return data;

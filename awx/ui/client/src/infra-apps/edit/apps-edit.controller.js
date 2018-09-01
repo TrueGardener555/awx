@@ -8,10 +8,10 @@ import { N_ } from "../../i18n";
 
 export default ['$scope', '$rootScope', '$stateParams', 'AppForm', 'GenerateForm', 'Rest','ParseTypeChange',
     'Alert', 'ProcessErrors', 'ReturnToCaller', 'GetBasePath',
-    'Wait', 'CreateSelect2', '$state', '$location', 'i18n',
+    'Wait', 'CreateSelect2', '$state', '$location', 'i18n','ParseVariableString',
     function($scope, $rootScope, $stateParams, AppForm, GenerateForm, Rest, ParseTypeChange, Alert,
     ProcessErrors, ReturnToCaller, GetBasePath, Wait, CreateSelect2,
-    $state, $location, i18n) {
+	$state, $location, i18n,ParseVariableString) {
 
         var form = AppForm,
             master = {},
@@ -167,6 +167,11 @@ export default ['$scope', '$rootScope', '$stateParams', 'AppForm', 'GenerateForm
 				}
 				if($scope.tabId == 2)
 				{
+
+					//$scope.opts = getVars(data);
+				}
+				if($scope.tabId == 3)
+				{
 					var fld;
 					var data = "{";
 					for (fld in form.fields) {
@@ -193,20 +198,16 @@ export default ['$scope', '$rootScope', '$stateParams', 'AppForm', 'GenerateForm
 			                }*/
 			            }
 		            }
-		            
 		        	data += "}";
-		            
-		            $scope.opts = data;
+		            $scope.opts = ParseVariableString(data);
 					$scope.parseTypeOpts = 'yaml';
 			        ParseTypeChange({
 			            scope: $scope,
-			            field_id: 'opts',
+			            field_id: 'app_opts',
 			            variable: 'opts',
 			            onChange: callback,
 			            parse_variable: 'parseTypeOpts'
 			        });
-
-					//$scope.opts = getVars(data);
 				}
 			}
 

@@ -118,7 +118,6 @@ export default ['i18n', function(i18n) {
 	                dataTitle: i18n._('Input Opts'),
 	                dataPlacement: 'right',
 	                dataContainer: "body",
-	                id: 'opts',
                     ngDisabled: '!(user_obj.summary_fields.user_capabilities.edit || canAdd)',
 					ngShow: 'tabId == 1',
                 },
