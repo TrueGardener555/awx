@@ -1,0 +1,95 @@
+
+---
+name: Red Hat Enterprise Virtualization
+group: Cloud
+version: 1.0
+description: |
+     Red Hat Enterprise Virtualization
+
+hosts: all
+  
+# roles:
+#   - common
+#   - os-controller
+#   - os-compute
+
+
+
+wizards: 
+    basic: 
+      index: 1
+      name: 'Variable'
+      type: 'collection'
+      title: i18n._('Variable')
+    
+    relation: 
+      index: 2
+      name: 'Relation'
+      type: 'collection'
+      title: i18n._('Relation')
+    opts:
+      index: 3
+      name: 'Option'
+      type: 'collection'
+      title: i18n._('Option')
+        
+      
+
+
+
+fields:
+  name: 
+      label: i18n._('Name')
+      type: 'text'
+      ngDisabled: '!(user_obj.summary_fields.user_capabilities.edit || canAdd)'
+      required: true
+      ngShow: 'tabId == 1'
+      
+
+  description: 
+    label: i18n._('Description')
+    type: 'text'
+    ngDisabled: '!(user_obj.summary_fields.user_capabilities.edit || canAdd)'
+    ngShow: 'tabId == 1'
+
+
+
+  token:
+    label: i18n._('Token')
+    type: 'text'
+    ngDisabled: '!(user_obj.summary_fields.user_capabilities.edit || canAdd)'
+    ngShow: 'tabId == 1'
+        
+
+  datacenter: 
+    label: i18n._('Datacenter')
+    type: 'select'
+    defaultText: 'Choose a Datacenter'
+    ngModel: 'datacenter'
+    ngOptions: 'item as item.label for item in datacenter_type_options'
+    ngDisabled: '!(user_obj.summary_fields.user_capabilities.edit || canAdd)'
+    ngShow: 'tabId == 2'
+  
+  credential: 
+    label: i18n._('Credential')
+    type: 'select'
+    defaultText: 'Choose a Credential'
+    ngModel: 'credential'
+    ngOptions: 'item as item.label for item in credential_type_options'
+    ngDisabled: '!(user_obj.summary_fields.user_capabilities.edit || canAdd)'
+    ngShow: 'tabId == 2'
+      
+  opts: 
+    label: i18n._('Input Opts')
+    class: 'Form-textAreaLabel Form-formGroup--fullWidth'
+    type: 'textarea'
+    rows: 15
+    default: '---'
+    showParseTypeToggle: true
+    parseTypeName: 'parseTypeOpts'
+    awPopOverWatch: "opts_help_text"
+    dataTitle: i18n._('Input Opts')
+    dataPlacement: 'right'
+    dataContainer: "body"
+    ngDisabled: '!(user_obj.summary_fields.user_capabilities.edit || canAdd)'
+    ngShow: 'tabId == 3'

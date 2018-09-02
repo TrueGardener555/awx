@@ -1,0 +1,16 @@
+
+---
+name: Red Hat OpenShift Container Platform
+group: Cloud
+version: 1.0
+description: |
+     Red Hat OpenShift Container Platform
+
+hosts: all
+
+picture: path-to-image.png
+
+# roles:
+#   - common
+#   - os-controller
+#   - os-compute

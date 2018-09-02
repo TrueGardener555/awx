@@ -141,7 +141,7 @@ class IpamInfrastructureSourceViewSet(viewsets.ViewSet):
 
     def list(self, request, **kwargs):
         # pass
-        return Response( sources.demo() )
+        return Response( sources.infrastructure_api_source() )
 
     # def create(self, request):
     #     pass
