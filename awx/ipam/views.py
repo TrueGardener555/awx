@@ -134,7 +134,7 @@ class IpamRegistryViewSet(viewsets.ModelViewSet):
 
 
 
-# Time
+# Infrastructure Source
 class IpamInfrastructureSourceViewSet(viewsets.ViewSet):
     # queryset = Registry.objects.all()
     # serializer_class = IpamRegistrySerializer
@@ -142,6 +142,32 @@ class IpamInfrastructureSourceViewSet(viewsets.ViewSet):
     def list(self, request, **kwargs):
         # pass
         return Response( sources.infrastructure_api_source() )
+
+    # def create(self, request):
+    #     pass
+
+    def retrieve(self, request, pk=None):
+        pass
+
+    # def update(self, request, pk=None):
+    #     pass
+
+    def partial_update(self, request, pk=None):
+        pass
+
+    def destroy(self, request, pk=None):
+        pass
+
+
+
+# Infrastructure Source
+class IpamInfrastructureWizardSourceViewSet(viewsets.ViewSet):
+    # queryset = Registry.objects.all()
+    # serializer_class = IpamRegistrySerializer
+
+    def list(self, request, **kwargs):
+        # pass
+        return Response( sources.infrastructure_api_demo_source() )
 
     # def create(self, request):
     #     pass

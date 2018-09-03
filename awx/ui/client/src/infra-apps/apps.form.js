@@ -11,6 +11,28 @@
 */
 
 export default ['i18n', function(i18n) {
+
+    var demo = 'danny';
+    var WIZARD = {};
+
+    // var tmpDemo = function() {
+    //      $http({method : 'GET', url : 'api/v2/ipam_infrastructure_wizard_sources/'})
+    //         .success(function(data, status) {
+    //             $WIZARD = data;
+    //          })
+    //         .error(function(data, status) {
+    //             alert("Error");
+    //         })
+    //     };
+
+    //     tmpDemo();
+        $http.get('api/v2/ipam_infrastructure_wizard_sources/').success(function(data, status) {    
+            WIZARD = data;
+
+        });
+
+
+
         return {
 
             addTitle: i18n._('NEW APP'),
@@ -21,26 +43,7 @@ export default ['i18n', function(i18n) {
             stateTree: 'infraAppsList',
             breadcrumbName: i18n._('INFRA APP'),
             showActions: true,
-			wizards: {
-				basic: {
-					index: 1,
-					name: 'Variable',
-                    type: 'collection',
-                    title: i18n._('Variable'),
-				},
-				relation: {
-					index:2,
-					name: 'Relation',
-	                type: 'collection',
-	                title: i18n._('Relation'),
-				},
-				opts: {
-					index:3,
-					name: 'Option',
-	                type: 'collection',
-	                title: i18n._('Option'),
-				}
-			},
+			wizards: `${ WIZARD }`,
             fields: {
                 name: {
                     label: i18n._('Name'),
@@ -171,4 +174,5 @@ export default ['i18n', function(i18n) {
 					ngDisabled: true,
                 }
             }
-        };}];
+        };
+    }];

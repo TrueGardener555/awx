@@ -35,5 +35,9 @@ ipam_router.register(r'ipam_registries', IpamRegistryViewSet, base_name="ipam_re
 ipam_router.register(r'ipam_infrastructure_sources', IpamInfrastructureSourceViewSet, base_name="ipam_infrastructure_source")
 
 
+# IpamInfrastructureWizardSourceViewSet
+ipam_router.register(r'ipam_infrastructure_wizard_sources', IpamInfrastructureWizardSourceViewSet, base_name="ipam_infrastructure_wizard_source")
 
 
+
+# IpamInfrastructureWizardSourceViewSet

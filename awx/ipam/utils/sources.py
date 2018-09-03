@@ -103,3 +103,14 @@ def from_yml_get_related(src_path):
 
 
 
+
+def infrastructure_api_demo_source():
+
+    # data = OrderedDict()
+    voutput = from_yml_get_related( "%s/%s/%s"  % ( DIR_INFRASTRUCTURES, 'apps', 'ntp.yml' ) )
+    voutput['wizards']
+
+    return voutput['wizards']
+
+
+

@@ -348,8 +348,8 @@ class ApiVersionRootView(APIView):
         data['ipam_network_gears'] = reverse('api:ipam_network_gear-list', request=request)
         data['ipam_registries'] = reverse('api:ipam_registry-list', request=request)
         data['ipam_infrastructure_sources'] = reverse('api:ipam_infrastructure_source-list', request=request)
+        data['ipam_infrastructure_wizard_sources'] = reverse('api:ipam_infrastructure_wizard_source-list', request=request)
         return Response(data)
-
 
 
 
